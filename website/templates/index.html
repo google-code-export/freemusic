@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Latest albums</h1>
+{% if albums %}
+<ul>
+{% for album in albums %}
+<li>
+<a href="/music/{{ album.artist.name|escape }}/{{ album.name|escape }}/"><img src="{{ album.cover_small }}" alt="{{ album.name|escape }}"/></a>
+<a href="/music/{{ album.artist.name|escape }}/{{ album.name|escape }}/">{{ album.name }}</a> from <a href="/music/{{ album.artist.name|escape }}/">{{ album.artist.name }}</a>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>No albums, <a href="/admin/init">initialize database</a>?</p>
+{% endif %}
+{% endblock %}

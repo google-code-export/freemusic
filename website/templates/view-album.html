@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="album">
+<h1>{{ album.name }}</h1>
+{% if album.date %}
+<p>Released on {{ album.date|date:"d.m.Y" }}</p>
+{% endif %}
+
+{% if album.cover %}
+<img src="{{ album.cover|escape }}" alt="cover" class="cover"/>
+{% endif %}
+
+{% if album.tracks %}
+<h2>Track Listing</h2>
+<table class="tracks">
+<tbody>
+{% for track in album.tracks %}
+<tr>
+<th>{{ track.number }}.</th>
+<td>
+<a href="{{ track.mp3|escape }}">{{ track.title }}</a>
+</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endif %}
+
+<h2>Other Files</h2>
+<ul>
+{% if album.files %}
+  <li>
+    <a href="{{ album.files.0.url|escape }}">Download</a>
+    <ul>
+      {% for file in album.files %}
+        <li>
+          <a href="{{ file.url|escape }}">{{ file.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+{% endif %}
+</ul>
+
+</div><!-- id=album -->
+{% endblock %}

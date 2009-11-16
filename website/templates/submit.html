@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<form action="/submit" method="post">
+<table>
+<tbody>
+<tr>
+<th>Исполнитель:</th>
+<td>
+<input type="text" name="artist"/>
+</td>
+</tr>
+<tr>
+<th>Название:</th>
+<td>
+<input type="text" name="album"/>
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<th/>
+<td>
+<input type="submit"/>
+</td>
+</tr>
+</tfoot>
+</table>
+</form>
+{% endblock %}
