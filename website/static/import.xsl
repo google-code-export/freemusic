@@ -33,6 +33,19 @@
 			<tracks>
 				<xsl:apply-templates select="files/node[filetype/text()='audio/mpeg']"/>
 			</tracks>
+			<xsl:variable name="files" select="files/node[not(contains(filetype/text(),'image/')) and not(contains(filetype/text(),'audio/'))]" mode="downloadable"/>
+			<xsl:if test="$files">
+				<files>
+					<xsl:for-each select="$files">
+						<file
+							name="{@name}"
+							uri="{$base}{download-url/text()}"
+							type="{filetype/text()}"
+							size="{filesize/text()}"
+							/>
+					</xsl:for-each>
+				</files>
+			</xsl:if>
 		</album>
 	</xsl:template>
 
