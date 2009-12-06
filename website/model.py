@@ -12,6 +12,21 @@ class SiteUser(db.Model):
 class SiteArtist(db.Model):
 	name = db.StringProperty(required=True)
 
+class SiteAlbum(db.Model):
+	name = db.StringProperty()
+	artist = db.ReferenceProperty(SiteArtist)
+	release_date = db.DateProperty(auto_now_add=True)
+	rating = db.RatingProperty() # average album rate
+	cover_small = db.LinkProperty() # image URL
+	cover_large = db.LinkProperty() # image URL
+
+class SiteImage(db.Model):
+	album = db.ReferenceProperty(SiteAlbum)
+	uri = db.LinkProperty()
+	width = db.IntegerProperty()
+	height = db.IntegerProperty()
+	cover = db.BooleanProperty()
+
 class SiteTrack(db.Model):
 	title = db.StringProperty()
 	artist = db.ReferenceProperty(SiteArtist) # for compilations
@@ -19,19 +34,12 @@ class SiteTrack(db.Model):
 	number = db.IntegerProperty()
 	mp3_link = db.LinkProperty()
 
-	def getXML(self):
-		return '<track title="%s" artist="%s" number="%s" mp3="%s"/>' % (self.title,
-			self.artist.name, self.number, self.mp3_link)
-
-class SiteAlbum(db.Model):
+class SiteFile(db.Model):
+	album = db.ReferenceProperty(SiteAlbum)
 	name = db.StringProperty()
-	artist = db.ReferenceProperty(SiteArtist)
-	release_date = db.DateTimeProperty(auto_now_add=True)
-	rating = db.RatingProperty() # average album rate
-	cover_small = db.LinkProperty() # image URL
-	cover_large = db.LinkProperty() # image URL
-	tracks = db.BlobProperty()
-	files = db.BlobProperty()
+	uri = db.LinkProperty()
+	type = db.StringProperty()
+	size = db.IntegerProperty()
 
 class SiteAlbumReview(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)

@@ -61,4 +61,14 @@
 			</xsl:for-each>
 		</ul>
 	</xsl:template>
+
+	<xsl:template match="upload-xml-form">
+		<h1>Upload XML</h1>
+		<form method="post" enctype="multipart/form-data">
+			<div>
+				<input type="file" name="xml"/>
+			</div>
+			<input type="submit"/>
+		</form>
+	</xsl:template>
 </xsl:stylesheet>
