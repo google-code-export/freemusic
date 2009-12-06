@@ -22,3 +22,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 	def unquote(self, text):
 		return urllib.unquote(text).decode('utf8')
+
+def run(rules):
+	_DEBUG = ('Development/' in os.environ.get('SERVER_SOFTWARE'))
+	if _DEBUG:
+		logging.getLogger().setLevel(logging.DEBUG)
+	application = webapp.WSGIApplication(rules, debug=_DEBUG)
+	wsgiref.handlers.CGIHandler().run(application)

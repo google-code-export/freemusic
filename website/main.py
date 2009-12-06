@@ -2,17 +2,14 @@
 # vim: set ts=4 sts=4 sw=4 noet:
 
 # Python imports
-import logging, pickle, os, urllib
+import logging, urllib
 
 # GAE imports
-import wsgiref.handlers
 from google.appengine.api import users
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
 from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
-from base import BaseRequestHandler
+from base import BaseRequestHandler, run
 import model
 
 
@@ -164,15 +161,11 @@ class AdminInitHandler(BaseRequestHandler):
 
 		self.redirect('/')
 
-def main():
-	application = webapp.WSGIApplication([
+if __name__ == '__main__':
+	run([
 		('/', IndexHandler),
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
 		('/music/([^/]+)/([^/]+)/', AlbumHandler),
 		('/admin/init', AdminInitHandler),
-	], debug=True)
-	wsgiref.handlers.CGIHandler().run(application)
-
-if __name__ == '__main__':
-	main()
+	])

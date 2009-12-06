@@ -7,14 +7,12 @@ import logging
 from xml.dom.minidom import parseString
 
 # GAE imports
-import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import db
-from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import login_required
 
 # Site imports
-from base import BaseRequestHandler
+from base import BaseRequestHandler, run
 import model
 
 class UploadXmlHandler(BaseRequestHandler):
@@ -27,9 +25,7 @@ class UploadXmlHandler(BaseRequestHandler):
 			raise Exception('You are not an admin.')
 
 		self.importArtists(parseString(self.request.get('xml')))
-
-		self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
-		self.response.out.write(self.request.get('xml'))
+		self.redirect('/')
 
 	def importArtists(self, xml):
 		for em in xml.getElementsByTagName("artist"):
@@ -95,7 +91,6 @@ class UploadXmlHandler(BaseRequestHandler):
 			db.delete(old)
 
 if __name__ == '__main__':
-	application = webapp.WSGIApplication([
+	run([
 		('/upload/xml', UploadXmlHandler),
-	], debug=True)
-	wsgiref.handlers.CGIHandler().run(application)
+	])
