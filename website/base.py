@@ -7,6 +7,7 @@ import logging, os, urllib
 # GAE imports
 import wsgiref.handlers
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
 
 class BaseRequestHandler(webapp.RequestHandler):
 	def render(self, template_name, vars={}, content_type='text/xml'):
@@ -17,6 +18,13 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
 		self.response.out.write(result)
 
+	def sendXML(self, xml):
+		result = "<?xml version=\"1.0\"?>"
+		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
+		result += '<page>' + xml + '</page>'
+		self.response.headers['Content-Type'] = 'text/xml; charset=utf-8'
+		self.response.out.write(result)
+
 	def quote(self, text):
 		return urllib.quote(text.encode('utf8'))
 
@@ -25,6 +33,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 def run(rules):
 	_DEBUG = ('Development/' in os.environ.get('SERVER_SOFTWARE'))
+	_DEBUG = True
 	if _DEBUG:
 		logging.getLogger().setLevel(logging.DEBUG)
 	application = webapp.WSGIApplication(rules, debug=_DEBUG)

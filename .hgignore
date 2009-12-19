@@ -1,3 +1,4 @@
 style: glob
+tmp
 website/static/import.xml
 website/static/data.xml

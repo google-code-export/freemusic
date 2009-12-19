@@ -12,8 +12,21 @@
 		/>
 	<xsl:template match="/page">
 		<html lang="{@lang}">
+			<head>
+				<title>music 3.5</title>
+				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
+			</head>
 			<body>
 				<xsl:apply-templates select="*"/>
+				<div id="footer">
+					<hr/>
+					<p>
+						<a href="http://code.google.com/p/freemusic/">Google Code</a>
+						<a href="/_ah/admin">admin console</a>
+						<a href="/upload/xml">upload xml</a>
+					</p>
+				</div>
 			</body>
 		</html>
 	</xsl:template>
@@ -70,5 +83,18 @@
 			</div>
 			<input type="submit"/>
 		</form>
+	</xsl:template>
+
+	<xsl:template match="/page/index">
+		<h1>New albums</h1>
+		<ul>
+			<xsl:for-each select="album">
+				<li>
+					<a href="music/{@artist}/{@name}/">
+						<xsl:value-of select="@name"/>
+					</a>
+				</li>
+			</xsl:for-each>
+		</ul>
 	</xsl:template>
 </xsl:stylesheet>

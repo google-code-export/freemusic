@@ -41,6 +41,7 @@ class UploadXmlHandler(BaseRequestHandler):
 	def importAlbums(self, artist, xml):
 		for em in xml.getElementsByTagName("album"):
 			name = em.attributes["name"].value
+			logging.info('Processing album "%s" by %s' % (name, artist.name))
 			album = model.SiteAlbum.gql('WHERE artist = :1 AND name = :2', artist, name).get()
 			if album is None:
 				album = model.SiteAlbum(artist=artist, name=name)
@@ -48,11 +49,13 @@ class UploadXmlHandler(BaseRequestHandler):
 				logging.info("+ album %s (%s)" % (album.name, artist.name))
 
 			album.release_date = datetime.datetime.strptime(em.attributes["pubDate"].value[:10], '%Y-%m-%d').date()
-			album.put()
+			album.put(quick=True)
 
 			self.importImages(album, em)
 			self.importTracks(album, em)
 			self.importFiles(album, em)
+
+			album.put() # updates XML
 
 	def importImages(self, album, xml):
 		self.purge(model.SiteImage, album)

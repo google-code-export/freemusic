@@ -20,10 +20,11 @@ class MainHandler(BaseRequestHandler):
 
 class IndexHandler(BaseRequestHandler):
 	def get(self):
-		latest = model.SiteAlbum.all().fetch(10)
-		self.render('index.html', {
-			'albums': latest,
-		})
+		xml = u""
+		for album in model.SiteAlbum.all().order('-release_date').fetch(10):
+			if album.xml:
+				xml += album.xml
+		self.sendXML(u'<index>' + xml + u'</index>')
 
 
 class SubmitHandler(BaseRequestHandler):
@@ -64,102 +65,10 @@ class AddFileHandler(BaseRequestHandler):
 
 class AlbumHandler(BaseRequestHandler):
 	def get(self, artist_name, album_name):
-		data = self.load(artist_name, album_name)
-		self.render('view-album.html', data)
-
-	def load(self, artist_name, album_name):
-		artist = model.SiteArtist.gql('WHERE name = :1', self.unquote(artist_name)).get()
-		if artist is None:
-			raise Exception('No such artist.')
-
-		album = model.SiteAlbum.gql('WHERE artist = :1 AND name = :2', artist, self.unquote(album_name)).get()
-		if album is None:
-			raise Exception('No such album.')
-
-		data = {
-			'artist': {
-				'name': artist.name,
-				},
-			'album': {
-				'name': album.name,
-				'date': album.release_date,
-				'rating': album.rating,
-				'cover': album.cover_large,
-				'tracks': [],
-				'files': [],
-				},
-		}
-
-		if album.tracks:
-			data['album']['tracks'] = pickle.loads(album.tracks)
-		if album.files:
-			data['album']['files'] = pickle.loads(album.files)
-
-		return data
-
-class AdminInitHandler(BaseRequestHandler):
-	@login_required
-	def get(self):
-		for tmp in model.SiteArtist.all().fetch(1000):
-			tmp.delete()
-		for tmp in model.SiteAlbum.all().fetch(1000):
-			tmp.delete()
-
-		data = {
-			'artists': {
-				'Skazka': {
-					'albums': {
-						'Fairy Tale': {
-							'cover_small': 'http://ebm.net.ru/sites/default/files/6/66/1066/folder.jpg.thumbnail.jpg',
-							'cover_large': 'http://ebm.net.ru/sites/default/files/6/66/1066/folder.jpg.medium.jpg',
-							'tracks': [
-								{ 'title': 'Russian Field',
-									'number': 1,
-									'mp3': 'http://ebm.net.ru/download/1056/01%20Russian%20Field.mp3' },
-								{ 'title': 'Ocean',
-									'number': 2,
-									'mp3': 'http://ebm.net.ru/download/1057/02%20Ocean.mp3' },
-								{ 'title': 'Aurora Borealis',
-									'number': 3,
-									'mp3': 'http://ebm.net.ru/download/1058/03%20Aurora%20Borealis.mp3' },
-								{ 'title': 'Mountain River',
-									'number': 4,
-									'mp3': 'http://ebm.net.ru/download/1059/04%20Mountain%20River.mp3' },
-								{ 'title': 'Fairy Tale',
-									'number': 10,
-									'mp3': 'http://ebm.net.ru/download/1065/10%20Fairy%20Tale.mp3' },
-								],
-							'files': [
-								{ 'url': 'http://ebm.net.ru/download/1067/skazka-2009-fairy-tale.zip',
-									'name': 'skazka-2009-fairy-tale.zip',
-									'type': 'application/zip' },
-								{ 'url': 'http://ebm.net.ru/download/1067/skazka-2009-fairy-tale.zip?torrent',
-									'name': 'skazka-2009-fairy-tale.zip.torrent',
-									'type': 'application/x-bit-torrent' },
-								],
-							},
-						},
-					},
-				},
-		}
-
-		for artist_name in data['artists']:
-			artist_data = data['artists'][artist_name]
-			artist = model.SiteArtist(name=artist_name)
-			artist.put()
-
-			for album_name in artist_data['albums']:
-				album_data = artist_data['albums'][album_name]
-				album = model.SiteAlbum(name=album_name,
-					artist=artist)
-				for k in album_data:
-					if type(album_data[k]) == type({}) or type(album_data[k]) == type([]):
-						setattr(album, k, pickle.dumps(album_data[k]))
-					else:
-						setattr(album, k, album_data[k])
-				album.put()
-
-		self.redirect('/')
+		# TODO: filter by artist
+		album = model.SiteAlbum.gql('WHERE name = :1', album_name).get()
+		if album:
+			self.sendXML(album.xml)
 
 if __name__ == '__main__':
 	run([
@@ -167,5 +76,4 @@ if __name__ == '__main__':
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
 		('/music/([^/]+)/([^/]+)/', AlbumHandler),
-		('/admin/init', AdminInitHandler),
 	])
