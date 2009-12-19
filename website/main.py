@@ -66,9 +66,10 @@ class AddFileHandler(BaseRequestHandler):
 class AlbumHandler(BaseRequestHandler):
 	def get(self, artist_name, album_name):
 		# TODO: filter by artist
-		album = model.SiteAlbum.gql('WHERE name = :1', album_name).get()
+		album = model.SiteAlbum.gql('WHERE name = :1', urllib.unquote(album_name)).get()
 		if album:
 			self.sendXML(album.xml)
+		logging.info('404')
 
 if __name__ == '__main__':
 	run([
