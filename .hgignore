@@ -1,4 +1,5 @@
-style: glob
+syntax: glob
+*.pyc
 tmp
 website/static/import.xml
 website/static/data.xml

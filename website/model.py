@@ -6,6 +6,10 @@ import urllib
 from xml.sax.saxutils import escape
 from google.appengine.ext import db
 
+def __atoint(a, xyz):
+	if xyz:
+		return u" %s='%u'" % (a, xyz)
+
 class SiteUser(db.Model):
 	user = db.UserProperty()
 	joined = db.DateTimeProperty(auto_now_add=True)
@@ -25,23 +29,25 @@ class SiteAlbum(db.Model):
 
 	def put(self, quick=False):
 		if not quick:
-			self.xml = self.get_xml()
+			self.xml = self.to_xml()
 		db.Model.put(self)
 
-	def get_xml(self):
+	def to_xml(self):
 		xml = u'<album name="%s" artist="%s">' % (escape(self.name), escape(self.artist.name))
-		xml += self.get_tracks_xml()
+		xml += self.get_children_xml(SiteTrack, u'tracks')
+		xml += self.get_children_xml(SiteImage, u'images')
+		xml += self.get_children_xml(SiteFile, u'files')
 		xml += u'</album>'
 		return xml
 
-	def get_tracks_xml(self):
+	def get_children_xml(self, cls, em):
 		xml = u''
-		tracks = SiteTrack.gql('WHERE album = :1', self).fetch(1000)
-		if tracks:
-			xml += u'<tracks>'
-			for track in tracks:
-				xml += track.xml()
-			xml += u'</tracks>'
+		children = cls.gql('WHERE album = :1', self).fetch(1000)
+		if children:
+			xml += u'<' + em + u'>'
+			for child in children:
+				xml += child.to_xml()
+			xml += u'</' + em + u'>'
 		return xml
 
 class SiteImage(db.Model):
@@ -51,6 +57,12 @@ class SiteImage(db.Model):
 	height = db.IntegerProperty()
 	cover = db.BooleanProperty()
 
+	def to_xml(self):
+		xml = u"<image uri='%s' width='%u' height='%u'" % (escape(self.uri), self.width, self.height)
+		if self.cover:
+			xml += u" cover='yes'"
+		return xml + u'/>'
+
 class SiteTrack(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
 	title = db.StringProperty()
@@ -59,7 +71,7 @@ class SiteTrack(db.Model):
 	number = db.IntegerProperty()
 	mp3_link = db.LinkProperty()
 
-	def xml(self):
+	def to_xml(self):
 		xml = u'<track number="%u" title="%s" mp3="%s"/>' % (self.number, escape(self.title), escape(self.mp3_link))
 		return xml
 
@@ -69,6 +81,12 @@ class SiteFile(db.Model):
 	uri = db.LinkProperty()
 	type = db.StringProperty()
 	size = db.IntegerProperty()
+
+	def to_xml(self):
+		xml = u"<file name='%s' uri='%s' type='%s'" % (escape(self.name), escape(self.uri), escape(self.type))
+		if self.size:
+			xml += u" size='%u'" % self.size
+		return xml + u'/>'
 
 class SiteAlbumReview(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
