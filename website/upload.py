@@ -64,8 +64,7 @@ class UploadXmlHandler(BaseRequestHandler):
 			image.uri = em.attributes["uri"].value
 			image.width = int(em.attributes["width"].value)
 			image.height = int(em.attributes["height"].value)
-			if "yes" == em.attributes["cover"].value:
-				image.cover = True
+			image.type = em.attributes["type"].value
 			image.put()
 
 	def importTracks(self, album, xml):

@@ -6,10 +6,6 @@ import urllib
 from xml.sax.saxutils import escape
 from google.appengine.ext import db
 
-def __atoint(a, xyz):
-	if xyz:
-		return u" %s='%u'" % (a, xyz)
-
 class SiteUser(db.Model):
 	user = db.UserProperty()
 	joined = db.DateTimeProperty(auto_now_add=True)
@@ -55,13 +51,10 @@ class SiteImage(db.Model):
 	uri = db.LinkProperty()
 	width = db.IntegerProperty()
 	height = db.IntegerProperty()
-	cover = db.BooleanProperty()
+	type = db.StringProperty()
 
 	def to_xml(self):
-		xml = u"<image uri='%s' width='%u' height='%u'" % (escape(self.uri), self.width, self.height)
-		if self.cover:
-			xml += u" cover='yes'"
-		return xml + u'/>'
+		return u"<image uri='%s' width='%u' height='%u' type='%s'/>" % (escape(self.uri), self.width, self.height, escape(self.type))
 
 class SiteTrack(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)

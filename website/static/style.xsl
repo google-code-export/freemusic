@@ -10,6 +10,9 @@
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		/>
+
+	<xsl:variable name="index-image-type">medium</xsl:variable><!-- thumbnail, medium -->
+
 	<xsl:template match="/page">
 		<html lang="{@lang}">
 			<head>
@@ -22,6 +25,7 @@
 				<div id="footer">
 					<hr/>
 					<p>
+						<a href="/">home</a>
 						<a href="http://code.google.com/p/freemusic/">Google Code</a>
 						<a href="/_ah/admin">admin console</a>
 						<a href="/upload/xml">upload xml</a>
@@ -87,14 +91,29 @@
 
 	<xsl:template match="/page/index">
 		<h1>New albums</h1>
-		<ul>
+		<ul id="index">
 			<xsl:for-each select="album">
 				<li>
 					<a href="music/{@artist}/{@name}/">
-						<xsl:value-of select="@name"/>
+						<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
 					</a>
+					<div>
+						<a class="n" href="music/{@artist}/{@name}/">
+							<xsl:value-of select="@name"/>
+						</a>
+						<span>
+							<xsl:text> by </xsl:text>
+						</span>
+						<a class="a" href="music/{@artist}/">
+							<xsl:value-of select="@artist"/>
+						</a>
+					</div>
 				</li>
 			</xsl:for-each>
 		</ul>
+	</xsl:template>
+
+	<xsl:template match="image">
+		<img src="{@uri}" alt="image" width="{@width}" height="{@height}"/>
 	</xsl:template>
 </xsl:stylesheet>
