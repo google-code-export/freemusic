@@ -12,9 +12,11 @@ class SiteUser(db.Model):
 	weight = db.FloatProperty()
 
 class SiteArtist(db.Model):
+	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
 
 class SiteAlbum(db.Model):
+	id = db.IntegerProperty()
 	name = db.StringProperty()
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
@@ -29,7 +31,7 @@ class SiteAlbum(db.Model):
 		db.Model.put(self)
 
 	def to_xml(self):
-		xml = u'<album name="%s" artist="%s">' % (escape(self.name), escape(self.artist.name))
+		xml = u'<album id="%u" name="%s" artist="%s" pubDate="%s">' % (self.id, escape(self.name), escape(self.artist.name), self.release_date.isoformat())
 		xml += self.get_children_xml(SiteTrack, u'tracks')
 		xml += self.get_children_xml(SiteImage, u'images')
 		xml += self.get_children_xml(SiteFile, u'files')

@@ -21,7 +21,7 @@ class MainHandler(BaseRequestHandler):
 class IndexHandler(BaseRequestHandler):
 	def get(self):
 		xml = u""
-		for album in model.SiteAlbum.all().order('-release_date').fetch(10):
+		for album in model.SiteAlbum.all().order('-release_date').fetch(15):
 			if album.xml:
 				xml += album.xml
 		self.sendXML(u'<index>' + xml + u'</index>')
@@ -64,9 +64,8 @@ class AddFileHandler(BaseRequestHandler):
 
 
 class AlbumHandler(BaseRequestHandler):
-	def get(self, artist_name, album_name):
-		# TODO: filter by artist
-		album = model.SiteAlbum.gql('WHERE name = :1', urllib.unquote(album_name)).get()
+	def get(self, id):
+		album = model.SiteAlbum.gql('WHERE id = :1', int(id)).get()
 		if album:
 			self.sendXML(album.xml)
 		logging.info('404')
@@ -76,5 +75,5 @@ if __name__ == '__main__':
 		('/', IndexHandler),
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
-		('/music/([^/]+)/([^/]+)/', AlbumHandler),
+		('/album/(\d+)', AlbumHandler),
 	])

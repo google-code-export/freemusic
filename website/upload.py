@@ -39,14 +39,20 @@ class UploadXmlHandler(BaseRequestHandler):
 			self.importAlbums(artist, em)
 
 	def importAlbums(self, artist, xml):
+		last = model.SiteAlbum.gql('ORDER BY id DESC').get()
+		if last:
+			nextId = last.id + 1
+		else:
+			nextId = 1
+
 		for em in xml.getElementsByTagName("album"):
 			name = em.attributes["name"].value
 			logging.info('Processing album "%s" by %s' % (name, artist.name))
 			album = model.SiteAlbum.gql('WHERE artist = :1 AND name = :2', artist, name).get()
 			if album is None:
-				album = model.SiteAlbum(artist=artist, name=name)
-				album.put()
-				logging.info("+ album %s (%s)" % (album.name, artist.name))
+				album = model.SiteAlbum(id=nextId, artist=artist, name=name)
+				logging.info("+ album %s (%s), id=%u" % (album.name, artist.name, album.id))
+				nextId += 1
 
 			album.release_date = datetime.datetime.strptime(em.attributes["pubDate"].value[:10], '%Y-%m-%d').date()
 			album.put(quick=True)

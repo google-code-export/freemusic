@@ -1,15 +1,101 @@
-#footer a {
-  margin-right: 1em;
+body {
+  margin: 0;
+  padding: 0;
+  font: normal 10pt/12pt arial, sans-serif;
 }
 
-#index {
+#wrapper {
+  width: 760px;
+  margin: 0 auto;
+}
+
+#header {
+  margin: 10px 0 40px;
+}
+#header h1 {
+  display: inline;
+  margin-right: 1em;
+}
+#header .text {
+  width: 300px;
+  border: solid 1px #ccc;
+  padding: 4px;
+  margin-right: 10px;
+}
+
+.twocol .left {
+  width: 150px;
+  float: left;
+}
+.twocol .right {
+  margin-left: 170px;
+}
+
+.left ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.left ul li {
+  line-height: 1.5em;
+}
+
+/* upload your album */
+.uya {
+  color: gray;
+  font-size: 9pt;
+  margin-top: 3em;
+}
+.uya p {
+  margin: .25em 0;
+}
+
+#album h2 {
+  font-size: 14pt;
+  font-weight: bold;
+}
+#album h2 small {
+  font-weight: normal;
+}
+
+#album .left {
+  float: left;
+}
+#album .left img {
+  border: solid 1px #ccc;
+  padding: 2px;
+}
+#album .left .dl {
+  display: block;
+  height: 30px;
+  line-height: 30px;
+  text-align: center;
+  background-color: #ccc;
+  color: gray;
+}
+
+#album .right {
+  margin-left: 220px;
+}
+#album td {
+  padding: 2px 4px;
+  vertical-align: top;
+}
+
+#footer {
+  text-align: center;
+  padding: 50px 0 10px;
+  color: gray;
+}
+
+#index ul {
   margin: 0;
   padding: 0;
 }
-#index li {
+#index .right li {
   display: block;
-  width: 220px;
-  height: 260px;
+  width: 150px;
+  height: 170px;
   list-style-type: none;
   margin: 0 10px 10px;
   padding: 0;
@@ -18,6 +104,11 @@
 }
 #index li div a {
   white-space: nowrap;
+}
+#index .album small {
+  white-space: nowrap;
+  display: block;
+  color: #444;
 }
 
 

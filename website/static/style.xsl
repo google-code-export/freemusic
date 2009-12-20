@@ -11,7 +11,7 @@
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		/>
 
-	<xsl:variable name="index-image-type">medium</xsl:variable><!-- thumbnail, medium -->
+	<xsl:variable name="index-image-type">thumbnail</xsl:variable><!-- thumbnail, medium -->
 
 	<xsl:template match="/page">
 		<html lang="{@lang}">
@@ -21,53 +21,80 @@
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 			</head>
 			<body>
-				<xsl:apply-templates select="*"/>
-				<div id="footer">
-					<hr/>
-					<p>
-						<a href="/">home</a>
-						<a href="http://code.google.com/p/freemusic/">Google Code</a>
-						<a href="/_ah/admin">admin console</a>
-						<a href="/upload/xml">upload xml</a>
-					</p>
+				<div id="wrapper">
+					<div id="header">
+						<form action="/search" method="get">
+							<h1>
+								<a href="/">new music</a>
+							</h1>
+							<input type="text" name="q" class="text"/>
+							<input type="submit" value="Найти"/>
+						</form>
+					</div>
+					<xsl:apply-templates select="*"/>
+					<div id="footer">© ebm.net.ru - <a href="/">Главная</a> - <a href="http://code.google.com/p/freemusic/">О проекте</a> - <a href="/_ah/admin">Админка</a> - <a href="/upload/xml">Загрузить XML</a></div>
 				</div>
 			</body>
 		</html>
 	</xsl:template>
 
+	<!--
 	<xsl:template match="/page/album">
-		<h1>
-			<xsl:value-of select="@name"/>
-		</h1>
-		<xsl:if test="@pubDate">
-			<p>Published on <xsl:value-of select="@pubDate"/></p>
-		</xsl:if>
-		<xsl:apply-templates select="cover"/>
-		<xsl:apply-templates select="tracks"/>
-		<xsl:apply-templates select="files"/>
+		<div id="album">
+			<div class="images">
+				<xsl:apply-templates select="images/image[@type='medium']"/>
+			</div>
+			<h2>
+				<xsl:value-of select="@name"/>
+				<small> by <a href="/music/{@artist}/"><xsl:value-of select="@artist"/></a></small>
+			</h2>
+			<xsl:if test="@pubDate">
+				<p>Published on <xsl:value-of select="@pubDate"/></p>
+			</xsl:if>
+			<xsl:apply-templates select="cover"/>
+			<xsl:apply-templates select="tracks"/>
+			<xsl:apply-templates select="files"/>
+		</div>
 	</xsl:template>
+	-->
 
-	<xsl:template match="cover">
-		<img src="{@uri}" alt="cover"/>
-	</xsl:template>
-
-	<xsl:template match="tracks">
-		<h2>Tracks</h2>
-		<ul>
-			<xsl:apply-templates select="track"/>
-		</ul>
-	</xsl:template>
-
-	<xsl:template match="track">
-		<li>
-			<a href="{@mp3}">
-				<xsl:value-of select="@title"/>
-			</a>
-		</li>
+	<xsl:template match="/page/album">
+		<div id="album">
+			<h2>
+				<xsl:value-of select="@name"/>
+				<small> by <a href="/music/{@artist}/"><xsl:value-of select="@artist"/></a></small>
+			</h2>
+			<div class="left">
+				<xsl:apply-templates select="images/image[@type='medium']"/>
+				<p class="dl"><a href="{files/file/@uri}">Скачать альбом</a> ▼</p>
+			</div>
+			<div class="right">
+				<table>
+					<tbody>
+						<xsl:for-each select="tracks/track">
+							<tr>
+								<td>
+									<xsl:value-of select="position()"/>
+									<xsl:text>.</xsl:text>
+								</td>
+								<td>
+									<a href="{@mp3}">
+										<xsl:value-of select="@title"/>
+									</a>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</tbody>
+				</table>
+				<xsl:if test="@pubDate">
+					<p>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></p>
+				</xsl:if>
+			</div>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="files">
-		<h2><a href="{file/@uri}">Download</a></h2>
+		<h3><a href="{file/@uri}">Download</a></h3>
 		<ul>
 			<xsl:for-each select="file">
 				<li>
@@ -80,7 +107,7 @@
 	</xsl:template>
 
 	<xsl:template match="upload-xml-form">
-		<h1>Upload XML</h1>
+		<h2>Upload XML</h2>
 		<form method="post" enctype="multipart/form-data">
 			<div>
 				<input type="file" name="xml"/>
@@ -90,27 +117,39 @@
 	</xsl:template>
 
 	<xsl:template match="/page/index">
-		<h1>New albums</h1>
-		<ul id="index">
-			<xsl:for-each select="album">
-				<li>
-					<a href="music/{@artist}/{@name}/">
-						<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
-					</a>
-					<div>
-						<a class="n" href="music/{@artist}/{@name}/">
-							<xsl:value-of select="@name"/>
-						</a>
-						<span>
-							<xsl:text> by </xsl:text>
-						</span>
-						<a class="a" href="music/{@artist}/">
-							<xsl:value-of select="@artist"/>
-						</a>
-					</div>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<div id="index" class="twocol">
+			<div class="left">
+				<ul>
+					<li><a href="/">Recent</a></li>
+					<li><a href="/">Popular</a></li>
+					<li><a href="/">Featured</a></li>
+				</ul>
+				<div class="uya">
+					<p>Музыкант?</p>
+					<a href="/upload">Загрузи свой альбом</a>
+				</div>
+			</div>
+			<div class="right">
+				<ul>
+					<xsl:for-each select="album">
+						<li class="album">
+							<a href="album/{@id}">
+								<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
+							</a>
+							<div>
+								<a class="n" href="music/{@artist}/{@name}/">
+									<xsl:value-of select="@name"/>
+								</a>
+								<small>
+									<xsl:text> by </xsl:text>
+									<xsl:value-of select="@artist"/>
+								</small>
+							</div>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</div>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="image">

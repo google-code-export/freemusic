@@ -51,7 +51,7 @@
 
 	<xsl:template match="picture">
 		<images>
-			<image uri="{concat($base,@url)}" width="{@width}" height="{@height}" type="cover"/>
+			<image uri="{concat($base,@url)}" width="{@width}" height="{@height}" type="original"/>
 			<xsl:for-each select="version">
 				<image uri="{$base}{@url}" width="{@width}" height="{@height}" type="{@name}"/>
 			</xsl:for-each>
