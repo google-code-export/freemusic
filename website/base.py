@@ -22,7 +22,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
 		result += '<page>' + xml + '</page>'
-		self.response.headers['Content-Type'] = 'text/xml; charset=utf-8'
+		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
 	def quote(self, text):
