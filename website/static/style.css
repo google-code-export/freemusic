@@ -8,6 +8,15 @@ a {
   outline: none;
 }
 
+
+form.gen label {
+  display: block;
+}
+form.gen .text {
+  padding: 4px;
+  border: solid 1px #ccc;
+}
+
 #wrapper {
   width: 760px;
   margin: 0 auto;

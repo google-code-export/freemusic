@@ -169,4 +169,25 @@
 	<xsl:template match="image">
 		<img src="{@uri}" alt="image" width="{@width}" height="{@height}"/>
 	</xsl:template>
+
+	<xsl:template match="s3-settings">
+		<h2>Amazon S3 Settings</h2>
+		<form action="{@action}" method="post" class="gen">
+			<div>
+				<label for="s3a">Access Key:</label>
+				<input id="s3a" type="text" name="s3a" value="{@s3a}" class="text"/>
+			</div>
+			<div>
+				<label for="s3s">Secret Key:</label>
+				<input id="s3s" type="text" name="s3s" value="{@s3s}" class="text"/>
+			</div>
+			<div>
+				<label for="bucket">Bucket Name:</label>
+				<input id="bucket" type="text" name="bucket" value="{@bucket}" class="text"/>
+			</div>
+			<div>
+				<input type="submit" value="Save" class="button"/>
+			</div>
+		</form>
+	</xsl:template>
 </xsl:stylesheet>

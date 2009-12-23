@@ -7,8 +7,13 @@ from xml.sax import saxutils
 
 # GAE imports
 import wsgiref.handlers
+from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+
+class ForbiddenException(Exception): pass
+
+class UnauthorizedException(Exception): pass
 
 class BaseRequestHandler(webapp.RequestHandler):
 	def render(self, template_name, vars={}, content_type='text/xml'):
@@ -18,6 +23,15 @@ class BaseRequestHandler(webapp.RequestHandler):
 		result = template.render(path, vars)
 		self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
 		self.response.out.write(result)
+
+	def force_admin(self):
+		if not users.is_current_user_admin():
+			raise ForbiddenException()
+		self.force_user()
+
+	def force_user(self):
+		if not users.get_current_user():
+			raise UnauthorizedException()
 
 	def formatXML(self, message, *args, **kw):
 		xml = u'<' + message
