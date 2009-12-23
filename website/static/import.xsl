@@ -28,7 +28,7 @@
 	</xsl:template>
 
 	<xsl:template match="node[@class='release']">
-		<album name="{@name}" pubDate="{@created}">
+		<album name="{@name}" pubDate="{date/text()}">
 			<xsl:apply-templates select="picture"/>
 			<tracks>
 				<xsl:apply-templates select="files/node[filetype/text()='audio/mpeg']"/>
