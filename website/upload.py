@@ -104,9 +104,3 @@ class UploadXmlHandler(BaseRequestHandler):
 		old = source.gql('WHERE album = :1', album).fetch(1000)
 		if old:
 			db.delete(old)
-
-if __name__ == '__main__':
-	run([
-		('/upload', UploadHandler),
-		('/upload/xml', UploadXmlHandler),
-	])

@@ -10,8 +10,8 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
 from base import BaseRequestHandler, run
+from upload import UploadHandler, UploadXmlHandler
 import model
-
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -76,4 +76,6 @@ if __name__ == '__main__':
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
 		('/album/(\d+)', AlbumHandler),
+		('/upload', UploadHandler),
+		('/upload/xml', UploadXmlHandler),
 	])
