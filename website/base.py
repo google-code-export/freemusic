@@ -3,6 +3,7 @@
 
 # Python imports
 import logging, os, urllib
+from xml.sax import saxutils
 
 # GAE imports
 import wsgiref.handlers
@@ -17,6 +18,17 @@ class BaseRequestHandler(webapp.RequestHandler):
 		result = template.render(path, vars)
 		self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
 		self.response.out.write(result)
+
+	def formatXML(self, message, *args, **kw):
+		xml = u'<' + message
+		for (k) in kw:
+			value = kw[k]
+			if value:
+				if type(value) == type(str()) or type(value) == type(unicode()):
+					value = saxutils.escape(value)
+				xml += u' ' + k + '="' + value + '"'
+		xml += u'/>'
+		return xml
 
 	def sendXML(self, xml):
 		result = "<?xml version=\"1.0\"?>"
