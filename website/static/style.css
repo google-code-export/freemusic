@@ -4,6 +4,10 @@ body {
   font: normal 10pt/12pt arial, sans-serif;
 }
 
+a {
+  outline: none;
+}
+
 #wrapper {
   width: 760px;
   margin: 0 auto;
@@ -109,6 +113,9 @@ body {
   white-space: nowrap;
   display: block;
   color: #444;
+}
+#index img {
+  border: none;
 }
 
 
