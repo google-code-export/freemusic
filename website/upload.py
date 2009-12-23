@@ -4,6 +4,7 @@
 # Python imports
 import datetime, time
 import logging
+import urllib
 from xml.dom.minidom import parseString
 
 # GAE imports
@@ -14,6 +15,12 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports
 from base import BaseRequestHandler, run
 import model
+
+class UploadHandler(BaseRequestHandler):
+	@login_required
+	def get(self):
+		worker = 'upload.' + self.request.environ['HTTP_HOST']
+		self.sendXML('<upload worker="%s"/>' % urllib.quote(worker))
 
 class UploadXmlHandler(BaseRequestHandler):
 	@login_required
@@ -100,5 +107,6 @@ class UploadXmlHandler(BaseRequestHandler):
 
 if __name__ == '__main__':
 	run([
+		('/upload', UploadHandler),
 		('/upload/xml', UploadXmlHandler),
 	])

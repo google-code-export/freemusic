@@ -8,6 +8,8 @@ handlers:
   static_dir: static
 - url: /doc/
   static_dir: doc
+- url: /upload
+  script: upload.py
 - url: /upload/.*
   script: upload.py
 - url: .*
