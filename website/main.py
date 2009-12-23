@@ -11,7 +11,7 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports.
 from base import BaseRequestHandler, run
 from upload import UploadHandler, UploadXmlHandler
-from s3 import S3SettingsHandler
+from s3 import S3SettingsHandler, S3UploadHandler
 import model
 
 class MainHandler(BaseRequestHandler):
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
 		('/album/(\d+)', AlbumHandler),
-		('/upload', UploadHandler),
+		('/upload', S3UploadHandler),
 		('/upload/settings', S3SettingsHandler),
 		('/upload/xml', UploadXmlHandler),
 	])

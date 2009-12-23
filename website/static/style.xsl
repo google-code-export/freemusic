@@ -190,4 +190,25 @@
 			</div>
 		</form>
 	</xsl:template>
+
+	<xsl:template match="s3-upload-form">
+		<h1>Загрузка нового альбома</h1>
+		<!--
+		http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingHTTPPOST.html
+		-->
+		<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="AWSAccessKeyId" value="{@access-key}"/>
+			<input type="hidden" name="acl" value="public-read"/>
+			<input type="hidden" name="key" value="{@key}"/>
+			<input type="hidden" name="policy" value="{@policy}"/>
+			<input type="hidden" name="signature" value="{@signature}"/>
+			<input type="hidden" name="success_action_redirect" value="{@base}upload"/>
+			<div>
+				<input type="file" name="file"/>
+			</div>
+			<div>
+				<input type="submit" value="Загрузить файл"/> или <a href="/">отменить загрузку</a>
+			</div>
+		</form>
+	</xsl:template>
 </xsl:stylesheet>

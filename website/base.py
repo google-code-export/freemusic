@@ -3,6 +3,7 @@
 
 # Python imports
 import logging, os, urllib
+import urlparse # используется в getBaseURL()
 from xml.sax import saxutils
 
 # GAE imports
@@ -16,6 +17,13 @@ class ForbiddenException(Exception): pass
 class UnauthorizedException(Exception): pass
 
 class BaseRequestHandler(webapp.RequestHandler):
+	def getBaseURL(self):
+		"""
+		Возвращает базовый адрес текущего сайта.
+		"""
+		url = urlparse.urlparse(self.request.url)
+		return url[0] + '://' + url[1] + '/'
+
 	def render(self, template_name, vars={}, content_type='text/xml'):
 		directory = os.path.dirname(__file__)
 		path = os.path.join(directory, 'templates', template_name)
@@ -41,6 +49,14 @@ class BaseRequestHandler(webapp.RequestHandler):
 				if type(value) == type(str()) or type(value) == type(unicode()):
 					value = saxutils.escape(value)
 				xml += u' ' + k + '="' + value + '"'
+		xml += u'/>'
+		return xml
+
+	def mkem(self, name, dict):
+		xml = u'<' + name
+		for k in dict:
+			if dict[k]:
+				xml += u' ' + k + u'="' + saxutils.escape(unicode(dict[k])) + u'"'
 		xml += u'/>'
 		return xml
 
