@@ -3,10 +3,10 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<xsl:output
 		omit-xml-declaration="yes"
-		method="xml"
 		version="1.0"
 		encoding="utf-8"
-		indent="no"
+		indent="yes"
+		method="html"
 		doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
 		doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
 		/>
@@ -19,6 +19,8 @@
 				<title>music 3.5</title>
 				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
+				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+				<script type="text/javascript" src="/static/scripts.js"></script>
 			</head>
 			<body>
 				<div id="wrapper">
@@ -106,6 +108,18 @@
 		</ul>
 	</xsl:template>
 
+	<xsl:template match="/page/upload">
+		<div id="aupload">
+			<h2>Загрузка альбома</h2>
+			<form action="http://{@worker}">
+				<div>
+					<input type="file" name="file"/>
+				</div>
+				<input type="submit"/>
+			</form>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="upload-xml-form">
 		<h2>Upload XML</h2>
 		<form method="post" enctype="multipart/form-data">
@@ -120,9 +134,9 @@
 		<div id="index" class="twocol">
 			<div class="left">
 				<ul>
-					<li><a href="/">Recent</a></li>
-					<li><a href="/">Popular</a></li>
-					<li><a href="/">Featured</a></li>
+					<li><a href="/">Свежие</a></li>
+					<li><a href="/">Популярные</a></li>
+					<li><a href="/">Рекомендуемые</a></li>
 				</ul>
 				<div class="uya">
 					<p>Музыкант?</p>
@@ -137,7 +151,7 @@
 								<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
 							</a>
 							<div>
-								<a class="n" href="music/{@artist}/{@name}/">
+								<a class="n" href="album/{@id}">
 									<xsl:value-of select="@name"/>
 								</a>
 								<small>
