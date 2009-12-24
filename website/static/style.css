@@ -129,10 +129,15 @@ form.gen .text {
 #index .pager {
   clear: left;
   list-style-type: none;
+  text-align: center;
+  width: 520px;
+  margin: 0;
+  padding: 0;
 }
 #index .pager li {
   display: inline;
-  margin-right: 2em;
+  margin: 0 2em 0 0;
+  padding: 0;
 }
 
 
