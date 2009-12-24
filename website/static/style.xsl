@@ -40,33 +40,13 @@
 		</html>
 	</xsl:template>
 
-	<!--
-	<xsl:template match="/page/album">
-		<div id="album">
-			<div class="images">
-				<xsl:apply-templates select="images/image[@type='medium']"/>
-			</div>
-			<h2>
-				<xsl:value-of select="@name"/>
-				<small> by <a href="/music/{@artist}/"><xsl:value-of select="@artist"/></a></small>
-			</h2>
-			<xsl:if test="@pubDate">
-				<p>Published on <xsl:value-of select="@pubDate"/></p>
-			</xsl:if>
-			<xsl:apply-templates select="cover"/>
-			<xsl:apply-templates select="tracks"/>
-			<xsl:apply-templates select="files"/>
-		</div>
-	</xsl:template>
-	-->
-
 	<xsl:template match="/page/album">
 		<div id="album">
 			<h2>
 				<xsl:text>«</xsl:text>
 				<xsl:value-of select="@name"/>
 				<xsl:text>»</xsl:text>
-				<small> by <a href="/music/{@artist}/"><xsl:value-of select="@artist"/></a></small>
+				<small> by <a href="/artist/{@artist-id}"><xsl:value-of select="@artist-name"/></a></small>
 			</h2>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='medium']"/>
@@ -146,39 +126,60 @@
 				</div>
 			</div>
 			<div class="right">
-				<ul class="tiles">
-					<xsl:for-each select="album">
-						<li class="album">
-							<a href="album/{@id}">
-								<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
-							</a>
-							<div>
-								<a class="n" href="album/{@id}">
-									<xsl:value-of select="@name"/>
-								</a>
-								<small>
-									<xsl:text> by </xsl:text>
-									<xsl:value-of select="@artist"/>
-								</small>
-							</div>
-						</li>
-					</xsl:for-each>
-				</ul>
-				<ul class="pager">
-					<xsl:if test="@skip &gt; 14">
-						<li>
-							<a href="?skip={@skip - 15}">« Назад</a>
-						</li>
-					</xsl:if>
-					<xsl:if test="count(album) = 15">
-						<!-- TODO: аяксовая подгрузка ещё 15 альбомов сюда же -->
-						<li>
-							<a href="?skip={@skip + 15}">Ещё »</a>
-						</li>
-					</xsl:if>
-				</ul>
-			</div><!-- right column -->
+				<xsl:apply-templates select="albums" mode="tiles"/>
+			</div>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="/page/artist">
+		<h2>
+			<xsl:value-of select="@name"/>
+		</h2>
+		<div class="twocol">
+			<div class="left">
+			</div>
+			<div class="right">
+				<xsl:apply-templates select="albums" mode="tiles"/>
+			</div>
+		</div>
+	</xsl:template>
+
+	<!-- additional stuff -->
+
+	<xsl:template match="albums" mode="tiles">
+		<ul class="altiles">
+			<xsl:for-each select="album">
+				<li class="album">
+					<a href="/album/{@id}">
+						<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
+					</a>
+					<div>
+						<a class="n" href="/album/{@id}">
+							<xsl:value-of select="@name"/>
+						</a>
+						<small>
+							<xsl:text> by </xsl:text>
+							<a href="/artist/{@artist-id}">
+								<xsl:value-of select="@artist-name"/>
+							</a>
+						</small>
+					</div>
+				</li>
+			</xsl:for-each>
+		</ul>
+		<ul class="pager">
+			<xsl:if test="@skip &gt; 14">
+				<li>
+					<a href="?skip={@skip - 15}">« Назад</a>
+				</li>
+			</xsl:if>
+			<xsl:if test="count(album) = 15">
+				<!-- TODO: аяксовая подгрузка ещё 15 альбомов сюда же -->
+				<li>
+					<a href="?skip={@skip + 15}">Ещё »</a>
+				</li>
+			</xsl:if>
+		</ul>
 	</xsl:template>
 
 	<xsl:template match="image">

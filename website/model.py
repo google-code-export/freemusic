@@ -14,6 +14,23 @@ class SiteUser(db.Model):
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
+	xml = db.TextProperty()
+
+	def put(self, quick=False):
+		if not quick:
+			self.xml = self.to_xml()
+		db.Model.put(self)
+
+	def to_xml(self):
+		xml = u'<artist id="%u" name="%s">' % (self.id, escape(self.name))
+		albums = u''
+		for album in SiteAlbum.gql('WHERE artist = :1', self).fetch(100):
+			if album.xml:
+				albums += album.xml
+		if albums:
+			xml += u'<albums>' + albums + u'</albums>'
+		xml += u'</artist>'
+		return xml
 
 class SiteAlbum(db.Model):
 	id = db.IntegerProperty()
@@ -31,7 +48,7 @@ class SiteAlbum(db.Model):
 		db.Model.put(self)
 
 	def to_xml(self):
-		xml = u'<album id="%u" name="%s" artist="%s" pubDate="%s">' % (self.id, escape(self.name), escape(self.artist.name), self.release_date.isoformat())
+		xml = u'<album id="%u" name="%s" artist-id="%u" artist-name="%s" pubDate="%s">' % (self.id, escape(self.name), self.artist.id, escape(self.artist.name), self.release_date.isoformat())
 		xml += self.get_children_xml(SiteTrack, u'tracks')
 		xml += self.get_children_xml(SiteImage, u'images')
 		xml += self.get_children_xml(SiteFile, u'files')

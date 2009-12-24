@@ -13,6 +13,8 @@ from base import BaseRequestHandler, run
 from upload import UploadHandler, UploadXmlHandler
 from s3 import S3SettingsHandler, S3UploadHandler
 import model
+import album
+import artist
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -26,11 +28,11 @@ class IndexHandler(BaseRequestHandler):
 		else:
 			offset = 0
 
-		xml = u"<index skip=\"%u\">" % offset
+		xml = u"<index skip=\"%u\"><albums>" % offset
 		for album in model.SiteAlbum.all().order('-release_date').fetch(15, offset):
 			if album.xml:
 				xml += album.xml
-		xml += u'</index>'
+		xml += u'</albums></index>'
 		self.sendXML(xml)
 
 
@@ -86,4 +88,7 @@ if __name__ == '__main__':
 		('/upload', S3UploadHandler),
 		('/upload/settings', S3SettingsHandler),
 		('/upload/xml', UploadXmlHandler),
+		('/artist/fix', artist.FixHandler),
+		('/artist/(\d+)', artist.ViewHandler),
+		('/album/update-xml', album.XmlUpdater),
 	])

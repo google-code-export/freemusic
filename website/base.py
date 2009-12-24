@@ -74,8 +74,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		return urllib.unquote(text).decode('utf8')
 
 def run(rules):
-	_DEBUG = ('Development/' in os.environ.get('SERVER_SOFTWARE'))
-	_DEBUG = True
+	_DEBUG = True # ('Development/' in os.environ.get('SERVER_SOFTWARE'))
 	if _DEBUG:
 		logging.getLogger().setLevel(logging.DEBUG)
 	application = webapp.WSGIApplication(rules, debug=_DEBUG)

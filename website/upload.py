@@ -38,10 +38,15 @@ class UploadXmlHandler(BaseRequestHandler):
 		for em in xml.getElementsByTagName("artist"):
 			name = em.attributes["name"].value
 			artist = model.SiteArtist.gql('WHERE name = :1', name).get()
+
 			if artist is None:
-				artist = model.SiteArtist(name=name)
+				artist = model.SiteArtist(name=name, id=self.nextid(model.SiteArtist))
 				artist.put()
 				logging.info("+ artist %s" % artist.name)
+
+			elif not artist.id:
+				artist.id = self.nextid(model.SiteArtist)
+				artist.put()
 
 			self.importAlbums(artist, em)
 
@@ -104,3 +109,9 @@ class UploadXmlHandler(BaseRequestHandler):
 		old = source.gql('WHERE album = :1', album).fetch(1000)
 		if old:
 			db.delete(old)
+
+	def nextid(self, cls):
+		tmp = cls.gql('ORDER BY id DESC').get()
+		if tmp:
+			return tmp.id
+		return 1

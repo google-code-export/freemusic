@@ -67,11 +67,11 @@ form.gen .text {
   margin: .25em 0;
 }
 
-#album h2 {
+h2 {
   font-size: 16pt;
   font-weight: normal;
 }
-#album h2 small {
+h2 small {
   font-weight: normal;
   font-size: 12pt;
 }
@@ -106,11 +106,11 @@ form.gen .text {
   color: gray;
 }
 
-#index ul {
+ul.altiles {
   margin: 0;
   padding: 0;
 }
-#index .tiles li {
+.altiles li {
   display: block;
   width: 150px;
   height: 170px;
@@ -120,15 +120,18 @@ form.gen .text {
   text-align: center;
   float: left;
 }
-#index .tiles li div a {
+.altiles li div a {
   white-space: nowrap;
 }
-#index .tiles small {
+.altiles small {
   white-space: nowrap;
   display: block;
   color: #444;
 }
-#index img {
+.altiles small a {
+  color: inherit;
+}
+.altiles img {
   border: none;
 }
 #index .pager {

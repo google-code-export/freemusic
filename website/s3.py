@@ -1,10 +1,18 @@
 # -*- coding: utf-8 -*-
 # vim: set ts=4 sts=4 sw=4 noet:
 #
-# Всё, что нужно для работы с Amazon S3.
+# Классы для работы с Amazon S3.  Из того, что можно использовать во вне:
 #
-# Настройки обслуживает класс S3Settings, его следует
-# прикрепить к нужному пути (напр., /upload/settings).
+# S3File:
+#   Используется для хранения информации о загруженных файлах.
+#
+# S3SettingsHandler:
+#   Настройка доступа, можно прикрепить к нужному пути,
+#   например: /upload/settings.
+#
+# S3UploadHandler:
+#   Вывод и обработка формы загрузки файла в хранилище.  Можно прикрепить
+#   к нужному пути, например: /upload.
 
 import base64, datetime, hmac, hashlib, logging, random
 
@@ -60,8 +68,8 @@ class S3File(db.Model):
 
 class S3SettingsHandler(BaseRequestHandler):
 	"""
-	Обработчик формы редактирования настроек S3.
-	Доступен только администраторам.
+	Обработчик формы редактирования настроек S3.  Доступен только
+	администраторам.  Выдаёт наружу элемент <s3-settings>.
 	"""
 	def get(self):
 		self.force_admin()
@@ -81,6 +89,9 @@ class S3SettingsHandler(BaseRequestHandler):
 		self.redirect(self.request.path)
 
 class S3UploadHandler(BaseRequestHandler):
+	"""
+	Обслуживание формы загрузки файла в хранилище Amazon S3.
+	"""
 	def get(self):
 		if self.request.get('key'):
 			return self.get_confirm()
