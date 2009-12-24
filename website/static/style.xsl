@@ -127,6 +127,19 @@
 			</div>
 			<div class="right">
 				<xsl:apply-templates select="albums" mode="tiles"/>
+				<ul class="pager">
+					<xsl:if test="@skip &gt; 14">
+						<li>
+							<a href="?skip={@skip - 15}">« Назад</a>
+						</li>
+					</xsl:if>
+					<xsl:if test="count(albums/album) = 15">
+						<!-- TODO: аяксовая подгрузка ещё 15 альбомов сюда же -->
+						<li>
+							<a href="?skip={@skip + 15}">Ещё »</a>
+						</li>
+					</xsl:if>
+				</ul>
 			</div>
 		</div>
 	</xsl:template>
@@ -166,19 +179,6 @@
 					</div>
 				</li>
 			</xsl:for-each>
-		</ul>
-		<ul class="pager">
-			<xsl:if test="@skip &gt; 14">
-				<li>
-					<a href="?skip={@skip - 15}">« Назад</a>
-				</li>
-			</xsl:if>
-			<xsl:if test="count(album) = 15">
-				<!-- TODO: аяксовая подгрузка ещё 15 альбомов сюда же -->
-				<li>
-					<a href="?skip={@skip + 15}">Ещё »</a>
-				</li>
-			</xsl:if>
 		</ul>
 	</xsl:template>
 
