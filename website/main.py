@@ -15,6 +15,7 @@ from s3 import S3SettingsHandler, S3UploadHandler
 import model
 import album
 import artist
+import sitemap
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -91,4 +92,6 @@ if __name__ == '__main__':
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)', artist.ViewHandler),
 		('/album/update-xml', album.XmlUpdater),
+		('/robots.txt', sitemap.RobotsHandler),
+		('/sitemap.xml', sitemap.SitemapHandler),
 	])
