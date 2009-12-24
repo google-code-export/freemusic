@@ -21,38 +21,6 @@ from google.appengine.api import users
 
 from base import BaseRequestHandler
 
-def encode_policy(dict):
-	return base64.b64encode(unicode(dict).encode('utf-8'))
-
-def sign(settings, string):
-	dm = hmac.new(settings.s3s, string, hashlib.sha1)
-	return base64.b64encode(dm.digest())
-
-def create_id():
-	"""
-	Возвращает случайный идентификатор для загрузки файла.
-	"""
-	# FIXME: придумать что-нибудь по-лучше
-	return hmac.new('key', str(random.random()), hashlib.md5).hexdigest()
-
-class S3Settings(db.Model):
-	"""
-	Класс для хранения настроек S3 в базе данных.
-	"""
-	s3a = db.StringProperty()
-	s3s = db.StringProperty()
-	bucket = db.StringProperty()
-
-	@classmethod
-	def load(cls):
-		"""
-		Loads settings from the database, creates if necessary.
-		"""
-		s = cls.all().get()
-		if s is None:
-			s = cls()
-		return s
-
 class S3File(db.Model):
 	"""
 	Класс для хранения загруженных файлов.
@@ -66,6 +34,25 @@ class S3File(db.Model):
 	info = db.TextProperty()
 	owner = db.UserProperty()
 
+class S3Settings(db.Model):
+	"""
+	Класс для хранения настроек S3 в базе данных.
+	"""
+	s3a = db.StringProperty()
+	s3s = db.StringProperty()
+	bucket = db.StringProperty()
+	after = db.StringProperty()
+
+	@classmethod
+	def load(cls):
+		"""
+		Loads settings from the database, creates if necessary.
+		"""
+		s = cls.all().get()
+		if s is None:
+			s = cls()
+		return s
+
 class S3SettingsHandler(BaseRequestHandler):
 	"""
 	Обработчик формы редактирования настроек S3.  Доступен только
@@ -78,7 +65,8 @@ class S3SettingsHandler(BaseRequestHandler):
 			action=self.request.path,
 			s3a=s.s3a,
 			s3s=s.s3s,
-			bucket=s.bucket))
+			bucket=s.bucket,
+			after=s.after))
 
 	def post(self):
 		self.force_admin()
@@ -95,6 +83,9 @@ class S3UploadHandler(BaseRequestHandler):
 	def get(self):
 		if self.request.get('key'):
 			return self.get_confirm()
+
+		if 'ok' in self.request.arguments():
+			return self.get_ok()
 
 		base = self.getBaseURL()
 		settings = S3Settings.load()
@@ -137,4 +128,21 @@ class S3UploadHandler(BaseRequestHandler):
 			owner=users.get_current_user())
 		File.put()
 
-		self.redirect('/?file=' + str(File.id))
+		self.redirect(self.request.path + '?ok=' + str(File.id))
+
+	def get_ok(self):
+		self.sendXML('<s3-upload-ok file-id="%u"/>' % int(self.request.get('ok')))
+
+def encode_policy(dict):
+	return base64.b64encode(unicode(dict).encode('utf-8'))
+
+def sign(settings, string):
+	dm = hmac.new(settings.s3s, string, hashlib.sha1)
+	return base64.b64encode(dm.digest())
+
+def create_id():
+	"""
+	Возвращает случайный идентификатор для загрузки файла.
+	"""
+	# FIXME: придумать что-нибудь по-лучше
+	return hmac.new('key', str(random.random()), hashlib.md5).hexdigest()

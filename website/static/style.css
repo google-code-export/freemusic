@@ -11,6 +11,12 @@ a {
 .r {
   text-align: right;
 }
+.hidden {
+  display: none;
+}
+li {
+  margin-bottom: .5em;
+}
 
 
 form.gen label {
@@ -18,8 +24,13 @@ form.gen label {
 }
 form.gen .text {
   padding: 4px;
+  width: 300px;
   border: solid 1px #ccc;
 }
+form.gen div {
+  margin-bottom: 1em;
+}
+
 
 #wrapper {
   width: 760px;
@@ -152,4 +163,13 @@ ul.altiles {
 
 #footer {
   clear: both;
+}
+
+.fileUpload {
+  background-color: #eee;
+  padding: 10px;
+  margin-top: 1em;
+}
+.fileUpload div {
+  margin-bottom: 10px;
 }

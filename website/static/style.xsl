@@ -201,6 +201,12 @@
 				<label for="bucket">Bucket Name:</label>
 				<input id="bucket" type="text" name="bucket" value="{@bucket}" class="text"/>
 			</div>
+			<!--
+			<div>
+				<label for="after">После загрузки переходить на:</label>
+				<input id="after" type="text" name="after" value="{@after}" class="text"/>
+			</div>
+			-->
 			<div>
 				<input type="submit" value="Save" class="button"/>
 			</div>
@@ -208,23 +214,49 @@
 	</xsl:template>
 
 	<xsl:template match="s3-upload-form">
-		<h1>Загрузка нового альбома</h1>
-		<!--
-		http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingHTTPPOST.html
-		-->
-		<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data">
-			<input type="hidden" name="AWSAccessKeyId" value="{@access-key}"/>
-			<input type="hidden" name="acl" value="public-read"/>
-			<input type="hidden" name="key" value="{@key}"/>
-			<input type="hidden" name="policy" value="{@policy}"/>
-			<input type="hidden" name="signature" value="{@signature}"/>
-			<input type="hidden" name="success_action_redirect" value="{@base}upload"/>
-			<div>
-				<input type="file" name="file"/>
+		<div class="twocol">
+			<!--
+			<div class="left">
+				<ul>
+					<li><a href="/upload">Обычная загрузка</a></li>
+					<li><a href="/upload/ftp">Загрузка по FTP</a></li>
+				</ul>
 			</div>
-			<div>
-				<input type="submit" value="Загрузить файл"/> или <a href="/">отменить загрузку</a>
+			-->
+			<div class="right">
+				<h2>Загрузка нового альбома</h2>
+				<!--
+				http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingHTTPPOST.html
+				-->
+				<p>Пожалуйста, подготовьте ZIP архив со всеми звуковыми файлами, картинками, буклетами и всем, что считаете нужным.&#160; Чем лучшего качества будут звуковые файлы, тем лучше; мы рекомендуем <a href="http://ru.wikipedia.org/wiki/FLAC" target="_blank">FLAC</a>, WAV или AIFF (мы сами сделаем из них MP3 и OGG).</p>
+				<p>После загрузки файла наши роботы примутся его обрабатывать, о результатах вам сообщат по электронной почте.</p>
+				<p>И будет здорово, если ваш браузер умеет показывать ход загрузки.&#160; Мы рекомендуем <a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a>.</p>
+				<label><input type="checkbox" class="toggle"/> Всё понятно</label>
+				<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data" class="hidden toggleMe fileUpload">
+					<input type="hidden" name="AWSAccessKeyId" value="{@access-key}"/>
+					<input type="hidden" name="acl" value="public-read"/>
+					<input type="hidden" name="key" value="{@key}"/>
+					<input type="hidden" name="policy" value="{@policy}"/>
+					<input type="hidden" name="signature" value="{@signature}"/>
+					<input type="hidden" name="success_action_redirect" value="{@base}upload"/>
+					<div>
+						<input type="file" name="file"/>
+					</div>
+					<div>
+						<input type="submit" value="Начать загрузку"/>
+					</div>
+				</form>
 			</div>
-		</form>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="s3-upload-ok">
+		<div class="twocol">
+			<div class="right">
+				<h2>Загрузка завершена</h2>
+				<p>Файл успешно загружен, ему присвоен номер <xsl:value-of select="@file-id"/>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
+				<p><a href="/upload">Загрузить ещё один файл</a></p>
+			</div>
+		</div>
 	</xsl:template>
 </xsl:stylesheet>
