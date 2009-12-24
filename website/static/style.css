@@ -8,6 +8,10 @@ a {
   outline: none;
 }
 
+.r {
+  text-align: right;
+}
+
 
 form.gen label {
   display: block;
@@ -64,11 +68,12 @@ form.gen .text {
 }
 
 #album h2 {
-  font-size: 14pt;
-  font-weight: bold;
+  font-size: 16pt;
+  font-weight: normal;
 }
 #album h2 small {
   font-weight: normal;
+  font-size: 12pt;
 }
 
 #album .left {

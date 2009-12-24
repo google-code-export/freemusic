@@ -63,7 +63,9 @@
 	<xsl:template match="/page/album">
 		<div id="album">
 			<h2>
+				<xsl:text>«</xsl:text>
 				<xsl:value-of select="@name"/>
+				<xsl:text>»</xsl:text>
 				<small> by <a href="/music/{@artist}/"><xsl:value-of select="@artist"/></a></small>
 			</h2>
 			<div class="left">
@@ -75,7 +77,7 @@
 					<tbody>
 						<xsl:for-each select="tracks/track">
 							<tr>
-								<td>
+								<td class="r">
 									<xsl:value-of select="position()"/>
 									<xsl:text>.</xsl:text>
 								</td>
