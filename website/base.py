@@ -12,9 +12,13 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
-class ForbiddenException(Exception): pass
+class ForbiddenException(Exception):
+	def __str__(self):
+		return u"У вас нет доступа к этой странице."
 
-class UnauthorizedException(Exception): pass
+class UnauthorizedException(Exception):
+	def __str__(self):
+		return u"Эта функция доступна только авторизованным пользователям."
 
 class BaseRequestHandler(webapp.RequestHandler):
 	def getBaseURL(self):
@@ -70,6 +74,14 @@ class BaseRequestHandler(webapp.RequestHandler):
 		result += xml + '</page>'
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
+
+	def handle_exception(self, e, debug_mode):
+		"""
+		Заворачивает сообщения об ошибках в <message>.
+		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
+		"""
+		self.sendXML(self.formatXML(u'message',
+			text=unicode(e)))
 
 	def quote(self, text):
 		return urllib.quote(text.encode('utf8'))

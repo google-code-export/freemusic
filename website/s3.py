@@ -19,7 +19,7 @@ import base64, datetime, hmac, hashlib, logging, random
 from google.appengine.ext import db
 from google.appengine.api import users
 
-from base import BaseRequestHandler
+from base import BaseRequestHandler, UnauthorizedException
 
 class S3File(db.Model):
 	"""
@@ -81,6 +81,8 @@ class S3UploadHandler(BaseRequestHandler):
 	Обслуживание формы загрузки файла в хранилище Amazon S3.
 	"""
 	def get(self):
+		self.force_user()
+
 		if self.request.get('key'):
 			return self.get_confirm()
 
@@ -132,6 +134,15 @@ class S3UploadHandler(BaseRequestHandler):
 
 	def get_ok(self):
 		self.sendXML('<s3-upload-ok file-id="%u"/>' % int(self.request.get('ok')))
+
+	def handle_exception(self, e, debug_mode):
+		"""
+		Заменяет ошибку 401 на сообщение с просьбой войти.
+		"""
+		if type(e) == UnauthorizedException:
+			self.sendXML('<s3-login-message/>')
+		else:
+			BaseRequestHandler.handle_exception(self, e, debug_mode)
 
 def encode_policy(dict):
 	return base64.b64encode(unicode(dict).encode('utf-8'))

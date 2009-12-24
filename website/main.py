@@ -10,7 +10,7 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
 from base import BaseRequestHandler, run
-from upload import UploadHandler, UploadXmlHandler
+from upload import UploadXmlHandler
 from s3 import S3SettingsHandler, S3UploadHandler
 import model
 import album

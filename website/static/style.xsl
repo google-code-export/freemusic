@@ -174,6 +174,13 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="/page/message">
+		<h2>Ошибка</h2>
+		<p>
+			<xsl:value-of select="@text"/>
+		</p>
+	</xsl:template>
+
 	<!-- additional stuff -->
 
 	<xsl:template match="albums" mode="tiles">
@@ -273,6 +280,16 @@
 				<h2>Загрузка завершена</h2>
 				<p>Файл успешно загружен, ему присвоен номер <xsl:value-of select="@file-id"/>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
 				<p><a href="/upload">Загрузить ещё один файл</a></p>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="s3-login-message">
+		<div class="twocol">
+			<div class="right">
+				<h2>Загрузка нового альбома</h2>
+				<p>Для этого вам понадобится авторизоваться.&#160; Если вы ещё не&#160;зарегистрированы в&#160;Google, вы можете без&#160;труда сделать это.</p>
+				<p><a href="{/page/@login-uri}">Продолжить</a></p>
 			</div>
 		</div>
 	</xsl:template>

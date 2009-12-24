@@ -16,12 +16,6 @@ from google.appengine.ext.webapp.util import login_required
 from base import BaseRequestHandler, run
 import model
 
-class UploadHandler(BaseRequestHandler):
-	@login_required
-	def get(self):
-		worker = 'upload.' + self.request.environ['HTTP_HOST']
-		self.sendXML('<upload worker="%s"/>' % urllib.quote(worker))
-
 class UploadXmlHandler(BaseRequestHandler):
 	@login_required
 	def get(self):
