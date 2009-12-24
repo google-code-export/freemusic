@@ -133,6 +133,7 @@ ul.altiles {
 }
 .altiles img {
   border: none;
+  margin-bottom: .5em;
 }
 #index .pager {
   clear: left;
