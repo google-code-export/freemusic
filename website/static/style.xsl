@@ -34,7 +34,24 @@
 						</form>
 					</div>
 					<xsl:apply-templates select="*"/>
-					<div id="footer">© ebm.net.ru - <a href="/">Главная</a> - <a href="http://code.google.com/p/freemusic/">О проекте</a> - <a href="/_ah/admin">Админка</a> - <a href="/upload/xml">Загрузить XML</a></div>
+					<div id="footer">
+						<xsl:text>© ebm.net.ru - </xsl:text>
+						<a href="/">Главная</a>
+						<xsl:text> - </xsl:text>
+						<a href="http://code.google.com/p/freemusic/">О проекте</a>
+						<xsl:if test="/page/@login-uri">
+							<xsl:text> - </xsl:text>
+							<a href="{/page/@login-uri}">Войти</a>
+						</xsl:if>
+						<xsl:if test="/page/@logout-uri">
+							<xsl:text> - </xsl:text>
+							<a href="{/page/@logout-uri}">Выйти</a>
+							<xsl:text> - </xsl:text>
+							<a href="/_ah/admin">Админка</a>
+							<xsl:text> - </xsl:text>
+							<a href="/upload/xml">Загрузить XML</a>
+						</xsl:if>
+					</div>
 				</div>
 			</body>
 		</html>

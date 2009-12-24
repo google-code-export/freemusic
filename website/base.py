@@ -4,7 +4,7 @@
 # Python imports
 import logging, os, urllib
 import urlparse # используется в getBaseURL()
-from xml.sax import saxutils
+from xml.sax.saxutils import escape
 
 # GAE imports
 import wsgiref.handlers
@@ -47,7 +47,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 			value = kw[k]
 			if value:
 				if type(value) == type(str()) or type(value) == type(unicode()):
-					value = saxutils.escape(value)
+					value = escape(value)
 				xml += u' ' + k + '="' + value + '"'
 		xml += u'/>'
 		return xml
@@ -56,14 +56,18 @@ class BaseRequestHandler(webapp.RequestHandler):
 		xml = u'<' + name
 		for k in dict:
 			if dict[k]:
-				xml += u' ' + k + u'="' + saxutils.escape(unicode(dict[k])) + u'"'
+				xml += u' ' + k + u'="' + escape(unicode(dict[k])) + u'"'
 		xml += u'/>'
 		return xml
 
 	def sendXML(self, xml):
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
-		result += '<page>' + xml + '</page>'
+		if users.get_current_user():
+			result += '<page logout-uri="%s">' % escape(users.create_logout_url(self.request.uri))
+		else:
+			result += '<page login-uri="%s">' % escape(users.create_login_url(self.request.uri))
+		result += xml + '</page>'
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
