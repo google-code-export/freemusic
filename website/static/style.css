@@ -105,7 +105,7 @@ form.gen .text {
   margin: 0;
   padding: 0;
 }
-#index .right li {
+#index .tiles li {
   display: block;
   width: 150px;
   height: 170px;
@@ -115,16 +115,24 @@ form.gen .text {
   text-align: center;
   float: left;
 }
-#index li div a {
+#index .tiles li div a {
   white-space: nowrap;
 }
-#index .album small {
+#index .tiles small {
   white-space: nowrap;
   display: block;
   color: #444;
 }
 #index img {
   border: none;
+}
+#index .pager {
+  clear: left;
+  list-style-type: none;
+}
+#index .pager li {
+  display: inline;
+  margin-right: 2em;
 }
 
 

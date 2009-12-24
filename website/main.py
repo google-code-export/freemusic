@@ -21,11 +21,17 @@ class MainHandler(BaseRequestHandler):
 
 class IndexHandler(BaseRequestHandler):
 	def get(self):
-		xml = u""
-		for album in model.SiteAlbum.all().order('-release_date').fetch(15):
+		if self.request.get('skip'):
+			offset = int(self.request.get('skip'))
+		else:
+			offset = 0
+
+		xml = u"<index skip=\"%u\">" % offset
+		for album in model.SiteAlbum.all().order('-release_date').fetch(15, offset):
 			if album.xml:
 				xml += album.xml
-		self.sendXML(u'<index>' + xml + u'</index>')
+		xml += u'</index>'
+		self.sendXML(xml)
 
 
 class SubmitHandler(BaseRequestHandler):
