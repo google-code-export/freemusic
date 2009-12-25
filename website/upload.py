@@ -14,52 +14,48 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports
 from base import BaseRequestHandler, run
-import model
+import model, myxml
 
-class UploadXmlHandler(BaseRequestHandler):
-	@login_required
-	def get(self):
-		self.render('upload-xml.xml')
-
+class APIHandler(BaseRequestHandler):
 	def post(self):
-		if not users.is_current_user_admin():
-			raise Exception('You are not an admin.')
+		data = self.request.get('xml')
+		logging.info(u'API called with replace=%u and data: %s' % (int('0' + self.request.get('replace')), data))
+		self.importAlbum(parseString(data.encode('utf-8')))
 
-		self.importArtists(parseString(self.request.get('xml')))
-		self.redirect('/')
+	def handle_exception(self, e, debug_mode):
+		self.sendXML(myxml.em(u'response', {
+			'status': 'error',
+			'message': str(e),
+		}))
 
-	def importArtists(self, xml):
-		for em in xml.getElementsByTagName("artist"):
-			name = em.attributes["name"].value
-			artist = model.SiteArtist.gql('WHERE name = :1', name).get()
+	def sendXML(self, content):
+		result = "<?xml version=\"1.0\"?>"
+		result += content
+		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
+		self.response.out.write(result)
+		logging.debug(result)
 
-			if artist is None:
-				artist = model.SiteArtist(name=name, id=self.nextid(model.SiteArtist))
-				artist.put()
-				logging.info("+ artist %s" % artist.name)
+	def reply(self, dict):
+		self.sendXML(myxml.em(u'response', dict))
 
-			elif not artist.id:
-				artist.id = self.nextid(model.SiteArtist)
-				artist.put()
+	def importAlbum(self, xml):
+		for em in xml.getElementsByTagName('album'):
+			try:
+				artist = model.SiteArtist.gql('WHERE name = :1', em.attributes['artist'].value).get()
+			except KeyError:
+				raise Exception(u'/album/@artist not set')
+			if not artist:
+				artist = model.SiteArtist(name=em.attributes['artist'].value)
+				artist.put(quick=True)
 
-			self.importAlbums(artist, em)
-
-	def importAlbums(self, artist, xml):
-		last = model.SiteAlbum.gql('ORDER BY id DESC').get()
-		if last:
-			nextId = last.id + 1
-		else:
-			nextId = 1
-
-		for em in xml.getElementsByTagName("album"):
-			name = em.attributes["name"].value
-			logging.info('Processing album "%s" by %s' % (name, artist.name))
-			album = model.SiteAlbum.gql('WHERE artist = :1 AND name = :2', artist, name).get()
-			if album is None:
-				album = model.SiteAlbum(id=nextId, artist=artist, name=name)
-				logging.info("+ album %s (%s), id=%u" % (album.name, artist.name, album.id))
-				nextId += 1
-
+			album = model.SiteAlbum.gql('WHERE artist = :1 AND name = :2', artist, em.attributes['name'].value).get()
+			if album is not None and not self.request.get('replace'):
+				return self.reply({
+					'status': 'error',
+					'message': u'Альбом "%s" от %s уже есть.' % (album.name, artist.name),
+					})
+			if not album:
+				album = model.SiteAlbum(artist=artist, name=em.attributes['name'].value)
 			album.release_date = datetime.datetime.strptime(em.attributes["pubDate"].value[:10], '%Y-%m-%d').date()
 			album.put(quick=True)
 
@@ -67,7 +63,12 @@ class UploadXmlHandler(BaseRequestHandler):
 			self.importTracks(album, em)
 			self.importFiles(album, em)
 
-			album.put() # updates XML
+			album.put()
+
+			self.sendXML(myxml.em(u'response', {
+				'status': 'ok',
+				'message': u'Album "%s" from %s is available at %s' % (album.name, artist.name, self.getBaseURL() + 'album/' + str(album.id)),
+			}))
 
 	def importImages(self, album, xml):
 		self.purge(model.SiteImage, album)
@@ -105,9 +106,3 @@ class UploadXmlHandler(BaseRequestHandler):
 		old = source.gql('WHERE album = :1', album).fetch(1000)
 		if old:
 			db.delete(old)
-
-	def nextid(self, cls):
-		tmp = cls.gql('ORDER BY id DESC').get()
-		if tmp:
-			return tmp.id
-		return 1

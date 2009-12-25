@@ -10,7 +10,6 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
 from base import BaseRequestHandler, run
-from upload import UploadXmlHandler
 from s3 import S3SettingsHandler, S3UploadHandler
 import model
 import album
@@ -18,6 +17,7 @@ import artist
 import sitemap
 import queue
 import tracks
+import upload
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 		('/albums\.rss', album.RSSHandler),
 		('/upload', S3UploadHandler),
 		('/upload/settings', S3SettingsHandler),
-		('/upload/xml', UploadXmlHandler),
+		('/upload/api', upload.APIHandler),
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)', artist.ViewHandler),
 		('/artists\.rss', artist.RSSHandler),

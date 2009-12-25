@@ -19,6 +19,9 @@ class SiteArtist(db.Model):
 	xml = db.TextProperty()
 
 	def put(self, quick=False):
+		if not self.id:
+			self.id = nextId(SiteArtist)
+			logging.info('New artist: %s (artist/%u)' % (self.name, self.id))
 		if not quick:
 			self.xml = self.to_xml()
 		db.Model.put(self)
@@ -44,6 +47,9 @@ class SiteAlbum(db.Model):
 	xml = db.TextProperty() # updated on save
 
 	def put(self, quick=False):
+		if not self.id:
+			self.id = nextId(SiteAlbum)
+			logging.info('New album: %s (album/%u)' % (self.name, self.id))
 		if not quick:
 			self.xml = self.to_xml()
 			logging.info('album/%u: xml updated' % self.id)
@@ -123,3 +129,9 @@ class SiteAlbumReview(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
 	author = db.ReferenceProperty(SiteUser)
 	created = db.DateTimeProperty(auto_now_add=True)
+
+def nextId(cls):
+	last = cls.gql('ORDER BY id DESC').get()
+	if last:
+		return last.id + 1
+	return 1
