@@ -72,6 +72,9 @@
 						</li>
 					</xsl:if>
 				</ul>
+				<xsl:apply-templates select="labels" mode="linked">
+					<xsl:with-param name="uri">/?label=</xsl:with-param>
+				</xsl:apply-templates>
 			</div>
 			<div class="right">
 				<table>
@@ -121,6 +124,21 @@
 							<textarea class="text" name="text">
 								<xsl:value-of select="@text"/>
 							</textarea>
+						</label>
+					</div>
+					<div>
+						<label>
+							<span>Метки:</span>
+							<input type="text" class="text" name="labels">
+								<xsl:attribute name="value">
+									<xsl:for-each select="labels/label">
+										<xsl:value-of select="text()"/>
+										<xsl:if test="position()!=last()">
+											<xsl:text>, </xsl:text>
+										</xsl:if>
+									</xsl:for-each>
+								</xsl:attribute>
+							</input>
 						</label>
 					</div>
 					<fieldset>
@@ -373,5 +391,19 @@
 				<p><a href="{/page/@login-uri}">Продолжить</a></p>
 			</div>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="labels" mode="linked">
+		<xsl:param name="uri"/>
+		<ul class="labels">
+			<xsl:for-each select="label">
+				<xsl:sort select="text()"/>
+				<li>
+					<a href="{$uri}{@uri}">
+						<xsl:value-of select="text()"/>
+					</a>
+				</li>
+			</xsl:for-each>
+		</ul>
 	</xsl:template>
 </xsl:stylesheet>

@@ -25,17 +25,27 @@ class MainHandler(BaseRequestHandler):
 
 class IndexHandler(BaseRequestHandler):
 	def get(self):
-		if self.request.get('skip'):
-			offset = int(self.request.get('skip'))
-		else:
-			offset = 0
-
+		offset = self.get_offset()
 		xml = u"<index skip=\"%u\"><albums>" % offset
-		for album in model.SiteAlbum.all().order('-release_date').fetch(15, offset):
+		for album in self.get_albums(offset):
 			if album.xml:
 				xml += album.xml
 		xml += u'</albums></index>'
 		self.sendXML(xml)
+
+	def get_albums(self, offset):
+		label = self.request.get('label')
+		if label:
+			list = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
+		else:
+			list = model.SiteAlbum.all().order('-release_date')
+		return list.fetch(15, offset)
+
+	def get_offset(self):
+		if self.request.get('skip'):
+			return int(self.request.get('skip'))
+		else:
+			return 0
 
 
 class SubmitHandler(BaseRequestHandler):

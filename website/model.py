@@ -6,6 +6,8 @@ import urllib
 from xml.sax.saxutils import escape
 from google.appengine.ext import db
 
+import myxml as xml
+
 class SiteUser(db.Model):
 	user = db.UserProperty()
 	joined = db.DateTimeProperty(auto_now_add=True)
@@ -22,15 +24,11 @@ class SiteArtist(db.Model):
 		db.Model.put(self)
 
 	def to_xml(self):
-		xml = u'<artist id="%u" name="%s">' % (self.id, escape(self.name))
-		albums = u''
-		for album in SiteAlbum.gql('WHERE artist = :1', self).fetch(100):
-			if album.xml:
-				albums += album.xml
-		if albums:
-			xml += u'<albums>' + albums + u'</albums>'
-		xml += u'</artist>'
-		return xml
+		albums = xml.em(u'albums', content=u''.join([album.xml for album in SiteAlbum.gql('WHERE artist = :1', self).fetch(100)]), empty=False)
+		return xml.em(u'artist', attrs={
+			'id': self.id,
+			'name': self.name,
+		}, content=albums)
 
 class SiteAlbum(db.Model):
 	id = db.IntegerProperty()
@@ -41,31 +39,32 @@ class SiteAlbum(db.Model):
 	rating = db.RatingProperty() # average album rate
 	cover_small = db.LinkProperty() # image URL
 	cover_large = db.LinkProperty() # image URL
+	labels = db.StringListProperty()
 	owner = db.UserProperty()
 	xml = db.TextProperty() # updated on save
 
 	def put(self, quick=False):
 		if not quick:
 			self.xml = self.to_xml()
+			logging.info('album/%u: xml updated' % self.id)
 		db.Model.put(self)
 
 	def to_xml(self):
-		xml = u'<album id="%u" name="%s" artist-id="%u" artist-name="%s" pubDate="%s" owner="%s" text="%s">' % (self.id, escape(self.name), self.artist.id, escape(self.artist.name), self.release_date.isoformat(), self.owner, self.text)
-		xml += self.get_children_xml(SiteTrack, u'tracks')
-		xml += self.get_children_xml(SiteImage, u'images')
-		xml += self.get_children_xml(SiteFile, u'files')
-		xml += u'</album>'
-		return xml
+		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
+		if self.labels:
+			content += xml.em(u'labels', content=u''.join([xml.em(u'label', {'uri':xml.uri(label)}, content=label) for label in self.labels]))
+		return xml.em(u'album', {
+			'id': self.id,
+			'name': self.name,
+			'artist-id': self.artist.id,
+			'artist-name': self.artist.name,
+			'pubDate': self.release_date.isoformat(),
+			'owner': self.owner,
+			'text': self.text
+		}, content)
 
 	def get_children_xml(self, cls, em):
-		xml = u''
-		children = cls.gql('WHERE album = :1', self).fetch(1000)
-		if children:
-			xml += u'<' + em + u'>'
-			for child in children:
-				xml += child.to_xml()
-			xml += u'</' + em + u'>'
-		return xml
+		return xml.em(em, content=u''.join([c.to_xml() for c in cls.gql('WHERE album = :1', self).fetch(1000)]))
 
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)

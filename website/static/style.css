@@ -198,3 +198,12 @@ ul.altiles {
 .fileUpload div {
   margin-bottom: 10px;
 }
+
+ul.labels li {
+  display: inline;
+}
+ul.labels li a {
+  text-decoration: none;
+  background-color: #ddd;
+  padding: 2px 4px;
+}

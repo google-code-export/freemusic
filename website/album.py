@@ -13,7 +13,6 @@ class XmlUpdater(BaseRequestHandler):
 	def get(self):
 		for album in SiteAlbum.all().fetch(1000):
 			album.put()
-			log('album/%u: xml updated' % album.id)
 		self.redirect('/')
 
 class Viewer(BaseRequestHandler):
@@ -39,6 +38,7 @@ class Editor(Viewer):
 		album.name = self.request.get(u'name')
 		album.release_date = datetime.datetime.strptime(self.request.get(u'pubDate'), '%Y-%m-%d').date()
 		album.text = self.request.get(u'text')
+		album.labels = [unicode(label.strip()).lower() for label in self.request.get('labels').split(',')]
 
 		album.put()
 		album.artist.put() # обновление XML

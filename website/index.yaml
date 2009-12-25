@@ -2,3 +2,8 @@ indexes:
 - kind: SiteTrack
   properties:
   - name: album
+- kind: SiteAlbum
+  properties:
+  - name: labels
+  - name: release_date
+    direction: desc
