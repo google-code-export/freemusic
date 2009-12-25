@@ -96,6 +96,7 @@ class SiteTrack(db.Model):
 
 	def to_xml(self):
 		return xml.em(u'track', {
+			'id': self.id,
 			'number': self.number,
 			'album-id': self.album.id,
 			'album-name': self.album.name,
