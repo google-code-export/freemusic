@@ -95,8 +95,15 @@ class SiteTrack(db.Model):
 		return 1
 
 	def to_xml(self):
-		xml = u'<track number="%u" title="%s" mp3="%s"/>' % (self.number, escape(self.title), escape(self.mp3_link))
-		return xml
+		return xml.em(u'track', {
+			'number': self.number,
+			'album-id': self.album.id,
+			'album-name': self.album.name,
+			'title': self.title,
+			'duration': self.duration,
+			'mp3-link': self.mp3_link,
+			'lyrics': self.lyrics,
+		})
 
 class SiteFile(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)

@@ -160,6 +160,22 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="/page/track">
+		<div class="twocol">
+			<div class="right">
+				<h2>
+					<xsl:value-of select="@title"/>
+				</h2>
+				<p>Из альбома <a href="/album/{@album-id}"><xsl:value-of select="@album-name"/></a>.</p>
+				<ul>
+					<li>
+						<a href="{@mp3-link}">Скачать MP3</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="album" mode="h2">
 		<h2>
 			<xsl:text>«</xsl:text>

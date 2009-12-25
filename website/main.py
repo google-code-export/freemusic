@@ -105,5 +105,6 @@ if __name__ == '__main__':
 		('/queue', queue.QueueHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
+		('/track/(\d+)$', tracks.Viewer),
 		('/tracks\.rss', tracks.RSSHandler),
 	])

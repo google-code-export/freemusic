@@ -6,10 +6,11 @@
 from logging import debug as log
 
 from model import SiteTrack
-from rss import RSSHandler as BaseRequestHandler
+from rss import RSSHandler as RssBase
+from base import BaseRequestHandler
 import myxml as xml
 
-class RSSHandler(BaseRequestHandler):
+class RSSHandler(RssBase):
 	def get(self):
 		self.sendRSS([{
 			'title': track.title,
@@ -20,3 +21,10 @@ class RSSHandler(BaseRequestHandler):
 				'url': track.mp3_link,
 			}),
 		} for track in SiteTrack.all().order('-id').fetch(50)], title=u'Новая музыка')
+
+class Viewer(BaseRequestHandler):
+	def get(self, id):
+		track = SiteTrack.gql('WHERE id = :1', int(id)).get()
+		if not track:
+			raise Error('No such track.')
+		self.sendXML(track.to_xml())
