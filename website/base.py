@@ -47,6 +47,12 @@ class BaseRequestHandler(webapp.RequestHandler):
 			raise UnauthorizedException()
 		return user
 
+	def force_user_or_admin(self, user):
+		u = self.force_user()
+		if u != user and not users.is_current_user_admin():
+			raise UnauthorizedException()
+		return u
+
 	def formatXML(self, message, *args, **kw):
 		xml = u'<' + message
 		for (k) in kw:

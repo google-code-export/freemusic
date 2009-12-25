@@ -74,25 +74,19 @@ class AddFileHandler(BaseRequestHandler):
 		})
 
 
-class AlbumHandler(BaseRequestHandler):
-	def get(self, id):
-		album = model.SiteAlbum.gql('WHERE id = :1', int(id)).get()
-		if album:
-			self.sendXML(album.xml)
-		logging.info('404')
-
 if __name__ == '__main__':
 	run([
 		('/', IndexHandler),
 		('/add/file', AddFileHandler),
 		('/submit', SubmitHandler),
-		('/album/(\d+)', AlbumHandler),
+		('/album/(\d+)$', album.Viewer),
+		('/album/(\d+)/edit$', album.Editor),
+		('/album/update-xml', album.XmlUpdater),
 		('/upload', S3UploadHandler),
 		('/upload/settings', S3SettingsHandler),
 		('/upload/xml', UploadXmlHandler),
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)', artist.ViewHandler),
-		('/album/update-xml', album.XmlUpdater),
 		('/queue', queue.QueueHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),

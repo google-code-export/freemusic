@@ -19,16 +19,41 @@ li {
 }
 
 
-form.gen label {
+form.gen label,
+form.gen label span {
   display: block;
 }
 form.gen .text {
   padding: 4px;
-  width: 300px;
+  width: 400px;
+  max-width: 400px;
   border: solid 1px #ccc;
 }
 form.gen div {
   margin-bottom: 1em;
+}
+
+/**
+ * Редактирование альбома.
+ */
+form.eal fieldset {
+  margin: 1em 0 0 -40px;
+  padding: 10px;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+}
+form.eal legend {
+  font-size: 10pt;
+  font-style: italic;
+  margin-left: 30px;
+}
+form.eal ol {
+  margin: 0;
+  padding: 0;
+}
+form.eal ol li {
+  margin-left: 30px;
 }
 
 

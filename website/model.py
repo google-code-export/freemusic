@@ -35,11 +35,13 @@ class SiteArtist(db.Model):
 class SiteAlbum(db.Model):
 	id = db.IntegerProperty()
 	name = db.StringProperty()
+	text = db.TextProperty()
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
 	rating = db.RatingProperty() # average album rate
 	cover_small = db.LinkProperty() # image URL
 	cover_large = db.LinkProperty() # image URL
+	owner = db.UserProperty()
 	xml = db.TextProperty() # updated on save
 
 	def put(self, quick=False):
@@ -48,7 +50,7 @@ class SiteAlbum(db.Model):
 		db.Model.put(self)
 
 	def to_xml(self):
-		xml = u'<album id="%u" name="%s" artist-id="%u" artist-name="%s" pubDate="%s">' % (self.id, escape(self.name), self.artist.id, escape(self.artist.name), self.release_date.isoformat())
+		xml = u'<album id="%u" name="%s" artist-id="%u" artist-name="%s" pubDate="%s" owner="%s" text="%s">' % (self.id, escape(self.name), self.artist.id, escape(self.artist.name), self.release_date.isoformat(), self.owner, self.text)
 		xml += self.get_children_xml(SiteTrack, u'tracks')
 		xml += self.get_children_xml(SiteImage, u'images')
 		xml += self.get_children_xml(SiteFile, u'files')

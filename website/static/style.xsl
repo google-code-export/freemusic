@@ -59,15 +59,19 @@
 
 	<xsl:template match="/page/album">
 		<div id="album">
-			<h2>
-				<xsl:text>«</xsl:text>
-				<xsl:value-of select="@name"/>
-				<xsl:text>»</xsl:text>
-				<small> by <a href="/artist/{@artist-id}"><xsl:value-of select="@artist-name"/></a></small>
-			</h2>
+			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='medium']"/>
-				<p class="dl"><a href="{files/file/@uri}">Скачать альбом</a> ▼</p>
+				<ul>
+					<li>
+						<a href="{files/file/@uri}">Скачать альбом</a>
+					</li>
+					<xsl:if test="/page/@user = @owner or /page/@is-admin">
+						<li>
+							<a href="/album/{@id}/edit">Отредактировать</a>
+						</li>
+					</xsl:if>
+				</ul>
 			</div>
 			<div class="right">
 				<table>
@@ -92,6 +96,63 @@
 				</xsl:if>
 			</div>
 		</div>
+	</xsl:template>
+
+	<xsl:template match="/page/form/album">
+		<div class="twocol">
+			<div class="right">
+				<xsl:apply-templates select="." mode="h2"/>
+				<form method="post" class="gen eal">
+					<div>
+						<label>
+							<span>Заголовок:</span>
+							<input type="text" class="text" name="name" value="{@name}"/>
+						</label>
+					</div>
+					<div>
+						<label>
+							<span>Дата публикации:</span>
+							<input type="text" class="text" name="pubDate" value="{@pubDate}"/>
+						</label>
+					</div>
+					<div>
+						<label>
+							<span>Описание:</span>
+							<textarea class="text" name="text">
+								<xsl:value-of select="@text"/>
+							</textarea>
+						</label>
+					</div>
+					<fieldset>
+						<legend>Названия дорожек:</legend>
+						<ol>
+							<xsl:for-each select="tracks/track">
+								<li>
+									<input type="text" class="text" name="track.{position()}" value="{@title}"/>
+								</li>
+							</xsl:for-each>
+						</ol>
+					</fieldset>
+					<div>
+						<input type="submit" value="Сохранить изменения"/> или <a href="/album/{@id}">вернуться без сохранения</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="album" mode="h2">
+		<h2>
+			<xsl:text>«</xsl:text>
+			<xsl:value-of select="@name"/>
+			<xsl:text>»</xsl:text>
+			<small>
+				<xsl:text> от </xsl:text>
+				<a href="@artist-id">
+					<xsl:value-of select="@artist-name"/>
+				</a>
+			</small>
+		</h2>
 	</xsl:template>
 
 	<xsl:template match="files">
