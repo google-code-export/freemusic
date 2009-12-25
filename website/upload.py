@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # vim: set ts=4 sts=4 sw=4 noet:
 
+import base64, hmac, hashlib
+
 # Python imports
 import datetime, time
 import logging
@@ -19,14 +21,21 @@ import model, myxml
 class APIHandler(BaseRequestHandler):
 	def post(self):
 		data = self.request.get('xml')
+
+		if self.request.get('signature') != sign('xyz', data):
+			return self.reply({
+				'status': 'error',
+				'message': 'Authentication failed.',
+			})
+
 		logging.info(u'API called with replace=%u and data: %s' % (int('0' + self.request.get('replace')), data))
 		self.importAlbum(parseString(data.encode('utf-8')))
 
 	def handle_exception(self, e, debug_mode):
-		self.sendXML(myxml.em(u'response', {
+		self.reply({
 			'status': 'error',
 			'message': str(e),
-		}))
+		})
 
 	def sendXML(self, content):
 		result = "<?xml version=\"1.0\"?>"
@@ -106,3 +115,7 @@ class APIHandler(BaseRequestHandler):
 		old = source.gql('WHERE album = :1', album).fetch(1000)
 		if old:
 			db.delete(old)
+
+def sign(password, string):
+	dm = hmac.new(password, string, hashlib.sha1)
+	return base64.b64encode(dm.digest())

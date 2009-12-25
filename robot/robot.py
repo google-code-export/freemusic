@@ -1,6 +1,8 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
 # vim: set ts=4 sts=4 sw=4 noet:
+#
+# TODO: отправлять имя пользователя, отправлять ему мыло
 
 import getopt, sys, os
 import urllib, urllib2
@@ -8,15 +10,24 @@ import base64, hmac, hashlib
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
-__HOST__ = 'music.home.umonkey.net'
+try:
+	import yaml
+except:
+	print "Please install python-yaml."
+	sys.exit(1)
 
 class Robot:
-	url = 'http://music.home.umonkey.net/upload/api'
-
 	def __init__(self, opts):
 		self.verbose = False
 		self.force = False
 		self.password = ''
+		self.host = None
+
+		config = yaml.load(self.readFile('$HOME/.config/freemusic.yaml'))
+		if config:
+			for k in config.keys():
+				if hasattr(self, k):
+					setattr(self, k, config[k])
 
 	def uploadAlbum(self, xml):
 		try:
@@ -28,9 +39,12 @@ class Robot:
 		data = { 'xml': xml, 'signature': self.sign(xml) }
 		if self.force:
 			data['replace'] = 1
-		self.post(self.url, data)
+		self.post('upload/api', data)
 
 	def post(self, url, data):
+		if not self.host:
+			raise Exception('host not set')
+		url = 'http://' + self.host + '/' + url
 		try:
 			body = urllib.urlencode(data)
 			if self.verbose:
@@ -62,6 +76,16 @@ class Robot:
 		dm = hmac.new(self.password, data, hashlib.sha1)
 		return base64.b64encode(dm.digest())
 
+	def readFile(self, fileName):
+		fileName = os.path.expandvars(fileName)
+		if os.path.exists(fileName):
+			f = open(fileName, "r")
+			data = f.read()
+		else:
+			print "no file: ", fileName
+			data = ""
+		return data
+
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
 	print "\nBasic options:"
@@ -73,7 +97,7 @@ def usage():
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:fh:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:fh:p:v")
 	except getopt.GetoptError, err:
 		return usage()
 
@@ -83,10 +107,20 @@ def main():
 			f = open(value, 'r')
 			r.uploadAlbum(f.read())
 			f.close()
-		if '-v' == option:
-			r.verbose = True
 		if '-f' == option:
 			r.force = True
+		if '-h' == option:
+			r.host = value
+		if '-v' == option:
+			r.verbose = True
+		if '-p' == option:
+			r.password = value
 
 if __name__ == '__main__':
-	sys.exit(main())
+	try:
+		sys.exit(main())
+	except KeyboardInterrupt:
+		print "\rInterrupted."
+	except Exception, e:
+		print "\r" + str(e)
+	sys.exit(1)
