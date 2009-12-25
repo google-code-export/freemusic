@@ -69,11 +69,16 @@ class BaseRequestHandler(webapp.RequestHandler):
 	def sendXML(self, xml):
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
+		result += '<page'
 		if users.get_current_user():
-			result += '<page logout-uri="%s">' % escape(users.create_logout_url(self.request.uri))
+			result += ' logout-uri="%s"' % escape(users.create_logout_url(self.request.uri))
 		else:
-			result += '<page login-uri="%s">' % escape(users.create_login_url(self.request.uri))
-		result += xml + '</page>'
+			result += ' login-uri="%s"' % escape(users.create_login_url(self.request.uri))
+		if users.is_current_user_admin():
+			result += ' is-admin="yes"'
+		if users.get_current_user():
+			result += ' user="' + users.get_current_user().nickname() + '"'
+		result += '>' + xml + '</page>'
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
