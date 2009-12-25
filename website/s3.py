@@ -20,6 +20,7 @@ from google.appengine.ext import db
 from google.appengine.api import users
 
 from base import BaseRequestHandler, UnauthorizedException
+import myxml as xml
 
 class S3File(db.Model):
 	"""
@@ -68,12 +69,13 @@ class S3SettingsHandler(BaseRequestHandler):
 	def get(self):
 		self.force_admin()
 		s = S3Settings.load()
-		return self.sendXML(self.formatXML('s3-settings',
-			action=self.request.path,
-			s3a=s.s3a,
-			s3s=s.s3s,
-			bucket=s.bucket,
-			after=s.after))
+		return self.sendXML(xml.em(u's3-settings', {
+			'action': self.request.path,
+			's3a': s.s3a,
+			's3s': s.s3s,
+			'bucket': s.bucket,
+			'after': s.after
+			}))
 
 	def post(self):
 		self.force_admin()
@@ -114,7 +116,7 @@ class S3UploadHandler(BaseRequestHandler):
 
 		logging.debug(policy_src)
 
-		return self.sendXML(self.mkem('s3-upload-form', {
+		return self.sendXML(xml.em('s3-upload-form', {
 			'bucket': settings.bucket,
 			'access-key': settings.s3a,
 			'key': path + '/${filename}',

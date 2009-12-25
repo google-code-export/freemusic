@@ -12,6 +12,9 @@ from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
+# Local imports
+import myxml as xml
+
 class ForbiddenException(Exception):
 	def __str__(self):
 		return u"У вас нет доступа к этой странице."
@@ -53,38 +56,20 @@ class BaseRequestHandler(webapp.RequestHandler):
 			raise UnauthorizedException()
 		return u
 
-	def formatXML(self, message, *args, **kw):
-		xml = u'<' + message
-		for (k) in kw:
-			value = kw[k]
-			if value:
-				if type(value) == type(str()) or type(value) == type(unicode()):
-					value = escape(value)
-				xml += u' ' + k + '="' + value + '"'
-		xml += u'/>'
-		return xml
+	def sendXML(self, content):
+		page = {}
+		if users.get_current_user():
+			page['logout-uri'] = users.create_logout_url(self.request.uri)
+		else:
+			page['login-uri'] = users.create_login_url(self.request.uri)
+		if users.is_current_user_admin():
+			page['is-admin'] = 'yes'
+		if users.get_current_user():
+			page['user'] = users.get_current_user().nickname()
 
-	def mkem(self, name, dict):
-		xml = u'<' + name
-		for k in dict:
-			if dict[k]:
-				xml += u' ' + k + u'="' + escape(unicode(dict[k])) + u'"'
-		xml += u'/>'
-		return xml
-
-	def sendXML(self, xml):
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
-		result += '<page'
-		if users.get_current_user():
-			result += ' logout-uri="%s"' % escape(users.create_logout_url(self.request.uri))
-		else:
-			result += ' login-uri="%s"' % escape(users.create_login_url(self.request.uri))
-		if users.is_current_user_admin():
-			result += ' is-admin="yes"'
-		if users.get_current_user():
-			result += ' user="' + users.get_current_user().nickname() + '"'
-		result += '>' + xml + '</page>'
+		result += xml.em(u'page', page, content)
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
@@ -94,8 +79,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
 		"""
 		logging.warning(e)
-		self.sendXML(self.formatXML(u'message',
-			text=unicode(e)))
+		self.sendXML(xml.em(u'message', {'text': unicode(e)}))
 
 	def quote(self, text):
 		return urllib.quote(text.encode('utf8'))
