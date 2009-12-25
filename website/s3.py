@@ -34,6 +34,13 @@ class S3File(db.Model):
 	info = db.TextProperty()
 	owner = db.UserProperty()
 
+	@classmethod
+	def getNextId(cls):
+		last = cls.gql('ORDER BY id DESC').get()
+		if last:
+			return last.id + 1
+		return 1
+
 class S3Settings(db.Model):
 	"""
 	Класс для хранения настроек S3 в базе данных.
@@ -81,7 +88,7 @@ class S3UploadHandler(BaseRequestHandler):
 	Обслуживание формы загрузки файла в хранилище Amazon S3.
 	"""
 	def get(self):
-		self.force_user()
+		user = self.force_user()
 
 		if self.request.get('key'):
 			return self.get_confirm()
@@ -92,7 +99,8 @@ class S3UploadHandler(BaseRequestHandler):
 		base = self.getBaseURL()
 		settings = S3Settings.load()
 
-		path = create_id()
+		path = user.nickname() + '/' + str(S3File.getNextId())
+
 		policy_src = {
 			'expiration': (datetime.datetime.now() + datetime.timedelta(hours=1)).isoformat() + 'Z',
 			'conditions': [
@@ -117,11 +125,7 @@ class S3UploadHandler(BaseRequestHandler):
 		}))
 
 	def get_confirm(self):
-		last = S3File.gql('ORDER BY id DESC').get()
-		if last is None:
-			id = 1
-		else:
-			id = last.id + 1
+		id = S3File.getNextId()
 
 		File = S3File(id=id,
 			name=self.request.get('key').split('/')[-1],
@@ -150,10 +154,3 @@ def encode_policy(dict):
 def sign(settings, string):
 	dm = hmac.new(settings.s3s, string, hashlib.sha1)
 	return base64.b64encode(dm.digest())
-
-def create_id():
-	"""
-	Возвращает случайный идентификатор для загрузки файла.
-	"""
-	# FIXME: придумать что-нибудь по-лучше
-	return hmac.new('key', str(random.random()), hashlib.md5).hexdigest()

@@ -42,8 +42,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.force_user()
 
 	def force_user(self):
-		if not users.get_current_user():
+		user = users.get_current_user()
+		if not user:
 			raise UnauthorizedException()
+		return user
 
 	def formatXML(self, message, *args, **kw):
 		xml = u'<' + message
@@ -80,6 +82,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		Заворачивает сообщения об ошибках в <message>.
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
 		"""
+		logging.warning(e)
 		self.sendXML(self.formatXML(u'message',
 			text=unicode(e)))
 
