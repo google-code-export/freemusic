@@ -8,6 +8,7 @@ from google.appengine.api import users
 
 from base import BaseRequestHandler
 from model import SiteAlbum
+import rss
 
 class XmlUpdater(BaseRequestHandler):
 	def get(self):
@@ -44,3 +45,11 @@ class Editor(Viewer):
 		album.artist.put() # обновление XML
 
 		self.redirect('/album/' + str(album.id))
+
+class RSSHandler(rss.RSSHandler):
+	def get(self):
+		items = [{
+			'title': album.name,
+			'link': 'album/' + str(album.id),
+		} for album in SiteAlbum.all().order('-release_date').fetch(20)]
+		self.sendRSS(items, title=u'Новые альбомы')

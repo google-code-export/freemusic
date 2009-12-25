@@ -21,6 +21,7 @@
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 				<script type="text/javascript" src="/static/scripts.js"></script>
+				<link rel="alternate" type="application/rss+xml" title="RSS" href="/albums.rss"/> 
 			</head>
 			<body>
 				<div id="wrapper">

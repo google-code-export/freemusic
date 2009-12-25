@@ -31,6 +31,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 		url = urlparse.urlparse(self.request.url)
 		return url[0] + '://' + url[1] + '/'
 
+	def getHost(self):
+		url = urlparse.urlparse(self.request.url)
+		return url[1]
+
 	def render(self, template_name, vars={}, content_type='text/xml'):
 		directory = os.path.dirname(__file__)
 		path = os.path.join(directory, 'templates', template_name)
@@ -72,7 +76,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
-	def handle_exception(self, e, debug_mode):
+	def Xhandle_exception(self, e, debug_mode):
 		"""
 		Заворачивает сообщения об ошибках в <message>.
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception

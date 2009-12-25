@@ -7,8 +7,9 @@ from logging import debug as log
 
 from google.appengine.ext import db
 
-from base import BaseRequestHandler
+from rss import RSSHandler as BaseRequestHandler
 from model import SiteArtist
+import myxml as xml
 
 class FixHandler(BaseRequestHandler):
 	def get(self):
@@ -33,3 +34,11 @@ class ViewHandler(BaseRequestHandler):
 		artist = SiteArtist.gql('WHERE id = :1', int(id)).get()
 		if artist and artist.xml:
 			self.sendXML(artist.xml)
+
+class RSSHandler(BaseRequestHandler):
+	def get(self):
+		items = [{
+			'title': u'Новый исполнитель: ' + artist.name,
+			'link': 'artist/' + str(artist.id),
+		} for artist in SiteArtist.all().order('-id').fetch(20)]
+		self.sendRSS(items, title=u'Новые исполнители')
