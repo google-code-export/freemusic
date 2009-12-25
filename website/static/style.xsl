@@ -162,13 +162,13 @@
 	</xsl:template>
 
 	<xsl:template match="/page/artist">
-		<h2>
-			<xsl:value-of select="@name"/>
-		</h2>
 		<div class="twocol">
 			<div class="left">
 			</div>
 			<div class="right">
+				<h2>
+					<xsl:value-of select="@name"/>
+				</h2>
 				<xsl:apply-templates select="albums" mode="tiles"/>
 			</div>
 		</div>
@@ -179,6 +179,26 @@
 		<p>
 			<xsl:value-of select="@text"/>
 		</p>
+	</xsl:template>
+
+	<xsl:template match="/page/queue">
+		<h2>Очередь обработки</h2>
+		<ol>
+			<xsl:for-each select="file">
+				<xsl:sort select="@id" data-type="number"/>
+				<li>
+					<tt>
+						<xsl:value-of select="@name"/>
+					</tt>
+					<xsl:if test="@owner">
+						<small>
+							<xsl:text> от </xsl:text>
+							<xsl:value-of select="@owner"/>
+						</small>
+					</xsl:if>
+				</li>
+			</xsl:for-each>
+		</ol>
 	</xsl:template>
 
 	<!-- additional stuff -->
@@ -278,7 +298,7 @@
 		<div class="twocol">
 			<div class="right">
 				<h2>Загрузка завершена</h2>
-				<p>Файл успешно загружен, ему присвоен номер <xsl:value-of select="@file-id"/>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
+				<p>Файл успешно загружен, ему присвоен <a href="/queue">номер <xsl:value-of select="@file-id"/></a>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
 				<p><a href="/upload">Загрузить ещё один файл</a></p>
 			</div>
 		</div>

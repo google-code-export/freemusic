@@ -16,6 +16,7 @@ import model
 import album
 import artist
 import sitemap
+import queue
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -92,6 +93,7 @@ if __name__ == '__main__':
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)', artist.ViewHandler),
 		('/album/update-xml', album.XmlUpdater),
+		('/queue', queue.QueueHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
 	])
