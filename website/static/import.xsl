@@ -59,6 +59,6 @@
 	</xsl:template>
 
 	<xsl:template match="node[filetype/text()='audio/mpeg']">
-		<track title="{@name}" number="{position()}" mp3="{$base}{download-url/text()}"/>
+		<track title="{@name}" number="{position()}" mp3="{$base}{download-url/text()}" mp3-length="{filesize/text()}" duration="{metadata/duration/text()}"/>
 	</xsl:template>
 </xsl:stylesheet>

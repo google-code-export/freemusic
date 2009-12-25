@@ -83,6 +83,15 @@ class SiteTrack(db.Model):
 	lyrics = db.TextProperty()
 	number = db.IntegerProperty()
 	mp3_link = db.LinkProperty()
+	mp3_length = db.IntegerProperty() # нужно для RSS с подкастом
+	duration = db.StringProperty()
+
+	@classmethod
+	def getNextId(cls):
+		last = cls.gql('ORDER BY id DESC').get()
+		if last:
+			return last.id + 1
+		return 1
 
 	def to_xml(self):
 		xml = u'<track number="%u" title="%s" mp3="%s"/>' % (self.number, escape(self.title), escape(self.mp3_link))

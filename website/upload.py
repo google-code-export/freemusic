@@ -86,6 +86,8 @@ class UploadXmlHandler(BaseRequestHandler):
 			track.title = em.attributes["title"].value
 			track.number = int(em.attributes["number"].value)
 			track.mp3_link = em.attributes["mp3"].value
+			track.mp3_length = int(em.attributes["mp3-length"].value)
+			track.duration = em.attributes["duration"].value
 			track.put()
 
 	def importFiles(self, album, xml):
