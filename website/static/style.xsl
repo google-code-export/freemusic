@@ -49,8 +49,6 @@
 							<a href="{/page/@logout-uri}">Выйти</a>
 							<xsl:text> - </xsl:text>
 							<a href="/_ah/admin">Админка</a>
-							<xsl:text> - </xsl:text>
-							<a href="/upload/xml">Загрузить XML</a>
 						</xsl:if>
 					</div>
 				</div>
