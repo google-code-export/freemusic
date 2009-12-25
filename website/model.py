@@ -77,6 +77,7 @@ class SiteImage(db.Model):
 		return u"<image uri='%s' width='%u' height='%u' type='%s'/>" % (escape(self.uri), self.width, self.height, escape(self.type))
 
 class SiteTrack(db.Model):
+	id = db.IntegerProperty()
 	album = db.ReferenceProperty(SiteAlbum)
 	title = db.StringProperty()
 	artist = db.ReferenceProperty(SiteArtist) # for compilations

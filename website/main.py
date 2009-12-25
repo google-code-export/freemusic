@@ -17,6 +17,7 @@ import album
 import artist
 import sitemap
 import queue
+import tracks
 
 class MainHandler(BaseRequestHandler):
 	def get(self):
@@ -104,4 +105,5 @@ if __name__ == '__main__':
 		('/queue', queue.QueueHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
+		('/tracks\.rss', tracks.RSSHandler),
 	])

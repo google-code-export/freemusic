@@ -82,7 +82,7 @@ class UploadXmlHandler(BaseRequestHandler):
 	def importTracks(self, album, xml):
 		self.purge(model.SiteTrack, album)
 		for em in xml.getElementsByTagName("track"):
-			track = model.SiteTrack(album=album)
+			track = model.SiteTrack(id=model.SiteTrack.getNextId(), album=album)
 			track.title = em.attributes["title"].value
 			track.number = int(em.attributes["number"].value)
 			track.mp3_link = em.attributes["mp3"].value
