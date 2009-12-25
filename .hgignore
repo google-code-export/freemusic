@@ -3,3 +3,4 @@ syntax: glob
 tmp
 website/static/import.xml
 website/static/data.xml
+robot/import/*.xml
