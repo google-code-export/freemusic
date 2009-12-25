@@ -31,7 +31,9 @@ class IndexHandler(BaseRequestHandler):
 			if album.xml:
 				xml += album.xml
 		xml += u'</albums></index>'
-		self.sendXML(xml)
+		self.sendXML(xml, {
+			'label': self.request.get('label'),
+		})
 
 	def get_albums(self, offset):
 		label = self.request.get('label')

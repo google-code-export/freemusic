@@ -215,6 +215,11 @@
 					<li><a href="/">Свежие</a></li>
 					<li><a href="/">Популярные</a></li>
 					<li><a href="/">Рекомендуемые</a></li>
+					<xsl:if test="../@label">
+						<li>
+							<xsl:value-of select="concat('С меткой «',../@label,'»')"/>
+						</li>
+					</xsl:if>
 				</ul>
 				<div class="uya">
 					<p>Музыкант?</p>

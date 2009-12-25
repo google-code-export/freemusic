@@ -56,20 +56,19 @@ class BaseRequestHandler(webapp.RequestHandler):
 			raise UnauthorizedException()
 		return u
 
-	def sendXML(self, content):
-		page = {}
+	def sendXML(self, content, attrs={}):
 		if users.get_current_user():
-			page['logout-uri'] = users.create_logout_url(self.request.uri)
+			attrs['logout-uri'] = users.create_logout_url(self.request.uri)
 		else:
-			page['login-uri'] = users.create_login_url(self.request.uri)
+			attrs['login-uri'] = users.create_login_url(self.request.uri)
 		if users.is_current_user_admin():
-			page['is-admin'] = 'yes'
+			attrs['is-admin'] = 'yes'
 		if users.get_current_user():
-			page['user'] = users.get_current_user().nickname()
+			attrs['user'] = users.get_current_user().nickname()
 
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
-		result += xml.em(u'page', page, content)
+		result += xml.em(u'page', attrs, content)
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
