@@ -87,7 +87,7 @@
 									<xsl:text>.</xsl:text>
 								</td>
 								<td>
-									<a href="{@mp3}">
+									<a href="/track/{@id}">
 										<xsl:value-of select="@title"/>
 									</a>
 								</td>
@@ -167,6 +167,16 @@
 					<xsl:value-of select="@title"/>
 				</h2>
 				<p>Из альбома <a href="/album/{@album-id}"><xsl:value-of select="@album-name"/></a>.</p>
+				<xsl:if test="@mp3-link or @ogg-link">
+					<audio controls="controls">
+						<xsl:if test="@mp3-link">
+							<source src="{@mp3-link}" type="audio/mp3"/>
+						</xsl:if>
+						<xsl:if test="@ogg-link">
+							<source src="{@ogg-link}" type="audio/ogg; codecs=vorbis"/>
+						</xsl:if>
+					</audio>
+				</xsl:if>
 				<ul>
 					<li>
 						<a href="{@mp3-link}">Скачать MP3</a>
