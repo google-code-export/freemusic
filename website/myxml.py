@@ -2,7 +2,7 @@
 # vim: set ts=4 sts=4 sw=4 noet:
 
 import urllib
-from xml.sax.saxutils import escape as saxescape
+import xml.sax.saxutils as saxutils
 
 def em(emname, attrs=None, content=None, empty=True):
 	if not empty and not content:
@@ -15,8 +15,8 @@ def em(emname, attrs=None, content=None, empty=True):
 				if True == value:
 					value = u'yes'
 				else:
-					value = unicode(escape(value))
-				xml += u' ' + k + u'="' + value + u'"'
+					value = unicode(value)
+				xml += u' ' + k + u'=' + escape(value)
 	if content:
 	   xml += u'>' + content + u'</' + emname + u'>'
 	else:
@@ -28,5 +28,5 @@ def uri(value):
 
 def escape(value):
 	if type(value) == type(str()) or type(value) == type(unicode()):
-		value = saxescape(value)
+		value = saxutils.quoteattr(value)
 	return value
