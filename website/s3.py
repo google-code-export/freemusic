@@ -101,7 +101,7 @@ class S3UploadHandler(BaseRequestHandler):
 		base = self.getBaseURL()
 		settings = S3Settings.load()
 
-		path = user.nickname() + '/' + str(S3File.getNextId())
+		path = user.email() + '/' + str(S3File.getNextId())
 
 		policy_src = {
 			'expiration': (datetime.datetime.now() + datetime.timedelta(hours=1)).isoformat() + 'Z',
@@ -123,7 +123,7 @@ class S3UploadHandler(BaseRequestHandler):
 			'policy': policy,
 			'signature': sign(settings, policy),
 			'base': base,
-			'owner': users.get_current_user().nickname(),
+			'owner': users.get_current_user().email(),
 		}))
 
 	def get_confirm(self):
