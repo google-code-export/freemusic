@@ -16,7 +16,7 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports
 from base import BaseRequestHandler, run
-import model, myxml
+import model, myxml, mail
 
 class APIHandler(BaseRequestHandler):
 	def post(self):
@@ -73,6 +73,11 @@ class APIHandler(BaseRequestHandler):
 			self.importFiles(album, em)
 
 			album.put()
+
+			mail.send('justin.forest@gmail.com', self.render('album-added.html', {
+				'album_id': album.id,
+				'album_name': album.name,
+			}))
 
 			self.sendXML(myxml.em(u'response', {
 				'status': 'ok',
