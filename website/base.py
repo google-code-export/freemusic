@@ -35,13 +35,15 @@ class BaseRequestHandler(webapp.RequestHandler):
 		url = urlparse.urlparse(self.request.url)
 		return url[1]
 
-	def render(self, template_name, vars={}, content_type='text/xml'):
+	def render(self, template_name, vars={}):
+		"""
+		Вызывает указанный шаблон, возвращает результат.
+		"""
+		vars['base'] = self.getBaseURL()
+		vars['host'] = self.getHost()
 		directory = os.path.dirname(__file__)
 		path = os.path.join(directory, 'templates', template_name)
-
-		result = template.render(path, vars)
-		self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
-		self.response.out.write(result)
+		return template.render(path, vars)
 
 	def force_admin(self):
 		if not users.is_current_user_admin():
