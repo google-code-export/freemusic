@@ -6,4 +6,6 @@ python ../../google_appengine/dev_appserver.py \
   --datastore_path=../tmp/datastore \
   --history_path=../tmp/datastore.history \
   --require_indexes \
+  --enable_sendmail \
+  --show_mail_body \
   .
