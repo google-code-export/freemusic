@@ -58,13 +58,13 @@ class Robot:
 	def showResponse(self, response):
 		xml = parseString(response)
 		for em in xml.getElementsByTagName("response"):
-			message = em.attributes["status"].value
-			if message == "ok":
-				message = ""
+			message = unicode(em.attributes["status"].value)
+			if message == u"ok":
+				message = u""
 			try:
-				extra = em.attributes["message"].value
+				extra = unicode(em.attributes["message"].value)
 				if message:
-					message += ": "
+					message += u": "
 				message += extra
 			except KeyError:
 				pass

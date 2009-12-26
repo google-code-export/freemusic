@@ -74,10 +74,13 @@ class APIHandler(BaseRequestHandler):
 
 			album.put()
 
-			mail.send('justin.forest@gmail.com', self.render('album-added.html', {
-				'album_id': album.id,
-				'album_name': album.name,
-			}))
+			try:
+				mail.send(em.attributes['owner'].value, self.render('album-added.html', {
+					'album_id': album.id,
+					'album_name': album.name,
+				}))
+			except KeyError:
+				pass
 
 			self.sendXML(myxml.em(u'response', {
 				'status': 'ok',

@@ -31,7 +31,7 @@
 	<xsl:template match="node[@class='release']">
 		<xsl:param name="artist"/>
 		<xsl:document href="album-{@id}.xml" method="xml" encoding="utf-8" indent="yes">
-			<album artist="{$artist}" name="{@name}" pubDate="{date/text()}">
+			<album artist="{$artist}" name="{@name}" pubDate="{date/text()}" owner="justin.forest@gmail.com">
 				<xsl:apply-templates select="picture"/>
 				<tracks>
 					<xsl:apply-templates select="files/node[filetype/text()='audio/mpeg']"/>
