@@ -2,7 +2,7 @@
 set -u
 cd $(dirname $0)
 rm -f artist-*.xml
-trap "rm -f *.xml; exit 1" INT
+trap "rm -f *.xml; exit 1" INT # http://www.davidpashley.com/articles/writing-robust-shell-scripts.html
 echo "Downloading from ebm.net.ru..."
 wget -qO import.xml 'http://ebm.net.ru/api/node/list.xml?class=release,file,artist&limit=none' \
   && xsltproc import.xsl import.xml > data.xml
