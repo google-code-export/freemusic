@@ -14,7 +14,7 @@ from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
 # local imports
-import tags
+import albumart, encoder
 
 try:
 	import yaml
@@ -23,20 +23,32 @@ except:
 	sys.exit(1)
 
 class Transcoder:
-	def __init__(self):
+	"""
+	Основной обработчик транскодирования. Получает имя исходного ZIP файла,
+	распаковывает его, формирует MP3/OGG файлы для онлайн-прослушивания
+	и архивы для скачивания.
+	
+	TODO: - запускать uploader
+	      - формировать XML файл для загрузки наружу
+	"""
+	def __init__(self, debug=False):
 		self.ready = None
 		self.zipname = None # исходный файл, для формирования имени выходных архивов
 		self.upload = []
 		self.tmpdir = tempfile.mkdtemp(prefix='freemusic-')
+		self.uploaddir = os.path.join(self.tmpdir, 'upload')
 		self.sourcefiles = [] # звуковые файлы
 		self.extrafiles = [] # дополнительные файлы
+		self.albumart = None
+		self.debug = debug
 
-		os.mkdir(os.path.join(self.tmpdir, 'upload'))
+		os.mkdir(self.uploaddir)
 		os.mkdir(os.path.join(self.tmpdir, 'tmp'))
 
 	def __del__(self):
 		if self.tmpdir:
-			self.examine(self.tmpdir)
+			if self.debug:
+				self.examine(self.tmpdir)
 			print "Removing", self.tmpdir
 			return shutil.rmtree(self.tmpdir)
 
@@ -45,14 +57,18 @@ class Transcoder:
 		Обрабатывает указанный архив, возвращает имена сгенерированных файлов.
 		"""
 		self.zipname = zipname
+		decoder = encoder.Decoder(tmpdir=self.tmpdir)
 		for f in self.unzip(zipname):
-			wav = self.decode(f)
+			wav = decoder.decode(f)
 			if wav:
 				self.sourcefiles.append(wav)
 			else:
 				self.extrafiles.append(f)
-		# self.makeOnlineFiles()
+		self.albumart = albumart.find(self.extrafiles, os.path.join(self.tmpdir, '__folder.jpg'))
+		self.makeOnlineFiles()
 		self.makeDownloadableFiles()
+		print "Files to upload:", self.upload
+		print "Sources:", self.sourcefiles
 
 	def unzip(self, zipname):
 		"""
@@ -76,139 +92,23 @@ class Transcoder:
 		Создаёт MP3 версии для прослушивания на сайте, помещает в папку ./upload"
 		"""
 		print "Preparing audio files for online listening."
-		for file in self.sourcefiles:
-			self.upload.append(self.toMP3(file, folder='upload', forweb=True))
-			self.upload.append(self.toOGG(file, folder='upload', forweb=True))
+		for e in (encoder.MP3, encoder.OGG):
+			self.upload += e(forweb=True, albumart=self.albumart, tmpdir=self.tmpdir).files(self.sourcefiles)
 
 	def makeDownloadableFiles(self):
 		prefix = os.path.join(self.tmpdir, 'upload', '.'.join(os.path.basename(self.zipname).split('.')[0:-1]))
-		self.mkzip(prefix + '-ogg.zip', self.toOGG)
-		self.mkzip(prefix + '-mp3.zip', self.toMP3)
-		self.mkzip(prefix + '-flac.zip', self.toFLAC)
+		self.mkzip(prefix + '-ogg.zip', encoder.OGG)
+		self.mkzip(prefix + '-mp3.zip', encoder.MP3)
+		self.mkzip(prefix + '-flac.zip', encoder.FLAC)
 
 	def mkzip(self, zipname, encoder):
 		print "creating", zipname
-		filelist = []
-		for file in self.sourcefiles:
-			filelist.append(encoder(file, folder='transcode'))
 		zip = zipfile.ZipFile(zipname, 'a')
-		for file in filelist + self.extrafiles:
+		for file in encoder(tmpdir=self.tmpdir, albumart=self.albumart).files(self.sourcefiles) + self.extrafiles:
 			print " +", file
 			zip.write(file, os.path.basename(file))
 		zip.close()
 		self.upload.append(zipname)
-
-	def toMP3(self, file, folder='.', forweb=False):
-		"""
-		Транскодирует файл в MP3.
-		"""
-		filename = file['wav']
-		outpath = os.path.join(self.tmpdir, folder)
-		if not os.path.exists(outpath):
-			print "mkdir", outpath
-			os.mkdir(outpath)
-		outname = os.path.join(outpath, '.'.join(os.path.basename(filename).split('.')[0:-1] + ['mp3']))
-
-		options = ['lame', '--quiet']
-		if forweb:
-			options.append('--resample')
-			options.append('44.1')
-			options.append('-B')
-			options.append('128')
-		else:
-			options.append('-v')
-			options.append('-V')
-			options.append('0')
-			options.append('-h')
-		options.append(filename)
-		options.append(outname)
-		self.runPipe([ options ])
-		tags.set(outname, file['tags'])
-		return outname
-
-	def toOGG(self, file, folder='.', forweb=False):
-		"""
-		Транскодирует файл в OGG.
-		"""
-		filename = file['wav']
-		outpath = os.path.join(self.tmpdir, folder)
-		if not os.path.exists(outpath):
-			print "mkdir", outpath
-			os.mkdir(outpath)
-
-		outname = os.path.join(outpath, '.'.join(os.path.basename(filename).split('.')[0:-1] + ['ogg']))
-
-		options = ['oggenc', '--quiet', '-o', outname]
-		if forweb:
-			options.append('--resample')
-			options.append('44100')
-		options.append(filename)
-
-		self.runPipe([ options ])
-		tags.set(outname, file['tags'])
-		return outname
-
-	def toFLAC(self, file, folder='.'):
-		"""
-		Транскодирует файл во FLAC.
-		"""
-		filename = file['wav']
-		outpath = os.path.join(self.tmpdir, folder)
-		if not os.path.exists(outpath):
-			print "mkdir", outpath
-			os.mkdir(outpath)
-
-		outname = os.path.join(outpath, '.'.join(os.path.basename(filename).split('.')[0:-1] + ['flac']))
-
-		options = ['flac', '-s', '--replay-gain', '-8', '-o', outname]
-		options.append(filename)
-
-		self.runPipe([ options ])
-		tags.set(outname, file['tags'])
-		return outname
-
-	def decode(self, filename):
-		ext = filename.split('.')[-1].lower()
-		noext = '.'.join(filename.split('.')[0:-1])
-		if ext == 'flac':
-			outname = noext + '.wav'
-			self.runPipe([[ 'flac', '-sd', '-o', outname, filename ]])
-			return {
-				'original': filename,
-				'wav': outname,
-				'lossless': True,
-				'tags': tags.get(filename),
-			}
-
-	def getDecoder(self, filename):
-		"""
-		Возвращает команду для декодирования файла и выдачи результата в stdout.
-		"""
-		ext = filename.split('.')[-1].lower()
-		if ext == 'flac':
-			return ['flac', '-s', '-c', '-d', filename]
-		return None
-
-	def runPipe(self, commands):
-		print ' ! ' + ' |\n   '.join([' '.join(command) for command in commands])
-		clist = [] # на всякий случай, чтобы деструкторов не было
-		stdin = None
-		for command in commands:
-			clist.append(subprocess.Popen(command, stdout=subprocess.PIPE, stdin=stdin))
-			stdin = clist[-1].stdout
-		response = clist[-1].communicate()
-		if clist[-1].returncode:
-			raise Exception(response[1])
-		return response[0]
-
-	def tmp(self, filename, ext=None):
-		"""
-		Возвращает имя файла во временной папке, при необходимости заменяет расширение.
-		"""
-		name = os.path.basename(filename)
-		if ext is not None:
-			name = '.'.join(name.split('.')[0:-1] + [ext])
-		return os.path.join(self.tmpdir, 'tmp', name)
 
 	def examine(self, path):
 		print 'Examine folder contents, then ^D'
@@ -225,6 +125,7 @@ class Robot:
 		self.password = ''
 		self.host = None
 		self.owner = None
+		self.debug = False
 
 		config = yaml.load(self.readFile('$HOME/.config/freemusic.yaml'))
 		if config:
@@ -293,7 +194,7 @@ class Robot:
 		return data
 
 	def processZipFile(self, filename):
-		Transcoder().transcode(filename)
+		Transcoder(debug=self.debug).transcode(filename)
 
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
@@ -307,7 +208,7 @@ def usage():
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:fh:p:u:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:u:v")
 	except getopt.GetoptError, err:
 		return usage()
 
