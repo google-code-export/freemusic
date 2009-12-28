@@ -4,7 +4,7 @@
 # Функции для работы с тэгами.
 # http://code.google.com/p/mutagen/wiki/Tutorial
 
-import base64, os
+import base64, datetime, logging, os
 
 try:
 	import mutagen.easyid3
@@ -21,7 +21,7 @@ __all__ = [ "get", "set" ]
 def get(filename):
 	type = ext(filename)
 	if type == 'flac':
-		return mutagen.flac.FLAC(filename)
+		return mutagen.flac.Open(filename)
 
 def set(filename, src, cover=None):
 	mode = ext(filename)
@@ -47,7 +47,7 @@ def set(filename, src, cover=None):
 		copy_tags(src, dst)
 		dst.save()
 	else:
-		print filename + ': tags not supported'
+		logging.info(filename + ': tags not supported')
 
 def ext(filename):
 	return filename.split('.')[-1].lower()
@@ -56,6 +56,6 @@ def copy_tags(src, dst):
 	for tag in sorted(src):
 		try:
 			dst[tag] = src[tag]
-			print " %s => %s" % (tag, dst[tag])
+			logging.debug("    %s => %s" % (tag, dst[tag]))
 		except ValueError:
 			pass

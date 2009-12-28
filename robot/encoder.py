@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
-import os, subprocess, tempfile
+import logging, os, subprocess, tempfile
 import tags
 
 class Encoder:
@@ -11,7 +11,7 @@ class Encoder:
 		self.tmpdir = tempfile.mkdtemp(prefix='encoder-', dir=tmpdir)
 
 	def pipe(self, commands):
-		print ' ! ' + ' |\n   '.join([' '.join(command) for command in commands])
+		logging.info('! ' + ' |\n  '.join([' '.join(command) for command in commands]))
 		clist = [] # на всякий случай, чтобы деструкторов не было
 		stdin = None
 		for command in commands:
@@ -22,17 +22,14 @@ class Encoder:
 			raise Exception(response[1])
 		return response[0]
 
-	def file(self, file):
-		filename = file['wav']
+	def file(self, filename, _tags):
 		outname = self.encode_file(filename, os.path.join(self.tmpdir, '.'.join(os.path.basename(filename).split('.')[0:-1])))
-		tags.set(outname, file['tags'], self.albumart)
+		if _tags:
+			tags.set(outname, _tags, self.albumart)
 		return outname
 
-	def files(self, files):
-		return self.replaygain([self.file(file) for file in files])
-
 	def replaygain(self, files):
-		print "No ReplayGain support for this file type."
+		logging.info("No ReplayGain support for this file type.")
 		return files
 
 class MP3(Encoder):

@@ -7,116 +7,19 @@
 import getopt, sys, os
 import urllib, urllib2
 import base64, hmac, hashlib
-import zipfile, tempfile, shutil
 import subprocess
 import traceback
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
 # local imports
-import albumart, encoder
+from transcoder import Transcoder
 
 try:
 	import yaml
 except:
 	print "Please install python-yaml."
 	sys.exit(1)
-
-class Transcoder:
-	"""
-	Основной обработчик транскодирования. Получает имя исходного ZIP файла,
-	распаковывает его, формирует MP3/OGG файлы для онлайн-прослушивания
-	и архивы для скачивания.
-	
-	TODO: - запускать uploader
-	      - формировать XML файл для загрузки наружу
-	"""
-	def __init__(self, debug=False):
-		self.ready = None
-		self.zipname = None # исходный файл, для формирования имени выходных архивов
-		self.upload = []
-		self.tmpdir = tempfile.mkdtemp(prefix='freemusic-')
-		self.uploaddir = os.path.join(self.tmpdir, 'upload')
-		self.sourcefiles = [] # звуковые файлы
-		self.extrafiles = [] # дополнительные файлы
-		self.albumart = None
-		self.debug = debug
-
-		os.mkdir(self.uploaddir)
-		os.mkdir(os.path.join(self.tmpdir, 'tmp'))
-
-	def __del__(self):
-		if self.tmpdir:
-			if self.debug:
-				self.examine(self.tmpdir)
-			print "Removing", self.tmpdir
-			return shutil.rmtree(self.tmpdir)
-
-	def transcode(self, zipname):
-		"""
-		Обрабатывает указанный архив, возвращает имена сгенерированных файлов.
-		"""
-		self.zipname = zipname
-		decoder = encoder.Decoder(tmpdir=self.tmpdir)
-		for f in self.unzip(zipname):
-			wav = decoder.decode(f)
-			if wav:
-				self.sourcefiles.append(wav)
-			else:
-				self.extrafiles.append(f)
-		self.albumart = albumart.find(self.extrafiles, os.path.join(self.tmpdir, '__folder.jpg'))
-		self.makeOnlineFiles()
-		self.makeDownloadableFiles()
-		print "Files to upload:", self.upload
-		print "Sources:", self.sourcefiles
-
-	def unzip(self, zipname):
-		"""
-		Распаковывает указанный ZIP архив во временную папку,
-		возвращает список с именами файлов.
-		"""
-		print "unzip", zipname
-		result = []
-		zip = zipfile.ZipFile(zipname)
-		for f in zip.namelist():
-			if not f.endswith('/'):
-				result.append(os.path.join(self.tmpdir, os.path.basename(f)))
-				out = open(result[-1], 'wb')
-				out.write(zip.read(f))
-				out.close()
-				print " +", f
-		return result
-
-	def makeOnlineFiles(self):
-		"""
-		Создаёт MP3 версии для прослушивания на сайте, помещает в папку ./upload"
-		"""
-		print "Preparing audio files for online listening."
-		for e in (encoder.MP3, encoder.OGG):
-			self.upload += e(forweb=True, albumart=self.albumart, tmpdir=self.tmpdir).files(self.sourcefiles)
-
-	def makeDownloadableFiles(self):
-		prefix = os.path.join(self.tmpdir, 'upload', '.'.join(os.path.basename(self.zipname).split('.')[0:-1]))
-		self.mkzip(prefix + '-ogg.zip', encoder.OGG)
-		self.mkzip(prefix + '-mp3.zip', encoder.MP3)
-		self.mkzip(prefix + '-flac.zip', encoder.FLAC)
-
-	def mkzip(self, zipname, encoder):
-		print "creating", zipname
-		zip = zipfile.ZipFile(zipname, 'a')
-		for file in encoder(tmpdir=self.tmpdir, albumart=self.albumart).files(self.sourcefiles) + self.extrafiles:
-			print " +", file
-			zip.write(file, os.path.basename(file))
-		zip.close()
-		self.upload.append(zipname)
-
-	def examine(self, path):
-		print 'Examine folder contents, then ^D'
-		old = os.getcwd()
-		os.chdir(path)
-		p = subprocess.Popen(['bash', '-i'])
-		p.communicate()
-		os.chdir(old)
 
 class Robot:
 	def __init__(self, opts):
@@ -126,6 +29,7 @@ class Robot:
 		self.host = None
 		self.owner = None
 		self.debug = False
+		self.upload_dir = None
 
 		config = yaml.load(self.readFile('$HOME/.config/freemusic.yaml'))
 		if config:
@@ -194,7 +98,7 @@ class Robot:
 		return data
 
 	def processZipFile(self, filename):
-		Transcoder(debug=self.debug).transcode(filename)
+		Transcoder(upload_dir=self.upload_dir).transcode(filename)
 
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
