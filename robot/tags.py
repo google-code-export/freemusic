@@ -1,6 +1,8 @@
 #! /usr/bin/python
-# -*- coding: utf-8 -*-
-# vim: set ts=4 sts=4 sw=4 noet:
+# vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
+#
+# Функции для работы с тэгами.
+# http://code.google.com/p/mutagen/wiki/Tutorial
 
 import logging, os
 
@@ -11,6 +13,8 @@ try:
 except:
 	print "Please install python-mutagen."
 	sys.exit(1)
+
+__all__ = [ "get", "set" ]
 
 def get(filename):
 	type = ext(filename)
@@ -38,7 +42,7 @@ def ext(filename):
 	return filename.split('.')[-1].lower()
 
 def copy_tags(src, dst):
-	for tag in src:
+	for tag in sorted(src):
 		try:
 			dst[tag] = src[tag]
 			print " %s => %s" % (tag, dst[tag])
