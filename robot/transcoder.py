@@ -50,7 +50,6 @@ class File:
 			except Exception, e:
 				logging.info("No duration for " + self.name + ": " + str(e))
 			self.lossless = raw['lossless']
-			print self, self.tags
 			if self.lossless:
 				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
 				self.ogg_dl = encoder.OGG(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
