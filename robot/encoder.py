@@ -86,13 +86,20 @@ class FLAC(Encoder):
 class Decoder(Encoder):
 	def decode(self, filename):
 		ext = filename.split('.')[-1].lower()
-		noext = '.'.join(filename.split('.')[0:-1])
+		result = {
+			'wav': os.path.join(self.tmpdir, '.'.join(filename.split('.')[0:-1])) + '.wav',
+			'lossless': False,
+			'tags': tags.get(filename),
+		}
+		
 		if ext == 'flac':
-			outname = os.path.join(self.tmpdir, noext + '.wav')
-			self.pipe([[ 'flac', '-sd', '-o', outname, filename ]])
-			return {
-				'original': filename,
-				'wav': outname,
-				'lossless': True,
-				'tags': tags.get(filename),
-			}
+			self.pipe([[ 'flac', '-sd', '-o', result['wav'], filename ]])
+			result['lossless'] = True
+			result['target'] = 'flac'
+		elif ext == 'mp3':
+			self.pipe([[ 'lame', '--decode', '--quiet', filename, result['wav'] ]])
+			result['target'] = 'mp3_dl'
+		else:
+			return None
+		logging.debug("tags from %s: %s" % (filename, result['tags']))
+		return result

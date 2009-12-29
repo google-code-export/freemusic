@@ -41,18 +41,22 @@ class File:
 	def process_audio(self, tmpdir, albumart):
 		raw = encoder.Decoder(tmpdir=tmpdir).decode(self.name)
 		if raw:
+			if 'target' in raw:
+				setattr(self, raw['target'], self.name)
 			self.wav = raw['wav']
 			self.tags = raw['tags']
 			try:
 				self.duration = str(datetime.timedelta(0, int(self.tags.info.length)))
-			except:
-				logging.info("No duration for " + self.name)
+			except Exception, e:
+				logging.info("No duration for " + self.name + ": " + str(e))
 			self.lossless = raw['lossless']
+			print self, self.tags
+			if self.lossless:
+				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
+				self.ogg_dl = encoder.OGG(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
+				self.flac = encoder.FLAC(tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
 			self.mp3_online = encoder.MP3(forweb=True, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-			self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
 			self.ogg_online = encoder.OGG(forweb=True, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-			self.ogg_dl = encoder.OGG(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-			self.flac = encoder.FLAC(tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
 
 	def is_audio(self):
 		if self.wav:
@@ -168,7 +172,9 @@ class Transcoder:
 		self.replaygain(encoder.OGG, 'ogg_dl')
 
 	def replaygain(self, encoder, attr):
-		encoder(tmpdir=self.tmpdir).replaygain([getattr(file, attr) for file in self.files if hasattr(file, attr) and getattr(file, attr)])
+		files = [getattr(file, attr) for file in self.files if hasattr(file, attr) and getattr(file, attr)]
+		if len(files):
+			encoder(tmpdir=self.tmpdir).replaygain(files)
 
 	def unzip(self, zipname):
 		"""
@@ -226,7 +232,7 @@ class Transcoder:
 		album = None
 
 		for file in self.files:
-			if file.is_audio():
+			if file.is_audio() and file.tags:
 				if 'artist' in file.tags and file.tags['artist'] not in artists:
 					artists.append(file.tags['artist'][0])
 				if 'album' in file.tags:
