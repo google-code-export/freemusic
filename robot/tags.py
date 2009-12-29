@@ -22,6 +22,10 @@ def get(filename):
 	type = ext(filename)
 	if type == 'flac':
 		return mutagen.flac.Open(filename)
+	elif type == 'mp3':
+		return mutagen.easyid3.Open(filename)
+	elif type == 'ogg':
+		return mutagen.oggvorbis.Open(filename)
 
 def set(filename, src, cover=None):
 	mode = ext(filename)
