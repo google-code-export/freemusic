@@ -240,7 +240,7 @@ class Transcoder:
 		if len(artists) != 1:
 			artists = ['Various Artists']
 		if not album:
-			raise Exception('Album name is unknown')
+			album = os.path.splitext(os.path.basename(self.zipname))[0]
 
 		return (artists[0], album)
 
