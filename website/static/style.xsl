@@ -330,6 +330,12 @@
 							<xsl:value-of select="@owner"/>
 						</small>
 					</xsl:if>
+					<xsl:if test="/page/@is-admin">
+						<xsl:text> </xsl:text>
+						<small>
+							<a href="/api/queue/delete?id={@id}">×</a>
+						</small>
+					</xsl:if>
 				</li>
 			</xsl:for-each>
 		</ul>

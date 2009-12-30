@@ -7,10 +7,12 @@ from google.appengine.ext import db
 # Local imports
 import myxml
 from base import BaseRequestHandler, NotFoundException
-from s3 import S3File
+from s3 import S3File, sign
 
-def check_signature(text):
-	return True
+class APIRequest(BaseRequestHandler):
+	def check_access(self, text):
+		if self.request.get('signature') != sign(text):
+			self.force_admin()
 
 class Queue(BaseRequestHandler):
 	def get(self):
@@ -41,12 +43,12 @@ class Queue(BaseRequestHandler):
 		self.sendText(yaml)
 
 
-class Delete(BaseRequestHandler):
+class Delete(APIRequest):
 	def get(self):
 		id = self.request.get('id')
 		if not id:
 			raise Exception('Queue id not specified.')
-		check_signature(id)
+		self.check_access(id)
 		file = S3File.gql('WHERE id = :1', int(id)).get()
 		if not file:
 			raise NotFoundException()
