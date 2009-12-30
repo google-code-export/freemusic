@@ -104,5 +104,5 @@ class Decoder(Encoder):
 			result['target'] = 'mp3_dl'
 		else:
 			return None
-		logging.debug("tags from %s: %s" % (filename, result['tags']))
+		logging.debug("tags in %s: %s" % (filename, result['tags']))
 		return result
