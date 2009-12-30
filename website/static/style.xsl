@@ -322,7 +322,9 @@
 					<xsl:value-of select="@id"/>
 					<xsl:text>. </xsl:text>
 					<tt>
-						<xsl:value-of select="@name"/>
+						<a href="{@uri}">
+							<xsl:value-of select="@name"/>
+						</a>
 					</tt>
 					<xsl:if test="@owner">
 						<small>
