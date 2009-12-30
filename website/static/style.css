@@ -29,6 +29,12 @@ form.gen .text {
   max-width: 400px;
   border: solid 1px #ccc;
 }
+form.gen .hint {
+  width: 400px;
+  color: gray;
+  font-size: 0.8em;
+  margin: 0 0 .5em;
+}
 form.gen div {
   margin-bottom: 1em;
 }
@@ -80,7 +86,7 @@ form.eal ol li {
   width: 150px;
   float: left;
 }
-.twocol .right {
+.twocol .right, .onecol {
   margin-left: 170px;
 }
 
