@@ -191,7 +191,7 @@
 			<xsl:text>»</xsl:text>
 			<small>
 				<xsl:text> от </xsl:text>
-				<a href="{@artist-id}">
+				<a href="/artist/{@artist-id}">
 					<xsl:value-of select="@artist-name"/>
 				</a>
 			</small>
