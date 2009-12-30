@@ -168,7 +168,12 @@ class Robot:
 		if not self.queue:
 			raise Exception(u'Queue URL must be set in the config (key "queue").')
 
-		for item in yaml.load(self.fetch(self.queue)):
+		items = yaml.load(self.fetch(self.queue))
+		if items is None:
+			print "Nothing to do."
+			return
+
+		for item in items:
 			print "Item #%u from %s" % (item['id'], item['owner'])
 			try:
 				zipname = self.fetch_file(item['uri'])
