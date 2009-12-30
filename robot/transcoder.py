@@ -123,7 +123,7 @@ class Transcoder:
 		self.upload_dir = upload_dir
 		self.albumart = None
 		self.files = []
-		self.logname = os.path.join(self.tmpdir, 'transcoding.log')
+		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
 		self.owner = owner
 
 		logging.basicConfig(filename=self.logname, level=logging.DEBUG)
@@ -159,6 +159,7 @@ class Transcoder:
 					files.append(ff)
 			if len(files):
 				dir = tempfile.mkdtemp(prefix='', dir=self.upload_dir)
+				os.chmod(dir, 0755)
 				for file in files:
 					shutil.move(file, dir)
 

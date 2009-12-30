@@ -78,7 +78,7 @@ class Robot:
 		self.upload_dir = None
 		self.queue = None
 
-		config = yaml.load(self.readFile('$HOME/.config/freemusic.yaml'))
+		config = yaml.load(self.read_file('$HOME/.config/freemusic.yaml', 'utf-8'))
 		if config:
 			for k in config.keys():
 				if hasattr(self, k):
@@ -131,7 +131,7 @@ class Robot:
 		dm = hmac.new(self.password, data, hashlib.sha1)
 		return base64.b64encode(dm.digest())
 
-	def readFile(self, filename):
+	def read_file(self, filename, encoding=None):
 		"""
 		Возвращает содержимое указанного файла.  Если файла нет, возвращает пустую строку.
 		"""
@@ -142,6 +142,8 @@ class Robot:
 		else:
 			print "no file: ", filename
 			data = ""
+		if encoding is not None:
+			data = data.decode(encoding)
 		return data
 
 	def fetch(self, url, data=None):
