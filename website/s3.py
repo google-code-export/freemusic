@@ -19,7 +19,7 @@ import base64, datetime, hmac, hashlib, logging, random
 from google.appengine.ext import db
 from google.appengine.api import users
 
-from base import BaseRequestHandler, UnauthorizedException
+from base import BaseRequestHandler, HTTPException
 import myxml as xml
 
 class S3File(db.Model):
@@ -152,7 +152,7 @@ class S3UploadHandler(BaseRequestHandler):
 		"""
 		Заменяет ошибку 401 на сообщение с просьбой войти.
 		"""
-		if type(e) == UnauthorizedException:
+		if type(e) == HTTPException and e.code == 401:
 			self.sendXML('<s3-login-message/>')
 		else:
 			BaseRequestHandler.handle_exception(self, e, debug_mode)

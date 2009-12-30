@@ -15,27 +15,6 @@ from google.appengine.ext.webapp import template
 # Local imports
 import myxml as xml
 
-class ForbiddenException(Exception):
-	def __init__(self):
-		self.status = 403
-
-	def __str__(self):
-		return u"У вас нет доступа к этой странице."
-
-class UnauthorizedException(Exception):
-	def __init__(self):
-		self.status = 401
-
-	def __str__(self):
-		return u"Эта функция доступна только авторизованным пользователям."
-
-class NotFoundException(Exception):
-	def __init__(self):
-		self.status = 404
-
-	def __str__(self):
-		return u"Страница не найдена."
-
 class HTTPException(Exception):
 	def __init__(self, code, message):
 		self.code = code
@@ -65,19 +44,19 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 	def force_admin(self):
 		if not users.is_current_user_admin():
-			raise ForbiddenException()
+			raise HTTPException(403, u'У вас нет доступа к этой странице.')
 		self.force_user()
 
 	def force_user(self):
 		user = users.get_current_user()
 		if not user:
-			raise UnauthorizedException()
+			raise HTTPException(401, u'Для доступа к этой странице требуется авторизация.')
 		return user
 
 	def force_user_or_admin(self, user):
 		u = self.force_user()
 		if u != user and not users.is_current_user_admin():
-			raise UnauthorizedException()
+			raise HTTPException(401, u'Для доступа к этой странице требуется авторизация.')
 		return u
 
 	def sendXML(self, content, attrs={}):

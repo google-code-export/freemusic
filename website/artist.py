@@ -7,6 +7,7 @@ from logging import debug as log
 
 from google.appengine.ext import db
 
+from base import HTTPException
 from rss import RSSHandler as BaseRequestHandler
 from model import SiteArtist
 import myxml as xml
@@ -34,6 +35,7 @@ class ViewHandler(BaseRequestHandler):
 		artist = SiteArtist.gql('WHERE id = :1', int(id)).get()
 		if artist and artist.xml:
 			self.sendXML(artist.xml)
+		raise HTTPException(404, u'Нет такого исполнителя.')
 
 class RSSHandler(BaseRequestHandler):
 	def get(self):

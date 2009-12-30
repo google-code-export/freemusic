@@ -11,7 +11,7 @@ from google.appengine.ext import db
 
 # Local imports
 import myxml, model
-from base import BaseRequestHandler, NotFoundException, HTTPException
+from base import BaseRequestHandler, HTTPException
 from s3 import S3File, sign
 import mail
 
@@ -65,11 +65,11 @@ class Delete(APIRequest):
 	def get(self):
 		id = self.request.get('id')
 		if not id:
-			raise Exception('Queue id not specified.')
+			raise HTTPException(400, u'Не указан идентификатор элемента очереди.')
 		self.check_access(id)
 		file = S3File.gql('WHERE id = :1', int(id)).get()
 		if not file:
-			raise NotFoundException()
+			raise HTTPException(404, u'Такого элемента в очереди нет.')
 		file.delete()
 		self.redirect('/api/queue.xml')
 
@@ -77,7 +77,7 @@ class SubmitAlbum(APIRequest):
 	def get(self):
 		url = self.request.get('url')
 		if not url:
-			raise Exception('URL not specified.')
+			raise HTTPException(400, u'Не указан URL файла album.xml.')
 		self.check_access(url)
 
 		data = fetch(url)

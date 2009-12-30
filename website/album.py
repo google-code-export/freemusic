@@ -6,7 +6,7 @@ import datetime
 
 from google.appengine.api import users
 
-from base import BaseRequestHandler
+from base import BaseRequestHandler, HTTPException
 from model import SiteAlbum
 import rss
 
@@ -24,7 +24,7 @@ class Viewer(BaseRequestHandler):
 		album = SiteAlbum.gql('WHERE id = :1', int(id)).get()
 		if album:
 			return album
-		raise Exception('No such album.')
+		raise HTTPException(404, u'Нет такого альбома.')
 
 class Editor(Viewer):
 	def get(self, id):

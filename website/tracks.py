@@ -7,7 +7,7 @@ from logging import debug as log
 
 from model import SiteTrack
 from rss import RSSHandler as RssBase
-from base import BaseRequestHandler
+from base import BaseRequestHandler, HTTPException
 import myxml as xml
 
 class RSSHandler(RssBase):
@@ -26,5 +26,5 @@ class Viewer(BaseRequestHandler):
 	def get(self, id):
 		track = SiteTrack.gql('WHERE id = :1', int(id)).get()
 		if not track:
-			raise Exception('No such track.')
+			raise HTTPException(404, u'Нет такой дорожки.')
 		self.sendXML(track.to_xml())
