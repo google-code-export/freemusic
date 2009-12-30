@@ -149,7 +149,7 @@ class Transcoder:
 		self.process_audio()
 		self.makeDownloadableFiles()
 		self.makeXML()
-		self.upload()
+		return self.upload()
 
 	def upload(self):
 		if self.upload_dir:
@@ -162,6 +162,7 @@ class Transcoder:
 				os.chmod(dir, 0755)
 				for file in files:
 					shutil.move(file, dir)
+			return os.path.join(os.path.basename(dir), 'album.xml')
 
 	def process_audio(self):
 		for f in self.files:
@@ -227,7 +228,7 @@ class Transcoder:
 		xml = u'<?xml version="1.0"?>\n'
 		xml += myxml.em(u'album', {
 			'artist': artist,
-			'album': album,
+			'name': album,
 			'owner': self.owner,
 		}, contents)
 

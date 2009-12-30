@@ -26,5 +26,5 @@ class Viewer(BaseRequestHandler):
 	def get(self, id):
 		track = SiteTrack.gql('WHERE id = :1', int(id)).get()
 		if not track:
-			raise Error('No such track.')
+			raise Exception('No such track.')
 		self.sendXML(track.to_xml())

@@ -24,7 +24,7 @@ class Viewer(BaseRequestHandler):
 		album = SiteAlbum.gql('WHERE id = :1', int(id)).get()
 		if album:
 			return album
-		raise Error('No such album.')
+		raise Exception('No such album.')
 
 class Editor(Viewer):
 	def get(self, id):

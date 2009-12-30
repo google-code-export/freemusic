@@ -94,6 +94,7 @@ if __name__ == '__main__':
 		('/api/queue\.xml', api.Queue),
 		('/api/queue\.yaml', api.Queue),
 		('/api/queue/delete', api.Delete),
+		('/api/submit/album', api.SubmitAlbum),
 		('/submit', SubmitHandler),
 		('/album/(\d+)$', album.Viewer),
 		('/album/(\d+)/edit$', album.Editor),

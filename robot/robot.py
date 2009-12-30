@@ -76,6 +76,7 @@ class Robot:
 		self.owner = None
 		self.debug = False
 		self.upload_dir = None
+		self.upload_base_url = None
 		self.queue = None
 
 		config = yaml.load(self.read_file('$HOME/.config/freemusic.yaml', 'utf-8'))
@@ -177,11 +178,25 @@ class Robot:
 			print "Item #%u from %s" % (item['id'], item['owner'])
 			try:
 				zipname = self.fetch_file(item['uri'])
-				self.processZipFile(zipname, item['owner'])
+				url = self.processZipFile(zipname, item['owner'])
+				if url and self.upload_base_url:
+					url = self.upload_base_url + url
+				if url:
+					self.submit_url(url)
 				os.remove(zipname)
 				self.dequeue(item['id'])
 			except Exception, e:
 				print "    ERROR: " + str(e)
+
+	def submit_url(self, url):
+		"""
+		Просит сервер добавить альбом, информация о котором находится по указанному адресу.
+		"""
+		url = self.get_api_url('api/submit/album', {
+			'url': url,
+			'signature': self.sign(url),
+		})
+		self.fetch(url)
 
 	def dequeue(self, id):
 		parts = urlparse.urlparse(self.queue)
@@ -190,6 +205,13 @@ class Robot:
 		print "    " + url
 		self.fetch(url)
 
+	def get_api_url(self, path, args=None):
+		parts = urlparse.urlparse(self.queue)
+		url = parts[0] + '://' + parts[1] + '/' + path
+		if args:
+			url += '?' + urllib.urlencode(args)
+		return url
+
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
 	print "\nBasic options:"
@@ -197,13 +219,14 @@ def usage():
 	print " -f               force (overwrite existing albums, etc)"
 	print " -h host          host name"
 	print " -q               process all incoming files"
+	print " -s url           submit album.xml"
 	print " -u filename      process and upload a single zip file"
 	print " -v               be verbose"
 	return 2
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:qu:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:qs:u:v")
 	except getopt.GetoptError, err:
 		return usage()
 
@@ -226,6 +249,8 @@ def main():
 			r.password = value
 		if '-q' == option:
 			r.processQueue()
+		if '-s' == option:
+			r.submit_url(value)
 		if '-u' == option:
 			r.processZipFile(value)
 

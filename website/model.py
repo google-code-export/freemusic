@@ -24,7 +24,7 @@ class SiteArtist(db.Model):
 			logging.info('New artist: %s (artist/%u)' % (self.name, self.id))
 		if not quick:
 			self.xml = self.to_xml()
-		db.Model.put(self)
+		return db.Model.put(self)
 
 	def to_xml(self):
 		albums = xml.em(u'albums', content=u''.join([album.xml for album in SiteAlbum.gql('WHERE artist = :1', self).fetch(100)]), empty=False)
@@ -53,7 +53,7 @@ class SiteAlbum(db.Model):
 		if not quick:
 			self.xml = self.to_xml()
 			logging.info('album/%u: xml updated' % self.id)
-		db.Model.put(self)
+		return db.Model.put(self)
 
 	def to_xml(self):
 		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
@@ -80,7 +80,12 @@ class SiteImage(db.Model):
 	type = db.StringProperty()
 
 	def to_xml(self):
-		return u"<image uri='%s' width='%u' height='%u' type='%s'/>" % (escape(self.uri), self.width, self.height, escape(self.type))
+		return xml.em(u'image', {
+			'uri': self.uri,
+			'width': self.width,
+			'height': self.height,
+			'type': self.type,
+		})
 
 class SiteTrack(db.Model):
 	id = db.IntegerProperty()
@@ -91,6 +96,8 @@ class SiteTrack(db.Model):
 	number = db.IntegerProperty()
 	mp3_link = db.LinkProperty()
 	mp3_length = db.IntegerProperty() # нужно для RSS с подкастом
+	ogg_link = db.LinkProperty()
+	ogg_length = db.IntegerProperty() # нужно для RSS с подкастом
 	duration = db.StringProperty()
 
 	@classmethod
@@ -120,10 +127,11 @@ class SiteFile(db.Model):
 	size = db.IntegerProperty()
 
 	def to_xml(self):
-		xml = u"<file name='%s' uri='%s' type='%s'" % (escape(self.name), escape(self.uri), escape(self.type))
-		if self.size:
-			xml += u" size='%u'" % self.size
-		return xml + u'/>'
+		return xml.em(u'file', {
+			'name': self.name,
+			'uri': self.uri,
+			'type': self.type,
+		})
 
 class SiteAlbumReview(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)

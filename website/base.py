@@ -36,6 +36,11 @@ class NotFoundException(Exception):
 	def __str__(self):
 		return u"Страница не найдена."
 
+class HTTPException(Exception):
+	def __init__(self, code, message):
+		self.code = code
+		self.message = message
+
 class BaseRequestHandler(webapp.RequestHandler):
 	def getBaseURL(self):
 		"""
@@ -101,7 +106,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
 		"""
 		logging.warning(e)
-		self.sendXML(xml.em(u'message', {'text': unicode(e)}))
+		if type(e) == HTTPException:
+			self.sendXML(xml.em(u'message', {'text': e.message}))
+		else:
+			webapp.RequestHandler.handle_exception(self, e, debug_mode)
 
 	def quote(self, text):
 		return urllib.quote(text.encode('utf8'))
