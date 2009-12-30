@@ -127,7 +127,7 @@ class S3UploadHandler(BaseRequestHandler):
 			'access-key': settings.s3a,
 			'key': path + '/${filename}',
 			'policy': policy,
-			'signature': sign(settings, policy),
+			'signature': sign(policy, settings),
 			'base': base,
 			'owner': users.get_current_user().email(),
 		}))
@@ -160,6 +160,8 @@ class S3UploadHandler(BaseRequestHandler):
 def encode_policy(dict):
 	return base64.b64encode(unicode(dict).encode('utf-8'))
 
-def sign(settings, string):
+def sign(string, settings=None):
+	if settings is None:
+		settings = S3Settings.load()
 	dm = hmac.new(settings.s3s, string, hashlib.sha1)
 	return base64.b64encode(dm.digest())
