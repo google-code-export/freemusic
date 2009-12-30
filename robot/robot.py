@@ -50,7 +50,7 @@
 #   по электронной почте.
 
 import getopt, sys, os
-import urllib, urllib2
+import urllib, urllib2, urlparse
 import base64, hmac, hashlib
 import subprocess
 import traceback
@@ -154,24 +154,34 @@ class Robot:
 		return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
 
 	def fetch_file(self, url):
-		filename = tempfile.mkstemp(suffix='.zip')[1]
-		print "fetching %s\n  as %s" % (url, filename)
+		filename = tempfile.mkstemp(suffix='.zip', prefix='freemusic-')[1]
+		print "  fetching %s\n    as %s" % (url, filename)
 		open(filename, 'wb').write(self.fetch(url))
 		return filename
 
-	def processZipFile(self, filename):
-		Transcoder(upload_dir=self.upload_dir).transcode(filename)
+	def processZipFile(self, filename, owner=None):
+		Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename)
 
 	def processQueue(self):
 		if not self.queue:
 			raise Exception(u'Queue URL must be set in the config (key "queue").')
 
 		for item in yaml.load(self.fetch(self.queue)):
+			print "Item #%u from %s" % (item['id'], item['owner'])
 			try:
-				self.processZipFile(zipname = self.fetch_file(item['uri']))
+				zipname = self.fetch_file(item['uri'])
+				self.processZipFile(zipname, item['owner'])
 				os.remove(zipname)
+				self.dequeue(item['id'])
 			except Exception, e:
-				print "  ERROR: " + str(e)
+				print "    ERROR: " + str(e)
+
+	def dequeue(self, id):
+		parts = urlparse.urlparse(self.queue)
+		url = parts[0] + '://' + parts[1] + '/api/queue/delete?id=' + str(id) + '&signature=' + urllib.quote(self.sign(str(id)))
+		print "  dequeueing"
+		print "    " + url
+		self.fetch(url)
 
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))

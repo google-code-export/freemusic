@@ -116,7 +116,7 @@ class Transcoder:
 	распаковывает его, формирует MP3/OGG файлы для онлайн-прослушивания
 	и архивы для скачивания.
 	"""
-	def __init__(self, upload_dir):
+	def __init__(self, upload_dir, owner):
 		self.ready = None
 		self.zipname = None # исходный файл, для формирования имени выходных архивов
 		self.tmpdir = tempfile.mkdtemp(prefix='freemusic-')
@@ -124,6 +124,7 @@ class Transcoder:
 		self.albumart = None
 		self.files = []
 		self.logname = os.path.join(self.tmpdir, 'transcoding.log')
+		self.owner = owner
 
 		logging.basicConfig(filename=self.logname, level=logging.DEBUG)
 		print "Logging to " + self.logname
@@ -218,10 +219,17 @@ class Transcoder:
 
 	def makeXML(self):
 		artist, album = self.find_meta()
-		xml = u'<?xml version="1.0"?>\n<album name=%s artist=%s>' % (escape(album), escape(artist))
+		contents = u'' # u'<?xml version="1.0"?>\n<album name=%s artist=%s>' % (escape(album), escape(artist))
 		for w, m in [(u'tracks', File.get_track_xml), (u'images', File.get_image_xml), (u'files', File.get_file_xml)]:
-			xml += myxml.em(w, content=u''.join([m(file) for file in self.files]), empty=False)
-		xml += u'</album>\n'
+			contents += myxml.em(w, content=u''.join([m(file) for file in self.files]), empty=False)
+
+		xml = u'<?xml version="1.0"?>\n'
+		xml += myxml.em(u'album', {
+			'artist': artist,
+			'album': album,
+			'owner': self.owner,
+		}, contents)
+
 		filename = os.path.join(self.tmpdir, 'album.xml')
 		open(filename, 'w').write(xml.encode('utf-8'))
 		self.files.append(File(filename))
