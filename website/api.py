@@ -14,6 +14,13 @@ class APIRequest(BaseRequestHandler):
 		if self.request.get('signature') != sign(text):
 			self.force_admin()
 
+	def handle_exception(self, e, debug_mode):
+		if hasattr(e, 'status'):
+			self.error(e.status)
+		else:
+			self.error(500)
+		self.sendText(unicode(e) + u'\n')
+
 class Queue(BaseRequestHandler):
 	def get(self):
 		if self.request.path == '/api/queue.yaml':

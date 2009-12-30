@@ -16,14 +16,23 @@ from google.appengine.ext.webapp import template
 import myxml as xml
 
 class ForbiddenException(Exception):
+	def __init__(self):
+		self.status = 403
+
 	def __str__(self):
 		return u"У вас нет доступа к этой странице."
 
 class UnauthorizedException(Exception):
+	def __init__(self):
+		self.status = 401
+
 	def __str__(self):
 		return u"Эта функция доступна только авторизованным пользователям."
 
 class NotFoundException(Exception):
+	def __init__(self):
+		self.status = 404
+
 	def __str__(self):
 		return u"Страница не найдена."
 
@@ -86,7 +95,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
 		self.response.out.write(content)
 
-	def Xhandle_exception(self, e, debug_mode):
+	def handle_exception(self, e, debug_mode):
 		"""
 		Заворачивает сообщения об ошибках в <message>.
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
