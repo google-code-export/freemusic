@@ -30,10 +30,16 @@ class S3File(db.Model):
 	name = db.StringProperty(required=True)
 	bucket = db.StringProperty()
 	path = db.StringProperty()
+	uri = db.StringProperty()
 	size = db.IntegerProperty()
 	created = db.DateTimeProperty(auto_now_add=True)
 	info = db.TextProperty()
 	owner = db.UserProperty()
+
+	def put(self):
+		if not self.id:
+			self.id = S3File.getNextId()
+		return db.Model.put(self)
 
 	@classmethod
 	def getNextId(cls):
@@ -133,6 +139,7 @@ class S3UploadHandler(BaseRequestHandler):
 			name=self.request.get('key').split('/')[-1],
 			bucket=self.request.get('bucket'),
 			path=self.request.get('key'),
+			uri='http://' + self.request.get('bucket') + '.s3.amazonaws.com/' + self.request.get('key'),
 			owner=users.get_current_user())
 		File.put()
 
