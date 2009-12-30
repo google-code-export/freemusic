@@ -189,7 +189,7 @@ class Transcoder:
 				out = open(result[-1], 'wb')
 				out.write(zip.read(f))
 				out.close()
-				logging.info("  found" + f)
+				logging.info("  found " + f)
 		return result
 
 	def makeDownloadableFiles(self):
@@ -223,7 +223,7 @@ class Transcoder:
 			xml += myxml.em(w, content=u''.join([m(file) for file in self.files]), empty=False)
 		xml += u'</album>\n'
 		filename = os.path.join(self.tmpdir, 'album.xml')
-		open(filename, 'w').write(xml)
+		open(filename, 'w').write(xml.encode('utf-8'))
 		self.files.append(File(filename))
 
 	def find_meta(self):
