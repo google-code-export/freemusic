@@ -18,19 +18,22 @@ class Queue(BaseRequestHandler):
 			return self.get_yaml()
 		xml = u''
 		for file in S3File.all().fetch(1000):
-			uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
+			if not file.uri:
+				file.uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
 			xml += myxml.em(u'file', {
 				'id': file.id,
 				'name': file.name,
 				'owner': file.owner,
-				'uri': 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path,
+				'uri': file.uri,
 			})
 		self.sendXML(myxml.em(u'queue', content=xml))
 
 	def get_yaml(self):
 		yaml = u'files:\n'
 		for file in S3File.all().fetch(1000):
-			uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
+			uri = file.uri
+			if not uri and file.bucket and file.path:
+				uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
 			yaml += u'  - id: %u\n' % file.id
 			yaml += u'    name: %s\n' % file.name
 			if file.owner:

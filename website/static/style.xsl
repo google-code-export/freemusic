@@ -233,6 +233,22 @@
 		</form>
 	</xsl:template>
 
+	<xsl:template match="/page/upload-remote">
+		<div class="onecol">
+			<h2>Загрузка альбома с другого сайта</h2>
+			<form method="post" class="gen">
+				<div>
+					<label>
+						<span>Адрес ZIP-архива:</span>
+						<input type="text" name="url" class="text"/>
+					</label>
+					<p class="hint">Это должна быть прямая ссылка, страницы-посредники вроде RapidShare работать не будут.</p>
+				</div>
+				<input type="submit"/>
+			</form>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="/page/index">
 		<div id="index" class="twocol">
 			<div class="left">
@@ -284,10 +300,17 @@
 	</xsl:template>
 
 	<xsl:template match="/page/message">
-		<h2>Ошибка</h2>
-		<p>
-			<xsl:value-of select="@text"/>
-		</p>
+		<div class="onecol">
+			<h2>
+				<xsl:value-of select="@title"/>
+				<xsl:if test="not(@title)">
+					<xsl:text>Ошибка</xsl:text>
+				</xsl:if>
+			</h2>
+			<p>
+				<xsl:value-of select="@text"/>
+			</p>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="/page/queue">
@@ -409,7 +432,7 @@
 		<div class="twocol">
 			<div class="right">
 				<h2>Загрузка завершена</h2>
-				<p>Файл успешно загружен, ему присвоен <a href="/queue">номер <xsl:value-of select="@file-id"/></a>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
+				<p>Файл успешно загружен, ему присвоен <a href="/api/queue.xml#{@file-id}">номер <xsl:value-of select="@file-id"/></a>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
 				<p><a href="/upload">Загрузить ещё один файл</a></p>
 			</div>
 		</div>
