@@ -292,10 +292,12 @@
 
 	<xsl:template match="/page/queue">
 		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
-		<ol>
+		<ul>
 			<xsl:for-each select="file">
 				<xsl:sort select="@id" data-type="number"/>
 				<li>
+					<xsl:value-of select="@id"/>
+					<xsl:text>. </xsl:text>
 					<tt>
 						<xsl:value-of select="@name"/>
 					</tt>
@@ -307,7 +309,7 @@
 					</xsl:if>
 				</li>
 			</xsl:for-each>
-		</ol>
+		</ul>
 	</xsl:template>
 
 	<!-- additional stuff -->
