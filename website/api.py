@@ -49,3 +49,4 @@ class Delete(BaseRequestHandler):
 		if not file:
 			raise NotFoundException()
 		file.delete()
+		self.redirect('/api/queue.xml')
