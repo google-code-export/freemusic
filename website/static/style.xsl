@@ -291,7 +291,7 @@
 	</xsl:template>
 
 	<xsl:template match="/page/queue">
-		<h2>Очередь обработки</h2>
+		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
 		<ol>
 			<xsl:for-each select="file">
 				<xsl:sort select="@id" data-type="number"/>

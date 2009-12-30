@@ -11,11 +11,11 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports.
 from base import BaseRequestHandler, run
 from s3 import S3SettingsHandler, S3UploadHandler
+import api
 import model
 import album
 import artist
 import sitemap
-import queue
 import tracks
 import upload
 
@@ -91,6 +91,9 @@ if __name__ == '__main__':
 	run([
 		('/', IndexHandler),
 		('/add/file', AddFileHandler),
+		('/api/queue\.xml', api.Queue),
+		('/api/queue\.yaml', api.Queue),
+		('/api/queue/delete', api.Delete),
 		('/submit', SubmitHandler),
 		('/album/(\d+)$', album.Viewer),
 		('/album/(\d+)/edit$', album.Editor),
@@ -102,7 +105,6 @@ if __name__ == '__main__':
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)', artist.ViewHandler),
 		('/artists\.rss', artist.RSSHandler),
-		('/queue', queue.QueueHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
 		('/track/(\d+)$', tracks.Viewer),

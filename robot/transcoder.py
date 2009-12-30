@@ -157,7 +157,7 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
-				dir = tempfile.mkdtemp(prefix='album-', dir=self.upload_dir)
+				dir = tempfile.mkdtemp(prefix='', dir=self.upload_dir)
 				for file in files:
 					shutil.move(file, dir)
 

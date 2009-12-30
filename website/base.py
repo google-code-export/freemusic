@@ -23,6 +23,10 @@ class UnauthorizedException(Exception):
 	def __str__(self):
 		return u"Эта функция доступна только авторизованным пользователям."
 
+class NotFoundException(Exception):
+	def __str__(self):
+		return u"Страница не найдена."
+
 class BaseRequestHandler(webapp.RequestHandler):
 	def getBaseURL(self):
 		"""
@@ -77,6 +81,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 		result += xml.em(u'page', attrs, content)
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
+
+	def sendText(self, content):
+		self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+		self.response.out.write(content)
 
 	def Xhandle_exception(self, e, debug_mode):
 		"""
