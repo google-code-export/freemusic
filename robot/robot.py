@@ -54,6 +54,7 @@ import urllib, urllib2
 import base64, hmac, hashlib
 import subprocess
 import traceback
+import tempfile
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
@@ -75,6 +76,7 @@ class Robot:
 		self.owner = None
 		self.debug = False
 		self.upload_dir = None
+		self.queue = None
 
 		config = yaml.load(self.readFile('$HOME/.config/freemusic.yaml'))
 		if config:
@@ -142,8 +144,34 @@ class Robot:
 			data = ""
 		return data
 
+	def fetch(self, url, data=None):
+		"""
+		Запрашивает указанный URL, возвращает результат.  Если указан параметр data,
+		его содержимое отправляется методом POST (обычно это словарь).
+		"""
+		if data is not None:
+			data = urllib.urlencode(data)
+		return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
+
+	def fetch_file(self, url):
+		filename = tempfile.mkstemp(suffix='.zip')[1]
+		print "fetching %s\n  as %s" % (url, filename)
+		open(filename, 'wb').write(self.fetch(url))
+		return filename
+
 	def processZipFile(self, filename):
 		Transcoder(upload_dir=self.upload_dir).transcode(filename)
+
+	def processQueue(self):
+		if not self.queue:
+			raise Exception(u'Queue URL must be set in the config (key "queue").')
+
+		for item in yaml.load(self.fetch(self.queue)):
+			try:
+				self.processZipFile(zipname = self.fetch_file(item['uri']))
+				os.remove(zipname)
+			except Exception, e:
+				print "  ERROR: " + str(e)
 
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
@@ -151,14 +179,18 @@ def usage():
 	print " -a filename.xml  upload an album from this file"
 	print " -f               force (overwrite existing albums, etc)"
 	print " -h host          host name"
-	print " -u filename      process and upload a zip file"
+	print " -q               process all incoming files"
+	print " -u filename      process and upload a single zip file"
 	print " -v               be verbose"
 	return 2
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:u:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:qu:v")
 	except getopt.GetoptError, err:
+		return usage()
+
+	if not len(opts):
 		return usage()
 
 	r = Robot(opts)
@@ -175,6 +207,8 @@ def main():
 			r.verbose = True
 		if '-p' == option:
 			r.password = value
+		if '-q' == option:
+			r.processQueue()
 		if '-u' == option:
 			r.processZipFile(value)
 
