@@ -47,6 +47,8 @@ class Queue(BaseRequestHandler):
 			yaml += u'  uri: %s\n' % uri
 			if file.owner:
 				yaml += u'  owner: %s\n' % file.owner
+		if not yaml:
+			yaml = u'# nothing to do'
 		self.sendText(yaml)
 
 
