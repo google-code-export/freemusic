@@ -315,32 +315,37 @@
 
 	<xsl:template match="/page/queue">
 		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
-		<ul>
-			<xsl:for-each select="file">
-				<xsl:sort select="@id" data-type="number"/>
-				<li>
-					<xsl:value-of select="@id"/>
-					<xsl:text>. </xsl:text>
-					<tt>
-						<a href="{@uri}">
-							<xsl:value-of select="@name"/>
-						</a>
-					</tt>
-					<xsl:if test="@owner">
-						<small>
-							<xsl:text> от </xsl:text>
-							<xsl:value-of select="@owner"/>
-						</small>
-					</xsl:if>
-					<xsl:if test="/page/@is-admin">
-						<xsl:text> </xsl:text>
-						<small>
-							<a href="/api/queue/delete?id={@id}">×</a>
-						</small>
-					</xsl:if>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<xsl:if test="file">
+			<ul>
+				<xsl:for-each select="file">
+					<xsl:sort select="@id" data-type="number"/>
+					<li>
+						<xsl:value-of select="@id"/>
+						<xsl:text>. </xsl:text>
+						<tt>
+							<a href="{@uri}">
+								<xsl:value-of select="@name"/>
+							</a>
+						</tt>
+						<xsl:if test="@owner">
+							<small>
+								<xsl:text> от </xsl:text>
+								<xsl:value-of select="@owner"/>
+							</small>
+						</xsl:if>
+						<xsl:if test="/page/@is-admin">
+							<xsl:text> </xsl:text>
+							<small>
+								<a href="/api/queue/delete?id={@id}">×</a>
+							</small>
+						</xsl:if>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</xsl:if>
+		<xsl:if test="not(file)">
+			<p>Очередь пуста, <a href="/upload">загрузи</a> что-нибудь<a href="/upload/remote">!</a></p>
+		</xsl:if>
 	</xsl:template>
 
 	<!-- additional stuff -->
