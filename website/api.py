@@ -85,6 +85,7 @@ class SubmitAlbum(APIRequest):
 			logging.info('New submission: ' + url)
 			logging.debug(data.content)
 			data = self.xml_to_dict(parseString(data.content), '/'.join(url.split('/')[0:-1]) + '/')
+			data['album_xml'] = url
 			logging.debug(data)
 			if data:
 				self.importAlbum(data)
@@ -163,15 +164,15 @@ class SubmitAlbum(APIRequest):
 
 			for em2 in em.getElementsByTagName('image'):
 				album['images'].append({
-					'uri': self.aton(em2.getAttribute('uri'), base_url),
-					'width': self.iton(em2.getAttribute('width')),
-					'height': self.iton(em2.getAttribute('height')),
-					'type': self.aton(em2.getAttribute('type')),
+					'small': self.aton(em2.getAttribute('small'), base_url),
+					'medium': self.aton(em2.getAttribute('medium'), base_url),
+					'original': self.aton(em2.getAttribute('original'), base_url),
 				})
 
 			for em2 in em.getElementsByTagName('track'):
 				album['tracks'].append({
 					'title': self.aton(em2.getAttribute('title')),
+					'artist': self.aton(em2.getAttribute('artist')),
 					'number': self.iton(em2.getAttribute('number')),
 					'mp3-link': self.aton(em2.getAttribute('mp3-link'), base_url),
 					'ogg-link': self.aton(em2.getAttribute('ogg-link'), base_url),

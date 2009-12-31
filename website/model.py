@@ -45,6 +45,7 @@ class SiteAlbum(db.Model):
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
 	xml = db.TextProperty() # updated on save
+	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
 
 	def put(self, quick=False):
 		if not self.id:
@@ -74,17 +75,15 @@ class SiteAlbum(db.Model):
 
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
-	uri = db.LinkProperty()
-	width = db.IntegerProperty()
-	height = db.IntegerProperty()
-	type = db.StringProperty()
+	small = db.LinkProperty()
+	medium = db.LinkProperty()
+	original = db.LinkProperty()
 
 	def to_xml(self):
 		return xml.em(u'image', {
-			'uri': self.uri,
-			'width': self.width,
-			'height': self.height,
-			'type': self.type,
+			'small': self.small,
+			'medium': self.medium,
+			'original': self.original,
 		})
 
 class SiteTrack(db.Model):
@@ -100,12 +99,10 @@ class SiteTrack(db.Model):
 	ogg_length = db.IntegerProperty() # нужно для RSS с подкастом
 	duration = db.StringProperty()
 
-	@classmethod
-	def getNextId(cls):
-		last = cls.gql('ORDER BY id DESC').get()
-		if last:
-			return last.id + 1
-		return 1
+	def put(self):
+		if not self.id:
+			self.id = nextId(SiteTrack)
+		return db.Model.put(self)
 
 	def to_xml(self):
 		return xml.em(u'track', {
