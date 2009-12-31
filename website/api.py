@@ -109,7 +109,7 @@ class SubmitAlbum(APIRequest):
 
 			self.purge(model.SiteImage, album)
 			for image in data['images']:
-				keys.append(model.SiteImage(album=album, uri=image['uri'], width=image['width'], height=image['height'], type=image['type']).put())
+				keys.append(model.SiteImage(album=album, small=image['small'], medium=image['medium'], original=image['original']).put())
 
 			self.purge(model.SiteTrack, album)
 			for track in data['tracks']:
