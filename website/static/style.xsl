@@ -176,9 +176,16 @@
 					</audio>
 				</xsl:if>
 				<ul>
-					<li>
-						<a href="{@mp3-link}">Скачать MP3</a>
-					</li>
+					<xsl:if test="@mp3-link">
+						<li>
+							<a href="{@mp3-link}">Скачать MP3</a>
+						</li>
+					</xsl:if>
+					<xsl:if test="@ogg-link">
+						<li>
+							<a href="{@ogg-link}">Скачать OGG/Vorbis</a>
+						</li>
+					</xsl:if>
 				</ul>
 			</div>
 		</div>

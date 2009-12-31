@@ -113,6 +113,7 @@ class SiteTrack(db.Model):
 			'title': self.title,
 			'duration': self.duration,
 			'mp3-link': self.mp3_link,
+			'ogg-link': self.ogg_link,
 			'lyrics': self.lyrics,
 		})
 
