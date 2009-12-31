@@ -163,7 +163,11 @@ class Robot:
 		return filename
 
 	def processZipFile(self, filename, owner=None):
-		Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename)
+		url = Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename)
+		if url and self.upload_base_url:
+			url = self.upload_base_url + url
+		if url:
+			self.submit_url(url)
 
 	def processQueue(self):
 		if not self.queue:
@@ -178,11 +182,7 @@ class Robot:
 			print "Item #%u from %s" % (item['id'], item['owner'])
 			try:
 				zipname = self.fetch_file(item['uri'])
-				url = self.processZipFile(zipname, item['owner'])
-				if url and self.upload_base_url:
-					url = self.upload_base_url + url
-				if url:
-					self.submit_url(url)
+				self.processZipFile(zipname, item['owner'])
 				os.remove(zipname)
 				self.dequeue(item['id'])
 			except Exception, e:

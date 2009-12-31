@@ -21,6 +21,8 @@ class File:
 		self.duration = None
 		self.width = None
 		self.height = None
+		self.img_small = None
+		self.img_medium = None
 
 		try:
 			img = Image.open(self.name)
@@ -38,7 +40,7 @@ class File:
 			return list(self.tags[name])[0]
 		return ''
 
-	def process_audio(self, tmpdir, albumart):
+	def process_audio(self, tmpdir, cover):
 		raw = encoder.Decoder(tmpdir=tmpdir).decode(self.name)
 		if raw:
 			if 'target' in raw:
@@ -51,11 +53,15 @@ class File:
 				logging.info("No duration for " + self.name + ": " + str(e))
 			self.lossless = raw['lossless']
 			if self.lossless:
-				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-				self.ogg_dl = encoder.OGG(forweb=False, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-				self.flac = encoder.FLAC(tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-			self.mp3_online = encoder.MP3(forweb=True, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
-			self.ogg_online = encoder.OGG(forweb=True, tmpdir=tmpdir, albumart=albumart).file(self.wav, self.tags)
+				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
+				self.ogg_dl = encoder.OGG(forweb=False, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
+				self.flac = encoder.FLAC(tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
+			self.mp3_online = encoder.MP3(forweb=True, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
+			self.ogg_online = encoder.OGG(forweb=True, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
+
+		if self.is_image():
+			self.img_small = albumart.resize(self.name, 100)
+			self.img_medium = albumart.resize(self.name, 200)
 
 	def is_audio(self):
 		if self.wav:
@@ -69,11 +75,10 @@ class File:
 
 	def uploadable(self):
 		lst = []
-		if self.mp3_online:
-			lst.append(self.mp3_online)
-		if self.ogg_online:
-			lst.append(self.ogg_online)
-		if not len(lst):
+		for k in ['mp3_online', 'ogg_online', 'img_small', 'img_medium']:
+			if getattr(self, k):
+				lst.append(getattr(self, k))
+		if not len(lst) or self.is_image():
 			lst.append(self.name)
 		return lst
 
@@ -104,9 +109,9 @@ class File:
 	def get_image_xml(self):
 		if self.is_image():
 			return myxml.em(u'image', {
-				'uri': myxml.uri(os.path.basename(self.name)),
-				'width': self.width,
-				'height': self.height,
+				'original': myxml.uri(os.path.basename(self.name)),
+				'small': myxml.uri(os.path.basename(self.img_small)),
+				'medium': myxml.uri(os.path.basename(self.img_medium)),
 				})
 		return u''
 
