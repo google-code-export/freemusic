@@ -12,7 +12,7 @@ def em(emname, attrs=None, content=None, empty=True):
 		for k in attrs:
 			value = attrs[k]
 			if value:
-				if True == value:
+				if True == value and type(value) == type(True):
 					value = u'yes'
 				else:
 					value = unicode(value)
