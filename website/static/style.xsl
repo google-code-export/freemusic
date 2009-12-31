@@ -60,7 +60,7 @@
 		<div id="album">
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
-				<xsl:apply-templates select="images/image[@type='medium']"/>
+				<xsl:apply-templates select="images/image[position()=1]" mode="medium"/>
 				<ul>
 					<li>
 						<a href="{files/file/@uri}">Скачать альбом</a>
@@ -355,7 +355,12 @@
 			<xsl:for-each select="album">
 				<li class="album">
 					<a href="/album/{@id}">
-						<xsl:apply-templates select="images/image[@type=$index-image-type]"/>
+						<img width="100" height="100">
+							<xsl:attribute name="src">
+								<xsl:value-of select="images/image[position()=1]/@small"/>
+								<xsl:if test="not(images/image[position()=1]/@small)">/static/cdaudio_mount.png</xsl:if>
+							</xsl:attribute>
+						</img>
 					</a>
 					<div>
 						<a class="n" href="/album/{@id}">
@@ -374,7 +379,28 @@
 	</xsl:template>
 
 	<xsl:template match="image">
-		<img src="{@uri}" alt="image" width="{@width}" height="{@height}"/>
+		<xsl:param name="size">medium</xsl:param>
+		<xsl:choose>
+			<xsl:when test="$size='medium'">
+				<img src="{@medium}" alt="image" width="200" height="200"/>
+			</xsl:when>
+			<xsl:when test="$size='small'">
+				<img src="{@small}" alt="image" width="100" height="100"/>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="image" mode="medium">
+		<xsl:choose>
+			<xsl:when test="@medium">
+				<a href="{@original}">
+					<img src="{@medium}" width="200" height="200" alt="medium"/>
+				</a>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="/static/cdaudio_mount.png" width="200" height="200" alt="default image"/>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="s3-settings">
