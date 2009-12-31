@@ -84,10 +84,14 @@ class File:
 
 	def get_track_xml(self):
 		if self.is_audio():
+			try:
+				tracknumber = int(self.tag('tracknumber').split('/')[0])
+			except:
+				tracknumber = None
 			return myxml.em(u'track', {
 				'artist': self.tag('artist'),
 				'title': self.tag('title'),
-				'number': self.tag('tracknumber'),
+				'number': tracknumber,
 				'duration': self.duration,
 				'mp3-link': myxml.uri(os.path.basename(self.mp3_online)),
 				'ogg-link': myxml.uri(os.path.basename(self.ogg_online)),
