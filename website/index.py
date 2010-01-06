@@ -1,0 +1,31 @@
+# vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
+
+# Site imports.
+from base import BaseRequestHandler, run
+from model import SiteAlbum
+
+class Recent(BaseRequestHandler):
+	def get(self):
+		offset = self.get_offset()
+		xml = u"<index skip=\"%u\"><albums>" % offset
+		for album in self.get_albums(offset):
+			if album.xml:
+				xml += album.xml
+		xml += u'</albums></index>'
+		self.sendXML(xml, {
+			'label': self.request.get('label'),
+		})
+
+	def get_albums(self, offset):
+		label = self.request.get('label')
+		if label:
+			list = SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
+		else:
+			list = SiteAlbum.all().order('-release_date')
+		return list.fetch(15, offset)
+
+	def get_offset(self):
+		if self.request.get('skip'):
+			return int(self.request.get('skip'))
+		else:
+			return 0

@@ -11,10 +11,11 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports.
 from base import BaseRequestHandler, run
 from s3 import S3SettingsHandler, S3UploadHandler
-import api
-import model
 import album
+import api
 import artist
+import index
+import model
 import sitemap
 import tracks
 import upload
@@ -22,34 +23,6 @@ import upload
 class MainHandler(BaseRequestHandler):
 	def get(self):
 		self.response.out.write('Hello world!')
-
-
-class IndexHandler(BaseRequestHandler):
-	def get(self):
-		offset = self.get_offset()
-		xml = u"<index skip=\"%u\"><albums>" % offset
-		for album in self.get_albums(offset):
-			if album.xml:
-				xml += album.xml
-		xml += u'</albums></index>'
-		self.sendXML(xml, {
-			'label': self.request.get('label'),
-		})
-
-	def get_albums(self, offset):
-		label = self.request.get('label')
-		if label:
-			list = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
-		else:
-			list = model.SiteAlbum.all().order('-release_date')
-		return list.fetch(15, offset)
-
-	def get_offset(self):
-		if self.request.get('skip'):
-			return int(self.request.get('skip'))
-		else:
-			return 0
-
 
 class SubmitHandler(BaseRequestHandler):
 	def get(self):
@@ -89,7 +62,7 @@ class AddFileHandler(BaseRequestHandler):
 
 if __name__ == '__main__':
 	run([
-		('/', IndexHandler),
+		('/', index.Recent),
 		('/add/file', AddFileHandler),
 		('/api/queue\.xml', api.Queue),
 		('/api/queue\.yaml', api.Queue),
