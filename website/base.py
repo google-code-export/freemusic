@@ -85,7 +85,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		http://code.google.com/intl/ru/appengine/docs/python/tools/webapp/requesthandlerclass.html#RequestHandler_handle_exception
 		"""
 		logging.warning(e)
-		if type(e) == HTTPException:
+		if isinstance(e, HTTPException):
 			self.sendXML(xml.em(u'message', {'text': e.message}))
 		else:
 			webapp.RequestHandler.handle_exception(self, e, debug_mode)
