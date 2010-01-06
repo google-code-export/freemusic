@@ -1,8 +1,13 @@
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
 # Site imports.
-from base import BaseRequestHandler, run
+from base import BaseRequestHandler, HTTPException
 from model import SiteAlbum
+
+class ServiceUnavailable(HTTPException):
+	def __init__(self):
+		self.code = 503
+		self.message = u"База данных пуста, зайдите позже."
 
 class Recent(BaseRequestHandler):
 	def get(self):
@@ -22,7 +27,10 @@ class Recent(BaseRequestHandler):
 			list = SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
 		else:
 			list = SiteAlbum.all().order('-release_date')
-		return list.fetch(15, offset)
+		result = list.fetch(15, offset)
+		if not result and not offset:
+			raise ServiceUnavailable()
+		return result
 
 	def get_offset(self):
 		if self.request.get('skip'):
