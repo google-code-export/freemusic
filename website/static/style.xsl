@@ -319,14 +319,15 @@
 	</xsl:template>
 
 	<xsl:template match="/page/artist">
-		<div class="twocol">
-			<div class="left">
-			</div>
+		<div class="onecol">
 			<div class="right">
 				<h2>
 					<xsl:value-of select="@name"/>
 				</h2>
 				<xsl:apply-templates select="albums" mode="tiles"/>
+				<xsl:if test="not(albums)">
+					<p>Об этом исполнителе пока ничего не известно.</p>
+				</xsl:if>
 			</div>
 		</div>
 	</xsl:template>
