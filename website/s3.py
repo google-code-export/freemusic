@@ -163,5 +163,7 @@ def encode_policy(dict):
 def sign(string, settings=None):
 	if settings is None:
 		settings = S3Settings.load()
+	if not settings.is_saved():
+		raise HTTPException(503, u'Отсутствуют <a href="/upload/settings">настройки S3</a>, загрузка файлов невозможна.')
 	dm = hmac.new(settings.s3s, string, hashlib.sha1)
 	return base64.b64encode(dm.digest())
