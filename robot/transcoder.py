@@ -4,7 +4,7 @@
 import datetime, logging, mimetypes, os, shutil, subprocess, tempfile, zipfile
 import Image
 from xml.sax.saxutils import quoteattr as escape
-import albumart, encoder, myxml
+import albumart, encoder, myxml, tags
 
 class File:
 	def __init__(self, name):
@@ -48,7 +48,7 @@ class File:
 			self.wav = raw['wav']
 			self.tags = raw['tags']
 			try:
-				self.duration = str(datetime.timedelta(0, int(self.tags.info.length)))
+				self.duration = str(datetime.timedelta(0, int(tags.duration(self.name))))
 			except Exception, e:
 				logging.info("No duration for " + self.name + ": " + str(e))
 			self.lossless = raw['lossless']

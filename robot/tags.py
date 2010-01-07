@@ -4,7 +4,7 @@
 # Функции для работы с тэгами.
 # http://code.google.com/p/mutagen/wiki/Tutorial
 
-import base64, datetime, logging, os, sys
+import base64, datetime, logging, os, re, sys
 
 try:
 	import mutagen.easyid3
@@ -20,12 +20,20 @@ __all__ = [ "get", "set" ]
 
 def get(filename):
 	type = ext(filename)
-	if type == 'flac':
-		return mutagen.flac.Open(filename)
-	elif type == 'mp3':
-		return mutagen.easyid3.Open(filename)
-	elif type == 'ogg':
-		return mutagen.oggvorbis.Open(filename)
+	try:
+		if type == 'flac':
+			return mutagen.flac.Open(filename)
+		elif type == 'mp3':
+			return mutagen.easyid3.Open(filename)
+		elif type == 'ogg':
+			return mutagen.oggvorbis.Open(filename)
+	except Exception, e:
+		logging.warning('%s: %s' % (e.__class__.__name__, str(e)))
+		tags = { 'title': os.path.basename(filename) }
+		x = re.match('(\d+)', tags['title'])
+		if x:
+			tags['tracknumber'] = x.group(1)
+		return tags
 
 def set(filename, src, cover=None):
 	mode = ext(filename)
@@ -63,3 +71,12 @@ def copy_tags(src, dst):
 			logging.debug("    %s => %s" % (tag, dst[tag]))
 		except ValueError:
 			pass
+
+def duration(filename):
+	type = ext(filename)
+	if type == 'flac':
+		return mutagen.flac.Open(filename).info.length
+	elif type == 'ogg':
+		return mutagen.oggvorbis.Open(filename).info.length
+	elif type == 'mp3':
+		return mutagen.mp3.Open(filename).info.length
