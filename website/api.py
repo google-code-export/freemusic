@@ -37,7 +37,6 @@ class Index(APIRequest):
 
 class Queue(BaseRequestHandler):
 	def get(self):
-		self.check_access()
 		if self.request.path == '/api/queue.yaml':
 			return self.get_yaml()
 		xml = u''
