@@ -91,6 +91,9 @@
 						<li>
 							<a href="/album/{@id}/edit">Отредактировать</a>
 						</li>
+						<li>
+							<a href="/album/{@id}/delete">Удалить</a>
+						</li>
 					</xsl:if>
 				</ul>
 				<xsl:apply-templates select="labels" mode="linked">
@@ -375,6 +378,16 @@
 		<xsl:if test="not(file)">
 			<p>Очередь пуста, <a href="/upload">загрузи</a> что-нибудь<a href="/upload/remote">!</a></p>
 		</xsl:if>
+	</xsl:template>
+
+	<xsl:template match="delete-album">
+		<div class="onecol">
+			<h2>Удаление альбома</h2>
+			<form method="post">
+				<p>Действительно ли ты хочешь удалить альбом <a href="/album/{@id}"><xsl:value-of select="@name"/></a> исполнителя <a href="/artist/{@artist-id}"><xsl:value-of select="@artist-name"/></a>?</p>
+				<input type="submit" name="confirm" value="Да"/> &#160; <a href="/album/{@id}">Нет</a>
+			</form>
+		</div>
 	</xsl:template>
 
 	<!-- additional stuff -->

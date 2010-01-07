@@ -69,6 +69,7 @@ if __name__ == '__main__':
 		('/submit', SubmitHandler),
 		('/album/(\d+)$', album.Viewer),
 		('/album/(\d+)/edit$', album.Editor),
+		('/album/(\d+)/delete$', album.Delete),
 		('/album/update-xml', album.XmlUpdater),
 		('/albums\.rss', album.RSSHandler),
 		('/upload', S3UploadHandler),

@@ -6,9 +6,9 @@ import datetime
 
 from google.appengine.api import users
 
-from base import BaseRequestHandler, HTTPException
-from model import SiteAlbum
-import rss
+from base import BaseRequestHandler, HTTPException, ForbiddenException
+from model import SiteAlbum, SiteImage, SiteTrack, SiteFile
+import rss, myxml
 
 class XmlUpdater(BaseRequestHandler):
 	def get(self):
@@ -48,6 +48,37 @@ class Editor(Viewer):
 		album.artist.put() # обновление XML
 
 		self.redirect('/album/' + str(album.id))
+
+class Delete(Viewer):
+	def get(self, id):
+		album = self.get_album(id)
+		self.sendXML(myxml.em(u'delete-album', {
+			'id': album.id,
+			'name': album.name,
+			'artist-id': album.artist.id,
+			'artist-name': album.artist.name,
+		}))
+
+	def post(self, id):
+		album = self.get_album(id)
+		for cls in (SiteImage, SiteTrack, SiteFile):
+			items = cls.gql('WHERE album = :1', album).fetch(1000)
+			if items:
+				for item in items:
+					item.delete()
+
+		artist = album.artist
+		album.delete()
+
+		artist.put() # обновление XML
+		self.redirect('/artist/' + str(artist.id))
+
+	def get_album(self, id):
+		album = Viewer.get_album(self, id)
+		user = self.force_user()
+		if album.owner != user and not self.is_admin():
+			raise ForbiddenException
+		return album
 
 class RSSHandler(rss.RSSHandler):
 	def get(self):
