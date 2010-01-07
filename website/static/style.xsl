@@ -351,12 +351,10 @@
 	<xsl:template match="/page/queue">
 		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
 		<xsl:if test="file">
-			<ul>
+			<ol>
 				<xsl:for-each select="file">
 					<xsl:sort select="@id" data-type="number"/>
 					<li>
-						<xsl:value-of select="@id"/>
-						<xsl:text>. </xsl:text>
 						<tt>
 							<a href="{@uri}">
 								<xsl:value-of select="@name"/>
@@ -371,12 +369,12 @@
 						<xsl:if test="/page/@is-admin">
 							<xsl:text> </xsl:text>
 							<small>
-								<a href="/api/queue/delete?id={@id}">×</a>
+								<a href="/api/queue/delete?url={@uri}">×</a>
 							</small>
 						</xsl:if>
 					</li>
 				</xsl:for-each>
-			</ul>
+			</ol>
 		</xsl:if>
 		<xsl:if test="not(file)">
 			<p>Очередь пуста, <a href="/upload">загрузи</a> что-нибудь<a href="/upload/remote">!</a></p>

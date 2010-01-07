@@ -44,7 +44,6 @@ class Queue(BaseRequestHandler):
 			if not file.uri:
 				file.uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
 			xml += myxml.em(u'file', {
-				'id': file.id,
 				'name': file.name,
 				'owner': file.owner,
 				'uri': file.uri,
@@ -57,8 +56,7 @@ class Queue(BaseRequestHandler):
 			uri = file.uri
 			if not uri and file.bucket and file.path:
 				uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
-			yaml += u'- id: %u\n' % file.id
-			yaml += u'  uri: %s\n' % uri
+			yaml += u'- uri: %s\n' % uri
 			if file.owner:
 				yaml += u'  owner: %s\n' % file.owner
 		if not yaml:
@@ -68,13 +66,13 @@ class Queue(BaseRequestHandler):
 
 class Delete(APIRequest):
 	def get(self):
-		id = self.request.get('id')
-		if not id:
-			raise HTTPException(400, u'Не указан идентификатор элемента очереди.')
-		self.check_access(id)
-		file = S3File.gql('WHERE id = :1', int(id)).get()
+		url = self.request.get('url')
+		if not url:
+			raise HTTPException(400, u'Не указан URL удаляемого файла.')
+		self.check_access(url)
+		file = S3File.gql('WHERE uri = :1', url).get()
 		if not file:
-			raise HTTPException(404, u'Такого элемента в очереди нет.')
+			raise HTTPException(404, u'Такого файла в очереди нет.')
 		file.delete()
 		self.redirect('/api/queue.xml')
 

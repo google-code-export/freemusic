@@ -197,7 +197,7 @@ class Robot:
 				zipname = self.fetch_file(item['uri'])
 				self.processZipFile(zipname, item['owner'])
 				os.remove(zipname)
-				self.dequeue(item['id'])
+				self.dequeue(item['uri'])
 			except Exception, e:
 				print "    ERROR: " + str(e)
 
@@ -211,10 +211,10 @@ class Robot:
 		})
 		self.fetch(url)
 
-	def dequeue(self, id):
+	def dequeue(self, url):
 		url = self.get_api_url('api/queue/delete', {
-			'id': id,
-			'signature': self.sign(str(id)),
+			'url': url,
+			'signature': self.sign(url),
 		})
 		print "  dequeueing"
 		print "    " + url
