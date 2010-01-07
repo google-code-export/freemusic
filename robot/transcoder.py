@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
-import datetime, logging, mimetypes, os, shutil, subprocess, tempfile, zipfile
+import datetime, hashlib, logging, mimetypes, os, shutil, subprocess, tempfile, zipfile
 import Image
 from xml.sax.saxutils import quoteattr as escape
 import albumart, encoder, myxml, tags
@@ -172,8 +172,9 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
-				dir = tempfile.mkdtemp(prefix='', dir=self.upload_dir)
-				os.chmod(dir, 0755)
+				dir = os.path.join(self.upload_dir, filemd5(self.zipname))
+				if not os.path.exists:
+					os.mkdir(dir, mode=0755)
 				for file in files:
 					shutil.move(file, dir)
 			return os.path.join(os.path.basename(dir), 'album.xml')
@@ -275,3 +276,18 @@ class Transcoder:
 		p = subprocess.Popen(['bash', '-i'])
 		p.communicate()
 		os.chdir(old)
+
+def filemd5(filename):
+	"""
+	Возвращает MD5 сумму файла.  Файл считывается блоками по 1024 байтов,
+	потому что обрабатываемые файлы (с музыкой) могут быть слишком большими,
+	чтобы уместиться в памяти.
+	"""
+	m = hashlib.md5()
+	f = open(filename, 'rb')
+	while True:
+		block = f.read(1024)
+		if not len(block):
+			break
+		m.update(block)
+	return m.hexdigest()
