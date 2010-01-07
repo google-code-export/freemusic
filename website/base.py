@@ -99,6 +99,8 @@ class BaseRequestHandler(webapp.RequestHandler):
 		if users.get_current_user():
 			attrs['user'] = users.get_current_user().nickname()
 
+		logging.debug(attrs)
+
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
 		result += xml.em(u'page', attrs, content)

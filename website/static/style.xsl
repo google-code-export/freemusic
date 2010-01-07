@@ -48,7 +48,9 @@
 							<xsl:text> - </xsl:text>
 							<a href="{/page/@logout-uri}">Выйти</a>
 							<xsl:text> - </xsl:text>
-							<a href="/_ah/admin">Админка</a>
+							<xsl:if test="contains(@logout-uri,'.appspot.com')">
+								<a href="https://appengine.google.com/dashboard?app_id=free-music">Админка</a>
+							</xsl:if>
 						</xsl:if>
 					</div>
 				</div>
