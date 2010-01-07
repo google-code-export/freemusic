@@ -126,6 +126,7 @@ class SubmitAlbum(APIRequest):
 				keys.append(model.SiteFile(album=album, name=file['name'], uri=file['uri'], type=file['type'], size=file['size']).put())
 
 			keys.append(album.put())
+			artist.put() # обновление XML
 
 			try:
 				mail.send(data['owner'], self.render('album-added.html', {
