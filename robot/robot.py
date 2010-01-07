@@ -170,10 +170,10 @@ class Robot:
 			self.submit_url(url)
 
 	def processQueue(self):
-		if not self.queue:
-			raise Exception(u'Queue URL must be set in the config (key "queue").')
+		if not self.host:
+			raise Exception(u'Host name not set, either use -h or ~/.config/freemusic.yaml')
 
-		items = yaml.load(self.fetch(self.queue))
+		items = yaml.load(self.fetch('http://' + self.host + '/api/queue.yaml'))
 		if items is None:
 			print "Nothing to do."
 			return
