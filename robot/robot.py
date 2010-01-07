@@ -261,5 +261,5 @@ if __name__ == '__main__':
 		print "\rInterrupted."
 	except Exception, e:
 		print "\r%s: %s" % (e.__class__.__name__, str(e))
-		traceback.print_exc()
+		# traceback.print_exc()
 	sys.exit(1)
