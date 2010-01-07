@@ -77,7 +77,6 @@ class Robot:
 		self.debug = False
 		self.upload_dir = None
 		self.upload_base_url = None
-		self.queue = None
 
 		config = yaml.load(self.read_file('$HOME/.config/freemusic.yaml', 'utf-8'))
 		if config:
@@ -187,8 +186,6 @@ class Robot:
 		if not self.upload_dir:
 			raise Exception(u'upload_dir not set in ~/.config/freemusic.yaml')
 
-		print "Working with " + self.host
-
 		items = yaml.load(self.fetch('http://' + self.host + '/api/queue.yaml'))
 		if items is None:
 			print "Nothing to do."
@@ -215,15 +212,16 @@ class Robot:
 		self.fetch(url)
 
 	def dequeue(self, id):
-		parts = urlparse.urlparse(self.queue)
-		url = parts[0] + '://' + parts[1] + '/api/queue/delete?id=' + str(id) + '&signature=' + urllib.quote(self.sign(str(id)))
+		url = self.get_api_url('api/queue/delete', {
+			'id': id,
+			'signature': self.sign(str(id)),
+		})
 		print "  dequeueing"
 		print "    " + url
 		self.fetch(url)
 
 	def get_api_url(self, path, args=None):
-		parts = urlparse.urlparse(self.queue)
-		url = parts[0] + '://' + parts[1] + '/' + path
+		url = 'http://' + self.host + '/' + path
 		if args:
 			url += '?' + urllib.urlencode(args)
 		return url
@@ -251,6 +249,8 @@ def main():
 
 	r = Robot(opts)
 	for option, value in opts:
+		if option in ('-u', '-q'):
+			print "Working with " + r.host
 		if '-a' == option:
 			f = open(value, 'r')
 			r.uploadAlbum(f.read())
