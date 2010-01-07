@@ -20,7 +20,34 @@ class HTTPException(Exception):
 		self.code = code
 		self.message = message
 
+	def __str__(self):
+		return '%s(%u): %s' % (type(self).__name__, self.code, self.message)
+
+	def to_xml(self):
+		return xml.em(u'message', {'code': self.code, 'text': self.message})
+
+class ClosedException(HTTPException):
+	def __init__(self):
+		HTTPException.__init__(self, 403, None)
+
+	def to_xml(self):
+		return xml.em(u'closed')
+
 class BaseRequestHandler(webapp.RequestHandler):
+	def is_open(self):
+		"""
+		Возвращает True, если сайт работает в открытом режиме и False,
+		если только по приглашениям (анонимные пользователи не допускаются).
+		"""
+		return False
+
+	def check_access(self):
+		if not self.is_open():
+			try:
+				self.force_user()
+			except HTTPException:
+				raise ClosedException
+
 	def getBaseURL(self):
 		"""
 		Возвращает базовый адрес текущего сайта.
@@ -86,7 +113,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		"""
 		logging.warning(e)
 		if isinstance(e, HTTPException):
-			self.sendXML(xml.em(u'message', {'text': e.message}))
+			self.sendXML(e.to_xml())
 		else:
 			webapp.RequestHandler.handle_exception(self, e, debug_mode)
 

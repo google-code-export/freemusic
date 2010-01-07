@@ -24,6 +24,7 @@ class RSSHandler(RssBase):
 
 class Viewer(BaseRequestHandler):
 	def get(self, id):
+		self.check_access()
 		track = SiteTrack.gql('WHERE id = :1', int(id)).get()
 		if not track:
 			raise HTTPException(404, u'Нет такой дорожки.')

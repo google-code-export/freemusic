@@ -26,6 +26,7 @@ class MainHandler(BaseRequestHandler):
 
 class SubmitHandler(BaseRequestHandler):
 	def get(self):
+		self.check_access()
 		self.render('submit.html')
 
 	def post(self):

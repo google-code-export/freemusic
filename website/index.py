@@ -11,6 +11,7 @@ class ServiceUnavailable(HTTPException):
 
 class Recent(BaseRequestHandler):
 	def get(self):
+		self.check_access()
 		offset = self.get_offset()
 		xml = u"<index skip=\"%u\"><albums>" % offset
 		for album in self.get_albums(offset):

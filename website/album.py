@@ -12,12 +12,14 @@ import rss
 
 class XmlUpdater(BaseRequestHandler):
 	def get(self):
+		self.check_access()
 		for album in SiteAlbum.all().fetch(1000):
 			album.put()
 		self.redirect('/')
 
 class Viewer(BaseRequestHandler):
 	def get(self, id):
+		self.check_access()
 		self.sendXML(self.get_album(id).xml)
 
 	def get_album(self, id):
@@ -28,6 +30,7 @@ class Viewer(BaseRequestHandler):
 
 class Editor(Viewer):
 	def get(self, id):
+		self.check_access()
 		self.sendXML('<form>' + self.get_album(id).xml + '</form>')
 
 	def post(self, id):

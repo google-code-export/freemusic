@@ -32,6 +32,7 @@ class FixHandler(BaseRequestHandler):
 
 class ViewHandler(BaseRequestHandler):
 	def get(self, id):
+		self.check_access()
 		artist = SiteArtist.gql('WHERE id = :1', int(id)).get()
 		if artist and artist.xml:
 			self.sendXML(artist.xml)

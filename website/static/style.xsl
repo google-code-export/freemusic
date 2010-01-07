@@ -56,6 +56,26 @@
 		</html>
 	</xsl:template>
 
+	<xsl:template match="/page[closed]">
+		<html lang="{@lang}">
+			<head>
+				<title>music 3.5</title>
+				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
+			</head>
+			<body>
+				<div id="closed">
+					<h2>Мы ещё не открыты</h2>
+					<p>
+						<xsl:text>Сайт находится на стадии закрытого тестирования.</xsl:text>
+						<xsl:if test="@login-uri">&#160; Чтобы получить приглашене, нужно <a href="{@login-uri}">залогиниться</a>.</xsl:if>
+						<xsl:if test="not(@login-uri)">&#160; Вы получите приглашение как только придёт время.</xsl:if>
+					</p>
+				</div>
+			</body>
+		</html>
+	</xsl:template>
+
 	<xsl:template match="/page/album">
 		<div id="album">
 			<xsl:apply-templates select="." mode="h2"/>
