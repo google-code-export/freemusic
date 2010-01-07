@@ -276,6 +276,9 @@ if __name__ == '__main__':
 	except KeyboardInterrupt:
 		print "\rInterrupted."
 	except Exception, e:
-		print "\r%s: %s" % (e.__class__.__name__, str(e))
-		# traceback.print_exc()
+		if isinstance(e, urllib2.URLError):
+			print "\r" + str(e)
+		else:
+			print "\r%s: %s" % (e.__class__.__name__, str(e))
+			traceback.print_exc()
 	sys.exit(1)
