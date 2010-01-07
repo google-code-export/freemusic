@@ -4,7 +4,7 @@
 # Функции для работы с тэгами.
 # http://code.google.com/p/mutagen/wiki/Tutorial
 
-import base64, datetime, logging, os
+import base64, datetime, logging, os, sys
 
 try:
 	import mutagen.easyid3
