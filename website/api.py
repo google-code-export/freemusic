@@ -17,7 +17,7 @@ import mail
 
 class APIRequest(BaseRequestHandler):
 	def check_access(self, text):
-		if self.request.get('signature') != sign(text):
+		if not self.is_admin() and not self.request.get('signature') != sign(text):
 			self.force_admin()
 
 	def reply(self, dict):
