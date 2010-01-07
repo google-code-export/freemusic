@@ -116,6 +116,10 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
 		self.response.out.write(content)
 
+	def sendAny(self, type, content):
+		self.response.headers['Content-Type'] = type + '; charset=utf-8'
+		self.response.out.write(content)
+
 	def handle_exception(self, e, debug_mode):
 		"""
 		Заворачивает сообщения об ошибках в <message>.

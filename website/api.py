@@ -30,6 +30,11 @@ class APIRequest(BaseRequestHandler):
 			self.error(500)
 		self.sendText(type(e).__name__ + ': ' + unicode(e) + u'\n')
 
+class Index(APIRequest):
+	def get(self):
+		self.force_admin()
+		self.sendAny('text/html', self.render('api.html'))
+
 class Queue(BaseRequestHandler):
 	def get(self):
 		self.check_access()

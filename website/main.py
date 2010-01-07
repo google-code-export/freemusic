@@ -61,6 +61,7 @@ if __name__ == '__main__':
 	run([
 		('/', index.Recent),
 		('/add/file', AddFileHandler),
+		('/api', api.Index),
 		('/api/queue\.xml', api.Queue),
 		('/api/queue\.yaml', api.Queue),
 		('/api/queue/delete', api.Delete),
