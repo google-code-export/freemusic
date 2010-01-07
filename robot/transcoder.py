@@ -132,9 +132,10 @@ class Transcoder:
 		self.upload_dir = upload_dir
 		self.albumart = None
 		self.files = []
-		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
+		self.logname = None
 		self.owner = owner
 
+		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
 		logging.basicConfig(filename=self.logname, level=logging.DEBUG)
 		print "Logging to " + self.logname
 
@@ -162,7 +163,9 @@ class Transcoder:
 
 	def upload(self):
 		if self.upload_dir:
-			files = [self.logname]
+			files = []
+			if self.logname and os.path.exists(self.logname):
+				files.append(self.logname)
 			for f in self.files:
 				for ff in f.uploadable():
 					files.append(ff)
