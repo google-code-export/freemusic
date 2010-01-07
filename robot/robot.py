@@ -151,27 +151,33 @@ class Robot:
 		Запрашивает указанный URL, возвращает результат.  Если указан параметр data,
 		его содержимое отправляется методом POST (обычно это словарь).
 		"""
-		if data is not None:
-			data = urllib.urlencode(data)
-		return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
+		try:
+			if data is not None:
+				data = urllib.urlencode(data)
+			return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
+		except urllib2.HTTPError, e:
+			print "Error: " + e.message
 
 	def fetch_file(self, url):
 		filename = tempfile.mkstemp(suffix='.zip', prefix='freemusic-')[1]
 		print "  fetching %s\n    as %s" % (url, filename)
 
-		o = open(filename, 'wb')
-		i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
-		bytes = 0
-		while True:
-			block = i.read(16384)
-			if len(block) == 0:
-				break
-			o.write(block)
-			bytes += len(block)
-			print "%fM\r" % (float(bytes) / 1048576),
+		try:
+			o = open(filename, 'wb')
+			i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
+			bytes = 0
+			while True:
+				block = i.read(16384)
+				if len(block) == 0:
+					break
+				o.write(block)
+				bytes += len(block)
+				print "%fM\r" % (float(bytes) / 1048576),
 
-		# open(filename, 'wb').write(self.fetch(url))
-		return filename
+			# open(filename, 'wb').write(self.fetch(url))
+			return filename
+		except urllib2.HTTPError, e:
+			print "Error: " + e.message
 
 	def processZipFile(self, filename, realname=None, owner=None):
 		if realname is None:
@@ -197,9 +203,10 @@ class Robot:
 			print "A file from " + item['owner']
 			try:
 				zipname = self.fetch_file(item['uri'])
-				self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
-				os.remove(zipname)
-				self.dequeue(item['uri'])
+				if zipname:
+					self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
+					os.remove(zipname)
+					self.dequeue(item['uri'])
 			except Exception, e:
 				print "    ERROR: " + str(e)
 				traceback.print_exc()
