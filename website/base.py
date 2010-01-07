@@ -116,6 +116,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		"""
 		logging.warning(e)
 		if isinstance(e, HTTPException):
+			self.error(e.code)
 			self.sendXML(e.to_xml())
 		else:
 			webapp.RequestHandler.handle_exception(self, e, debug_mode)
