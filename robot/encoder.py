@@ -37,17 +37,11 @@ class MP3(Encoder):
 		dst += '.mp3'
 		options = ['lame', '--quiet', '--replaygain-accurate']
 		if self.forweb:
-			options.append('--resample')
-			options.append('44.1')
-			options.append('-B')
-			options.append('128')
+			options.extend(('--resample', '44.1', '-B', '128'))
 		else:
-			options.append('-v')
-			options.append('-V')
-			options.append('0')
-			options.append('-h')
-		options.append(src)
-		options.append(dst)
+			options.extend(('--preset', 'insane'))
+			# options.extend(('-v', '-V', '0', '-h'))
+		options.extend((src, dst))
 		self.pipe([ options ])
 		return dst
 
@@ -60,11 +54,9 @@ class OGG(Encoder):
 		dst += '.ogg'
 		options = ['oggenc', '--quiet', '-o', dst]
 		if self.forweb:
-			options.append('--resample')
-			options.append('44100')
+			options.extend(('--resample', '44100'))
 		else:
-			options.append('-q')
-			options.append('6')
+			options.extend(('-q', '6'))
 		options.append(src)
 		self.pipe([ options ])
 		return dst
