@@ -159,7 +159,19 @@ class Robot:
 	def fetch_file(self, url):
 		filename = tempfile.mkstemp(suffix='.zip', prefix='freemusic-')[1]
 		print "  fetching %s\n    as %s" % (url, filename)
-		open(filename, 'wb').write(self.fetch(url))
+
+		o = open(filename, 'wb')
+		i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
+		bytes = 0
+		while True:
+			block = i.read(16384)
+			if len(block) == 0:
+				break
+			o.write(block)
+			bytes += len(block)
+			print "%fM\r" % (float(bytes) / 1048576),
+
+		# open(filename, 'wb').write(self.fetch(url))
 		return filename
 
 	def processZipFile(self, filename, owner=None):
@@ -172,6 +184,8 @@ class Robot:
 	def processQueue(self):
 		if not self.host:
 			raise Exception(u'Host name not set, either use -h or ~/.config/freemusic.yaml')
+		if not self.upload_dir:
+			raise Exception(u'upload_dir not set in ~/.config/freemusic.yaml')
 
 		print "Working with " + self.host
 
