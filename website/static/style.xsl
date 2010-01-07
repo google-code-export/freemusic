@@ -34,7 +34,9 @@
 							<input type="submit" value="Найти"/>
 						</form>
 					</div>
-					<xsl:apply-templates select="*"/>
+					<div id="content">
+						<xsl:apply-templates select="*"/>
+					</div>
 					<div id="footer">
 						<xsl:text>© ebm.net.ru - </xsl:text>
 						<a href="/">Главная</a>
