@@ -20,10 +20,6 @@ import sitemap
 import tracks
 import upload
 
-class MainHandler(BaseRequestHandler):
-	def get(self):
-		self.response.out.write('Hello world!')
-
 class SubmitHandler(BaseRequestHandler):
 	def get(self):
 		self.check_access()
