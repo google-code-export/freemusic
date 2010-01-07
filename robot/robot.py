@@ -173,6 +173,8 @@ class Robot:
 		if not self.host:
 			raise Exception(u'Host name not set, either use -h or ~/.config/freemusic.yaml')
 
+		print "Working with " + self.host
+
 		items = yaml.load(self.fetch('http://' + self.host + '/api/queue.yaml'))
 		if items is None:
 			print "Nothing to do."
