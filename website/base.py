@@ -69,8 +69,11 @@ class BaseRequestHandler(webapp.RequestHandler):
 		path = os.path.join(directory, 'templates', template_name)
 		return template.render(path, vars)
 
+	def is_admin(self):
+		return users.is_current_user_admin()
+
 	def force_admin(self):
-		if not users.is_current_user_admin():
+		if not self.is_admin():
 			raise HTTPException(403, u'У вас нет доступа к этой странице.')
 		self.force_user()
 
