@@ -128,6 +128,7 @@ class Transcoder:
 	def __init__(self, upload_dir, owner):
 		self.ready = None
 		self.zipname = None # исходный файл, для формирования имени выходных архивов
+		self.realname = None # исходное имя файла прискачивании
 		self.tmpdir = tempfile.mkdtemp(prefix='freemusic-')
 		self.upload_dir = upload_dir
 		self.albumart = None
@@ -148,11 +149,12 @@ class Transcoder:
 			print "Removing " + self.tmpdir
 			return shutil.rmtree(self.tmpdir)
 
-	def transcode(self, zipname):
+	def transcode(self, zipname, realname):
 		"""
 		Обрабатывает указанный архив, возвращает имена сгенерированных файлов.
 		"""
 		self.zipname = zipname
+		self.realname = realname
 		self.files = [File(f) for f in self.unzip(zipname)]
 		self.albumart = albumart.find(self.files, os.path.join(self.tmpdir, '__folder.jpg'))
 
@@ -208,7 +210,7 @@ class Transcoder:
 		return result
 
 	def makeDownloadableFiles(self):
-		prefix = os.path.join(self.tmpdir, '.'.join(os.path.basename(self.zipname).split('.')[0:-1]))
+		prefix = os.path.join(self.tmpdir, os.path.splitext(self.realname)[0])
 		self.mkzip(prefix + '-ogg.zip', 'ogg_dl')
 		self.mkzip(prefix + '-mp3.zip', 'mp3_dl')
 		self.mkzip(prefix + '-flac.zip', 'flac')
@@ -254,7 +256,7 @@ class Transcoder:
 
 		for file in self.files:
 			if file.is_audio() and file.tags:
-				if 'artist' in file.tags and file.tags['artist'] not in artists:
+				if 'artist' in file.tags and file.tags['artist'][0] not in artists:
 					artists.append(file.tags['artist'][0])
 				if 'album' in file.tags:
 					album = file.tags['album'][0]

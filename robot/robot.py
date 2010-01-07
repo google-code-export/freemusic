@@ -173,8 +173,10 @@ class Robot:
 		# open(filename, 'wb').write(self.fetch(url))
 		return filename
 
-	def processZipFile(self, filename, owner=None):
-		url = Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename)
+	def processZipFile(self, filename, realname=None, owner=None):
+		if realname is None:
+			realname = os.path.split(filename)[1]
+		url = Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename, realname)
 		if url and self.upload_base_url:
 			url = self.upload_base_url + url
 		if url:
@@ -192,14 +194,15 @@ class Robot:
 			return
 
 		for item in items:
-			print "Item #%u from %s" % (item['id'], item['owner'])
+			print "A file from " + item['owner']
 			try:
 				zipname = self.fetch_file(item['uri'])
-				self.processZipFile(zipname, item['owner'])
+				self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
 				os.remove(zipname)
 				self.dequeue(item['uri'])
 			except Exception, e:
 				print "    ERROR: " + str(e)
+				traceback.print_exc()
 
 	def submit_url(self, url):
 		"""
