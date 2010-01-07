@@ -26,6 +26,10 @@ class HTTPException(Exception):
 	def to_xml(self):
 		return xml.em(u'message', {'code': self.code, 'text': self.message})
 
+class ForbiddenException(HTTPException):
+	def __init__(self):
+		HTTPException.__init__(self, 403, u'У вас нет доступа к этой странице.')
+
 class ClosedException(HTTPException):
 	def __init__(self):
 		HTTPException.__init__(self, 403, None)
@@ -98,6 +102,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['is-admin'] = 'yes'
 		if users.get_current_user():
 			attrs['user'] = users.get_current_user().nickname()
+		attrs['class'] = type(self).__name__
 
 		logging.debug(attrs)
 
