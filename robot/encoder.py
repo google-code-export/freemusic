@@ -11,7 +11,7 @@ class Encoder:
 		self.tmpdir = tempfile.mkdtemp(prefix='encoder-', dir=tmpdir)
 
 	def pipe(self, commands):
-		logging.info('! ' + ' |\n  '.join([' '.join(command) for command in commands]))
+		logging.info(u'! ' + u' |\n  '.join([u' '.join(command) for command in commands]))
 		clist = [] # на всякий случай, чтобы деструкторов не было
 		stdin = None
 		for command in commands:
@@ -23,7 +23,7 @@ class Encoder:
 		return response[0]
 
 	def file(self, filename, _tags):
-		outname = self.encode_file(filename, os.path.join(self.tmpdir, '.'.join(os.path.basename(filename).split('.')[0:-1])))
+		outname = self.encode_file(filename, os.path.join(self.tmpdir, os.path.splitext(os.path.basename(filename))[0]))
 		if _tags:
 			tags.set(outname, _tags, self.albumart)
 		return outname
@@ -34,19 +34,18 @@ class Encoder:
 
 class MP3(Encoder):
 	def encode_file(self, src, dst):
-		dst += '.mp3'
+		dst += u'.mp3'
 		options = ['lame', '--quiet', '--replaygain-accurate']
 		if self.forweb:
 			options.extend(('--resample', '44.1', '-B', '128'))
 		else:
 			options.extend(('--preset', 'insane'))
-			# options.extend(('-v', '-V', '0', '-h'))
 		options.extend((src, dst))
 		self.pipe([ options ])
 		return dst
 
 	def replaygain(self, files):
-		self.pipe([ ['mp3gain', '-q'] + files ])
+		self.pipe([['mp3gain', '-q'] + files ])
 		return files
 
 class OGG(Encoder):
@@ -70,7 +69,7 @@ class FLAC(Encoder):
 		dst += '.flac'
 		options = ['flac', '-s', '--replay-gain', '-8', '-o', dst]
 		if self.albumart:
-			options.append('--picture=3|image/jpg|Cover|300x300x24|' + self.albumart)
+			options.append(u'--picture=3|image/jpg|Cover|300x300x24|' + self.albumart)
 		options.append(src)
 		self.pipe([ options ])
 		return dst
@@ -82,7 +81,7 @@ class Decoder(Encoder):
 	def decode(self, filename):
 		ext = filename.split('.')[-1].lower()
 		result = {
-			'wav': os.path.join(self.tmpdir, '.'.join(filename.split('.')[0:-1])) + '.wav',
+			'wav': os.path.join(self.tmpdir, os.path.splitext(filename)[0]) + u'.wav',
 			'lossless': False,
 			'tags': tags.get(filename),
 		}
@@ -96,5 +95,5 @@ class Decoder(Encoder):
 			result['target'] = 'mp3_dl'
 		else:
 			return None
-		logging.debug("tags in %s: %s" % (filename, result['tags']))
+		logging.debug(u"tags in %s: %s" % (filename, result['tags']))
 		return result

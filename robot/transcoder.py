@@ -50,7 +50,7 @@ class File:
 			try:
 				self.duration = str(datetime.timedelta(0, int(tags.duration(self.name))))
 			except Exception, e:
-				logging.info("No duration for " + self.name + ": " + str(e))
+				logging.info(u"No duration for " + self.name + u": " + unicode(e))
 			self.lossless = raw['lossless']
 			if self.lossless:
 				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
@@ -138,7 +138,7 @@ class Transcoder:
 
 		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
 		logging.basicConfig(filename=self.logname, level=logging.DEBUG)
-		print "Logging to " + self.logname
+		print u"Logging to " + self.logname
 
 	def __del__(self):
 		logging.basicConfig(filename=None)
@@ -156,7 +156,9 @@ class Transcoder:
 		self.zipname = zipname
 		self.realname = realname
 		self.files = [File(f) for f in self.unzip(zipname)]
-		self.albumart = albumart.find(self.files, os.path.join(self.tmpdir, '__folder.jpg'))
+		if not self.files:
+			return None
+		self.albumart = albumart.find([file.name for file in self.files], os.path.join(self.tmpdir, '__folder.jpg'))
 
 		self.process_audio()
 		self.makeDownloadableFiles()
@@ -173,8 +175,8 @@ class Transcoder:
 					files.append(ff)
 			if len(files):
 				dir = os.path.join(self.upload_dir, filemd5(self.zipname))
-				if not os.path.exists:
-					os.mkdir(dir, mode=0755)
+				if not os.path.exists(dir):
+					os.mkdir(dir, 0755)
 				for file in files:
 					shutil.move(file, dir)
 			return os.path.join(os.path.basename(dir), 'album.xml')
@@ -203,11 +205,14 @@ class Transcoder:
 		zip = zipfile.ZipFile(zipname)
 		for f in sorted(zip.namelist()):
 			if not f.endswith('/'):
-				result.append(os.path.join(self.tmpdir, os.path.basename(f)))
-				out = open(result[-1], 'wb')
-				out.write(zip.read(f))
-				out.close()
-				logging.info("  found " + f)
+				try:
+					result.append(os.path.join(unicode(self.tmpdir), os.path.basename(f).decode('utf-8')))
+					out = open(result[-1], 'wb')
+					out.write(zip.read(f))
+					out.close()
+					logging.info(u"  found " + f.decode('utf-8'))
+				except UnicodeDecodeError, e:
+					raise Exception(u'%s contains bad file names (non-unicode)' % zipname)
 		return result
 
 	def makeDownloadableFiles(self):
@@ -223,13 +228,13 @@ class Transcoder:
 			files = [getattr(file, attr) for file in self.files if getattr(file, attr)]
 		if not len(files):
 			return
-		logging.info("creating " + zipname)
+		logging.info(u"creating " + zipname)
 		files += [file.name for file in self.files if not file.is_audio()]
 
 		zip = zipfile.ZipFile(zipname, 'a')
 		for file in files:
 			if not file.endswith('.zip'):
-				logging.info("  adding " + file)
+				logging.info(u"  adding " + file)
 				zip.write(file, os.path.basename(file))
 		zip.close()
 		self.files.append(File(zipname))

@@ -68,7 +68,7 @@ def copy_tags(src, dst):
 	for tag in sorted(src):
 		try:
 			dst[tag] = src[tag]
-			logging.debug("    %s => %s" % (tag, dst[tag]))
+			logging.debug("    %s := %s" % (tag, '; '.join(dst[tag])))
 		except ValueError:
 			pass
 

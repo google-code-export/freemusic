@@ -5,13 +5,13 @@
 
 import Image, logging, os
 
-def find(files, outname='__folder.jpg'):
-	logging.info("Looking for album art")
-	extensions = ['jpg', 'jpeg', 'gif', 'png', 'bmp']
+def find(files, outname=u'__folder.jpg'):
+	logging.info(u"Looking for album art")
+	extensions = [u'jpg', u'jpeg', u'gif', u'png', u'bmp']
 	for file in files:
-		if unicode(file).split('.')[-1].lower() in extensions:
-			return resize(unicode(file), 300)
-	logging.info("  nothing")
+		if str(file.split('.')[-1].lower()) in extensions:
+			return resize(file, 300)
+	logging.info(u"  nothing")
 
 def resize(filename, width):
 	img = Image.open(unicode(filename))
@@ -24,7 +24,7 @@ def resize(filename, width):
 		img = img.crop(crop)
 		img.load()
 
-	outname = os.path.splitext(filename)[0] + '.' + str(width) + 'x' + str(width) + '.jpg'
+	outname = os.path.splitext(filename)[0] + u'.' + str(width) + u'x' + str(width) + u'.jpg'
 	img.thumbnail((width, width))
 	img.resize((width, width), Image.BICUBIC).save(outname, 'JPEG')
 	# img.save(outname, "JPEG")

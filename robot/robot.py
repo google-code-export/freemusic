@@ -156,7 +156,7 @@ class Robot:
 				data = urllib.urlencode(data)
 			return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
 		except urllib2.HTTPError, e:
-			print "Error: " + e.message
+			print "Error: " + str(e)
 
 	def fetch_file(self, url):
 		filename = tempfile.mkstemp(suffix='.zip', prefix='freemusic-')[1]
@@ -177,7 +177,7 @@ class Robot:
 			# open(filename, 'wb').write(self.fetch(url))
 			return filename
 		except urllib2.HTTPError, e:
-			print "Error: " + e.message
+			print "Error: " + str(e)
 
 	def processZipFile(self, filename, realname=None, owner=None):
 		if realname is None:
