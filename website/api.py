@@ -95,6 +95,7 @@ class SubmitAlbum(APIRequest):
 
 	def importAlbum(self, data):
 		keys = [] # ключи создаваемых объектов для удаления в случае исключения
+		user = users.get_current_user()
 		try:
 			artist = model.SiteArtist.gql('WHERE name = :1', data['artist']).get()
 			if not artist:
@@ -125,7 +126,7 @@ class SubmitAlbum(APIRequest):
 			keys.append(album.put())
 			artist.put() # обновление XML
 
-			if users.get_current_user() and data['owner'] != users.get_current_user().email():
+			if user and data['owner'] != user.email():
 				try:
 					mail.send(data['owner'], self.render('album-added.html', {
 						'album_id': album.id,
@@ -137,12 +138,13 @@ class SubmitAlbum(APIRequest):
 			db.delete(keys)
 			raise
 
-		self.sendXML(myxml.em(u'response', {
-			'status': 'ok',
-			'message': u'Album "%s" from %s is available at %s' % (album.name, artist.name, self.getBaseURL() + 'album/' + str(album.id)),
-		}))
-
-		self.redirect('/album/' + str(album.id))
+		if user:
+			self.redirect('/album/' + str(album.id))
+		else:
+			self.sendXML(myxml.em(u'response', {
+				'status': 'ok',
+				'message': u'Album "%s" from %s is available at %s' % (album.name, artist.name, self.getBaseURL() + 'album/' + str(album.id)),
+			}))
 
 	def purge(self, source, album):
 		old = source.gql('WHERE album = :1', album).fetch(1000)
