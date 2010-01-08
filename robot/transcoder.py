@@ -172,6 +172,7 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
+				print "Moving %u files to %s" % (len(files), settings['upload_dir'])
 				dir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
 				if not os.path.exists(dir):
 					os.mkdir(dir, 0755)
