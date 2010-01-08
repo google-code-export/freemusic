@@ -55,7 +55,7 @@ class OGG(Encoder):
 		if self.forweb:
 			options.extend(('--resample', '44100'))
 		else:
-			options.extend(('-q', '6'))
+			options.extend(('-q', '8'))
 		options.append(src)
 		self.pipe([ options ])
 		return dst
