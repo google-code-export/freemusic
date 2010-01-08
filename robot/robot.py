@@ -149,18 +149,23 @@ class Robot:
 
 		try:
 			o = open(filename, 'wb')
-			i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
-			bytes = 0
-			while True:
-				block = i.read(163840)
-				if len(block) == 0:
-					break
-				o.write(block)
-				bytes += len(block)
-				print "%fM\r" % (float(bytes) / 1048576),
+			try:
+				i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
+				bytes = 0
+				while True:
+					block = i.read(163840)
+					if len(block) == 0:
+						break
+					o.write(block)
+					bytes += len(block)
+					print "%fM\r" % (float(bytes) / 1048576),
 
-			# open(filename, 'wb').write(self.fetch(url))
-			return filename
+				# open(filename, 'wb').write(self.fetch(url))
+				return filename
+			except:
+				o.close()
+				os.unlink(o.name)
+				raise
 		except urllib2.HTTPError, e:
 			print "Error: " + str(e)
 
