@@ -204,9 +204,13 @@ class Robot:
 			try:
 				zipname = self.fetch_file(item['uri'])
 				if zipname:
-					self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
-					os.remove(zipname)
-					self.dequeue(item['uri'])
+					try:
+						self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
+						os.remove(zipname)
+						self.dequeue(item['uri'])
+					except:
+						os.remove(zipname)
+						raise
 			except Exception, e:
 				print "    ERROR: " + str(e)
 				traceback.print_exc()
