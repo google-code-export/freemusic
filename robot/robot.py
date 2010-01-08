@@ -156,7 +156,7 @@ class Robot:
 				data = urllib.urlencode(data)
 			return urllib2.urlopen(urllib2.Request(url.encode('utf-8'), data)).read()
 		except urllib2.HTTPError, e:
-			print "Error: " + str(e)
+			print "Error fetching %s: %s" % (url, e)
 
 	def fetch_file(self, url):
 		filename = tempfile.mkstemp(suffix='.zip', prefix='freemusic-')[1]
@@ -167,7 +167,7 @@ class Robot:
 			i = urllib2.urlopen(urllib2.Request(url.encode('utf-8')))
 			bytes = 0
 			while True:
-				block = i.read(16384)
+				block = i.read(163840)
 				if len(block) == 0:
 					break
 				o.write(block)
