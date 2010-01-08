@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
-import datetime, hashlib, logging, mimetypes, os, shutil, subprocess, tempfile, zipfile
+import datetime, hashlib, logger, mimetypes, os, shutil, subprocess, tempfile, zipfile
 import Image
 from xml.sax.saxutils import quoteattr as escape
 import albumart, encoder, myxml, tags
@@ -50,7 +50,7 @@ class File:
 			try:
 				self.duration = str(datetime.timedelta(0, int(tags.duration(self.name))))
 			except Exception, e:
-				logging.info(u"No duration for " + self.name + u": " + unicode(e))
+				logger.info(u"No duration for " + self.name + u": " + unicode(e))
 			self.lossless = raw['lossless']
 			if self.lossless:
 				self.mp3_dl = encoder.MP3(forweb=False, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
@@ -133,15 +133,13 @@ class Transcoder:
 		self.upload_dir = upload_dir
 		self.albumart = None
 		self.files = []
-		self.logname = None
+		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
 		self.owner = owner
 
-		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
-		logging.basicConfig(filename=self.logname, level=logging.DEBUG)
-		print u"Logging to " + self.logname
+		logger.setfile(self.logname)
 
 	def __del__(self):
-		logging.basicConfig(filename=None)
+		logger.close()
 		if self.tmpdir:
 			if not self.upload_dir:
 				print "No upload_dir, examining."
@@ -200,7 +198,7 @@ class Transcoder:
 		Распаковывает указанный ZIP архив во временную папку,
 		возвращает список с именами файлов.
 		"""
-		logging.info("unzipping " + zipname)
+		logger.info("unzipping " + zipname)
 		result = []
 		zip = zipfile.ZipFile(zipname)
 		for f in sorted(zip.namelist()):
@@ -210,7 +208,7 @@ class Transcoder:
 					out = open(result[-1], 'wb')
 					out.write(zip.read(f))
 					out.close()
-					logging.info(u"  found " + f.decode('utf-8'))
+					logger.info(u"  found " + f.decode('utf-8'))
 				except UnicodeDecodeError, e:
 					raise Exception(u'%s contains bad file names (non-unicode)' % zipname)
 		return result
@@ -228,13 +226,13 @@ class Transcoder:
 			files = [getattr(file, attr) for file in self.files if getattr(file, attr)]
 		if not len(files):
 			return
-		logging.info(u"creating " + zipname)
+		logger.info(u"creating " + zipname)
 		files += [file.name for file in self.files if not file.is_audio()]
 
 		zip = zipfile.ZipFile(zipname, 'a')
 		for file in files:
 			if not file.endswith('.zip'):
-				logging.info(u"  adding " + file)
+				logger.info(u"  adding " + file)
 				zip.write(file, os.path.basename(file))
 		zip.close()
 		self.files.append(File(zipname))

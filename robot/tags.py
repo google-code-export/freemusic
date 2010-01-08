@@ -4,7 +4,7 @@
 # Функции для работы с тэгами.
 # http://code.google.com/p/mutagen/wiki/Tutorial
 
-import base64, datetime, logging, os, re, sys
+import base64, datetime, logger, os, re, sys
 
 try:
 	import mutagen.easyid3
@@ -28,7 +28,7 @@ def get(filename):
 		elif type == 'ogg':
 			return mutagen.oggvorbis.Open(filename)
 	except Exception, e:
-		logging.warning('%s: %s' % (e.__class__.__name__, str(e)))
+		logger.warning('%s: %s' % (e.__class__.__name__, str(e)))
 		tags = { 'title': os.path.basename(filename) }
 		x = re.match('(\d+)', tags['title'])
 		if x:
@@ -59,7 +59,7 @@ def set(filename, src, cover=None):
 		copy_tags(src, dst)
 		dst.save()
 	else:
-		logging.info(filename + ': tags not supported')
+		logger.info(filename + ': tags not supported')
 
 def ext(filename):
 	return filename.split('.')[-1].lower()
@@ -68,7 +68,7 @@ def copy_tags(src, dst):
 	for tag in sorted(src):
 		try:
 			dst[tag] = src[tag]
-			logging.debug("    %s := %s" % (tag, '; '.join(dst[tag])))
+			logger.debug("    %s := %s" % (tag, '; '.join(dst[tag])))
 		except ValueError:
 			pass
 

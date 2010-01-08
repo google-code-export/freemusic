@@ -3,15 +3,15 @@
 #
 # Функции для работы с обложками.
 
-import Image, logging, os
+import Image, logger, os
 
 def find(files, outname=u'__folder.jpg'):
-	logging.info(u"Looking for album art")
+	logger.info(u"Looking for album art")
 	extensions = [u'jpg', u'jpeg', u'gif', u'png', u'bmp']
 	for file in files:
 		if str(file.split('.')[-1].lower()) in extensions:
 			return resize(file, 300)
-	logging.info(u"  nothing")
+	logger.info(u"  nothing")
 
 def resize(filename, width):
 	img = Image.open(unicode(filename))
