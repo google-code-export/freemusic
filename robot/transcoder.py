@@ -1,10 +1,11 @@
-#! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
 import datetime, hashlib, logger, mimetypes, os, shutil, subprocess, tempfile, zipfile
 import Image
 from xml.sax.saxutils import quoteattr as escape
 import albumart, encoder, myxml, tags
+
+from settings import settings
 
 class File:
 	def __init__(self, name):
@@ -125,12 +126,11 @@ class Transcoder:
 	распаковывает его, формирует MP3/OGG файлы для онлайн-прослушивания
 	и архивы для скачивания.
 	"""
-	def __init__(self, upload_dir, owner):
+	def __init__(self, owner):
 		self.ready = None
 		self.zipname = None # исходный файл, для формирования имени выходных архивов
 		self.realname = None # исходное имя файла прискачивании
 		self.tmpdir = tempfile.mkdtemp(prefix='freemusic-')
-		self.upload_dir = upload_dir
 		self.albumart = None
 		self.files = []
 		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
@@ -141,7 +141,7 @@ class Transcoder:
 	def __del__(self):
 		logger.close()
 		if self.tmpdir:
-			if not self.upload_dir:
+			if not settings['upload_dir']:
 				print "No upload_dir, examining."
 				self.examine(self.tmpdir)
 			print "Removing " + self.tmpdir
@@ -164,7 +164,7 @@ class Transcoder:
 		return self.upload()
 
 	def upload(self):
-		if self.upload_dir:
+		if settings['upload_dir']:
 			files = []
 			if self.logname and os.path.exists(self.logname):
 				files.append(self.logname)
@@ -172,7 +172,7 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
-				dir = os.path.join(self.upload_dir, filemd5(self.zipname))
+				dir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
 				if not os.path.exists(dir):
 					os.mkdir(dir, 0755)
 				for file in files:

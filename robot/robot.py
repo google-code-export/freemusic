@@ -58,32 +58,17 @@ import tempfile
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
-# local imports
-from transcoder import Transcoder
-
 try:
 	import yaml
 except:
 	print "Please install python-yaml."
 	sys.exit(1)
 
+# local imports
+from transcoder import Transcoder
+from settings import settings
+
 class Robot:
-	def __init__(self, opts):
-		self.verbose = False
-		self.force = False
-		self.password = ''
-		self.host = None
-		self.owner = None
-		self.debug = False
-		self.upload_dir = None
-		self.upload_base_url = None
-
-		config = yaml.load(self.read_file('$HOME/.config/freemusic.yaml', 'utf-8'))
-		if config:
-			for k in config.keys():
-				if hasattr(self, k):
-					setattr(self, k, config[k])
-
 	def uploadAlbum(self, xml):
 		try:
 			parseString(xml)
@@ -92,17 +77,17 @@ class Robot:
 			sys.exit(1)
 
 		data = { 'xml': xml, 'signature': self.sign(xml) }
-		if self.force:
+		if settings['force']:
 			data['replace'] = 1
 		self.post('upload/api', data)
 
 	def post(self, url, data):
-		if not self.host:
+		if not settings['host']:
 			raise Exception('host not set')
-		url = 'http://' + self.host + '/' + url
+		url = 'http://' + settings['host'] + '/' + url
 		try:
 			body = urllib.urlencode(data)
-			if self.verbose:
+			if settings['verbose']:
 				print "> uploading to %s: %s." % (url, body)
 			req = urllib2.Request(url, body)
 			response = urllib2.urlopen(req)
@@ -128,7 +113,7 @@ class Robot:
 		raise Exception("FAIL")
 
 	def sign(self, data):
-		dm = hmac.new(self.password, data, hashlib.sha1)
+		dm = hmac.new(settings['password'], data, hashlib.sha1)
 		return base64.b64encode(dm.digest())
 
 	def read_file(self, filename, encoding=None):
@@ -182,38 +167,36 @@ class Robot:
 	def processZipFile(self, filename, realname=None, owner=None):
 		if realname is None:
 			realname = os.path.split(filename)[1]
-		url = Transcoder(upload_dir=self.upload_dir, owner=owner).transcode(filename, realname)
-		if url and self.upload_base_url:
-			url = self.upload_base_url + url
+		url = Transcoder(owner=owner).transcode(filename, realname)
+		if url and settings['upload_base_url']:
+			url = settings['upload_base_url'] + url
 		if url:
 			self.submit_url(url)
 
 	def processQueue(self):
-		if not self.host:
-			raise Exception(u'Host name not set, either use -h or ~/.config/freemusic.yaml')
-		if not self.upload_dir:
-			raise Exception(u'upload_dir not set in ~/.config/freemusic.yaml')
-
-		items = yaml.load(self.fetch('http://' + self.host + '/api/queue.yaml'))
+		items = yaml.load(self.fetch('http://' + settings['host'] + '/api/queue.yaml'))
 		if items is None:
 			print "Nothing to do."
 			return
 
+		skip = settings['skip']
+
 		for item in items:
-			print "A file from " + item['owner']
-			try:
-				zipname = self.fetch_file(item['uri'])
-				if zipname:
-					try:
-						self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
-						os.remove(zipname)
-						self.dequeue(item['uri'])
-					except:
-						os.remove(zipname)
-						raise
-			except Exception, e:
-				print "    ERROR: " + str(e)
-				traceback.print_exc()
+			if item['uri'] not in skip:
+				print "A file from " + item['owner']
+				try:
+					zipname = self.fetch_file(item['uri'])
+					if zipname:
+						try:
+							self.processZipFile(zipname, realname=item['uri'].split('/')[-1], owner=item['owner'])
+							os.remove(zipname)
+							self.dequeue(item['uri'])
+						except:
+							os.remove(zipname)
+							raise
+				except Exception, e:
+					print "    ERROR: " + str(e)
+					traceback.print_exc()
 
 	def submit_url(self, url):
 		"""
@@ -235,7 +218,7 @@ class Robot:
 		self.fetch(url)
 
 	def get_api_url(self, path, args=None):
-		url = 'http://' + self.host + '/' + path
+		url = 'http://' + settings['host'] + '/' + path
 		if args:
 			url += '?' + urllib.urlencode(args)
 		return url
@@ -243,36 +226,56 @@ class Robot:
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
 	print "\nBasic options:"
-	print " -a filename.xml  upload an album from this file"
-	print " -f               force (overwrite existing albums, etc)"
-	print " -h host          host name"
-	print " -q               process all incoming files"
-	print " -s url           submit album.xml"
-	print " -u filename      process and upload a single zip file"
-	print " -v               be verbose"
+	print " -a filename.xml     upload an album from this file"
+	print " -d key=value        override config options"
+	print " -f                  force (overwrite existing albums, etc)"
+	print " -h host             host name"
+	print " -q                  process all incoming files"
+	print " -s url              submit album.xml"
+	print " -u filename         process and upload a single zip file"
+	print " -v                  be verbose"
+	print "\nConfig options (-d or ~/.config/freemusic.yaml):"
+	print "  force              new albums overwrite existing ones"
+	print "  host               web site host name"
+	print "  password           used for signing, usually equals to S3 private key"
+	print "  upload_dir         local path, a folder with dirs and files to upload"
+	print "  upload_base_url    public URL by which upload_dir is accessible"
+	print "  skip               a list of URLS to ignore if found in queue"
+	print "  verbose            send conversion log to stdout, print extra messages"
 	return 2
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:dfh:p:qs:u:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qs:u:v")
 	except getopt.GetoptError, err:
 		return usage()
 
 	if not len(opts):
 		return usage()
 
-	r = Robot(opts)
+	# Перегрузка настроек.
+	for option, value in opts:
+		if '-d' == option:
+			k, v = value.split('=', 1)
+			settings[k] = v
+		if '-h' == option:
+			settings['host'] = value
+		if '-v' == option:
+			settings['verbose'] = True
+
+	# Проверка настроек
+	settings.validate()
+
+	r = Robot()
 	for option, value in opts:
 		if option in ('-u', '-q'):
-			print "Working with " + r.host
+			print "Working with " + settings['host']
 		if '-a' == option:
 			f = open(value, 'r')
 			r.uploadAlbum(f.read())
 			f.close()
 		if '-f' == option:
 			r.force = True
-		if '-h' == option:
-			r.host = value
 		if '-v' == option:
 			r.verbose = True
 		if '-p' == option:

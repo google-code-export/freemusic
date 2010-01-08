@@ -3,13 +3,16 @@
 # Примитивное журналирование.  Разнотипные сообщения записываются
 # одновременно в файл и в stdout (если робот запущен без ключа -q).
 
+from settings import settings
+
 file = None
 
 def write(prefix, message):
 	"Вывод строки.  Добавляет к каждой строке указанный префикс."
 	global file
 	text = prefix + u': ' + message
-	print text
+	if settings['verbose']:
+		print text
 	if file is not None:
 		file.write(text.encode('utf-8') + "\n")
 
