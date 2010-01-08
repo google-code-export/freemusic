@@ -125,13 +125,14 @@ class SubmitAlbum(APIRequest):
 			keys.append(album.put())
 			artist.put() # обновление XML
 
-			try:
-				mail.send(data['owner'], self.render('album-added.html', {
-					'album_id': album.id,
-					'album_name': album.name,
-				}))
-			except KeyError:
-				pass
+			if users.get_current_user() and data['owner'] != users.get_current_user().email():
+				try:
+					mail.send(data['owner'], self.render('album-added.html', {
+						'album_id': album.id,
+						'album_name': album.name,
+					}))
+				except KeyError:
+					pass
 		except Exception, e:
 			db.delete(keys)
 			raise
