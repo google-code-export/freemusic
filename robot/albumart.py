@@ -10,11 +10,14 @@ def find(files, outname=u'__folder.jpg'):
 	extensions = [u'jpg', u'jpeg', u'gif', u'png', u'bmp']
 	for file in files:
 		if str(file.split('.')[-1].lower()) in extensions:
+			logger.info(u'Using ' + file)
 			return resize(file, 300)
 	logger.info(u"  nothing")
 
 def resize(filename, width):
 	img = Image.open(unicode(filename))
+	if img.mode != 'RGB':
+		img = img.convert('RGB')
 	if img.size[0] != img.size[1]:
 		shift = (max(img.size) - min(img.size)) / 2
 		if img.size[0] > img.size[1]:
