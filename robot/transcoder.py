@@ -1,6 +1,7 @@
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
 import datetime, hashlib, logger, mimetypes, os, shutil, subprocess, tempfile, zipfile
+import urllib
 import Image
 from xml.sax.saxutils import quoteattr as escape
 import albumart, encoder, myxml, tags
@@ -215,20 +216,20 @@ class Transcoder:
 			return None
 		for f in sorted(zip.namelist()):
 			if not f.endswith('/'):
+				name = os.path.basename(f)
 				try:
-					name = os.path.basename(f).decode('utf-8')
-					if name.startswith('.'):
-						logger.info(u'  skipped ' + name)
-					else:
-						result.append(os.path.join(unicode(self.tmpdir), name))
-						out = open(result[-1], 'wb')
-						out.write(zip.read(f))
-						out.close()
-						logger.info(u"  found " + f.decode('utf-8'))
-				except UnicodeDecodeError, e:
-					logger.debug(f)
-					logger.error(u'%s contains bad file names (non-unicode)' % zipname)
-					return None
+					name = name.decode('utf-8')
+				except UnicodeDecodeError:
+					parts = os.path.splitext(name)
+					name = urllib.quote(parts[0]).replace('%', 'x') + parts[1]
+				if name.startswith('.'):
+					logger.info(u'  skipped ' + name)
+				else:
+					result.append(os.path.join(unicode(self.tmpdir), name))
+					out = open(result[-1], 'wb')
+					out.write(zip.read(f))
+					out.close()
+					logger.info(u"  found " + name)
 		return result
 
 	def makeDownloadableFiles(self):
