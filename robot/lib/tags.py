@@ -75,8 +75,8 @@ def copy_tags(src, dst):
 	for tag in sorted(src):
 		try:
 			dst[tag] = src[tag]
-			logger.debug("    %s := %s" % (tag, '; '.join(dst[tag])))
 		except ValueError:
+			logger.warning('Error settings tag %s', tag)
 			pass
 
 def duration(filename):

@@ -100,5 +100,7 @@ class Decoder(Encoder):
 			result['target'] = 'mp3_dl'
 		else:
 			return None
+		for tag in sorted(result['tags']):
+			logger.info('Tag %s: %s' % (tag, '; '.join(result['tags'][tag])))
 		logger.debug(u"tags in %s: %s" % (filename, result['tags']))
 		return result
