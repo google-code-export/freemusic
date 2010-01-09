@@ -84,7 +84,7 @@
 		<div id="album">
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
-				<xsl:apply-templates select="images/image[position()=1]" mode="medium"/>
+				<xsl:apply-templates select="images/image[@type='front']" mode="medium"/>
 				<ul>
 					<li>
 						<a href="{files/file/@uri}">Скачать альбом</a>
@@ -400,8 +400,8 @@
 					<a href="/album/{@id}">
 						<img width="100" height="100">
 							<xsl:attribute name="src">
-								<xsl:value-of select="images/image[position()=1]/@small"/>
-								<xsl:if test="not(images/image[position()=1]/@small)">/static/cdaudio_mount.png</xsl:if>
+								<xsl:value-of select="images/image[@type='front']/@small"/>
+								<xsl:if test="not(images/image[@type='front'])">/static/cdaudio_mount.png</xsl:if>
 							</xsl:attribute>
 						</img>
 					</a>

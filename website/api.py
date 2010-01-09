@@ -113,7 +113,7 @@ class SubmitAlbum(APIRequest):
 
 			self.purge(model.SiteImage, album)
 			for image in data['images']:
-				keys.append(model.SiteImage(album=album, small=image['small'], medium=image['medium'], original=image['original']).put())
+				keys.append(model.SiteImage(album=album, small=image['small'], medium=image['medium'], original=image['original'], type=image['type']).put())
 
 			self.purge(model.SiteTrack, album)
 			for track in data['tracks']:
@@ -169,12 +169,18 @@ class SubmitAlbum(APIRequest):
 			for k in ('artist', 'name', 'pubDate', 'owner'):
 				album[k] = self.aton(em.getAttribute(k))
 
+			have_front = False
 			for em2 in em.getElementsByTagName('image'):
 				album['images'].append({
 					'small': self.aton(em2.getAttribute('small'), base_url),
 					'medium': self.aton(em2.getAttribute('medium'), base_url),
 					'original': self.aton(em2.getAttribute('original'), base_url),
+					'type': self.aton(em2.getAttribute('type')),
 				})
+				if album['images'][-1]['type'] == 'front':
+					have_front = True
+			if not have_front and album['images']:
+				album['images'][0]['type'] = 'front'
 
 			for em2 in em.getElementsByTagName('track'):
 				album['tracks'].append({

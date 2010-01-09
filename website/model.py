@@ -78,12 +78,14 @@ class SiteImage(db.Model):
 	small = db.LinkProperty()
 	medium = db.LinkProperty()
 	original = db.LinkProperty()
+	type = db.StringProperty()
 
 	def to_xml(self):
 		return xml.em(u'image', {
 			'small': self.small,
 			'medium': self.medium,
 			'original': self.original,
+			'type': self.type,
 		})
 
 class SiteTrack(db.Model):
