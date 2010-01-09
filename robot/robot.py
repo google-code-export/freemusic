@@ -237,7 +237,7 @@ def usage():
 	print " -f                  force (overwrite existing albums, etc)"
 	print " -h host             host name"
 	print " -q                  process all incoming files"
-	print " -s url              submit album.xml"
+	print " -s urls...          submit one or more album.xml"
 	print " -u filename         process and upload a single zip file"
 	print " -v                  be verbose"
 	print "\nConfig options (-d or ~/.config/freemusic.yaml):"
@@ -252,7 +252,7 @@ def usage():
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qs:u:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qsu:v")
 	except getopt.GetoptError, err:
 		return usage()
 
@@ -289,7 +289,10 @@ def main():
 		if '-q' == option:
 			r.processQueue()
 		if '-s' == option:
-			r.submit_url(value)
+			if not len(args):
+				usage()
+			for url in args:
+				r.submit_url(url)
 		if '-u' == option:
 			r.processZipFile(value)
 
