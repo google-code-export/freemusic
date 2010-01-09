@@ -201,7 +201,11 @@ class Transcoder:
 		"""
 		logger.info("unzipping " + zipname)
 		result = []
-		zip = zipfile.ZipFile(zipname)
+		try:
+			zip = zipfile.ZipFile(zipname)
+		except zipfile.BadZipfile, e:
+			logger.error(str(e))
+			return None
 		for f in sorted(zip.namelist()):
 			if not f.endswith('/'):
 				try:
@@ -211,7 +215,9 @@ class Transcoder:
 					out.close()
 					logger.info(u"  found " + f.decode('utf-8'))
 				except UnicodeDecodeError, e:
-					raise Exception(u'%s contains bad file names (non-unicode)' % zipname)
+					logger.debug(f)
+					logger.error(u'%s contains bad file names (non-unicode)' % zipname)
+					return None
 		return result
 
 	def makeDownloadableFiles(self):

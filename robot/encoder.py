@@ -19,6 +19,7 @@ class Encoder:
 			stdin = clist[-1].stdout
 		response = clist[-1].communicate()
 		if clist[-1].returncode:
+			logger.error('%d: %s' % (clist[-1].returncode, response))
 			raise Exception(response[1])
 		return response[0]
 
