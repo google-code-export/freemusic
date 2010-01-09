@@ -76,7 +76,7 @@ def copy_tags(src, dst):
 		try:
 			dst[tag] = src[tag]
 		except ValueError:
-			logger.warning('Error settings tag %s', tag)
+			logger.warning('Error settings tag ' + tag)
 			pass
 
 def duration(filename):
