@@ -135,6 +135,7 @@ class Transcoder:
 		self.files = []
 		self.logname = os.path.join(self.tmpdir, 'transcoding-log.txt')
 		self.owner = owner
+		self.pubdir = None
 
 		logger.setfile(self.logname)
 
@@ -153,6 +154,11 @@ class Transcoder:
 		"""
 		self.zipname = zipname
 		self.realname = realname
+		self.pubdir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
+		if os.path.exists(self.pubdir):
+			logger.warning('Target directory %s already exists.' % self.pubdir)
+			return None
+
 		self.files = [File(f) for f in self.unzip(zipname)]
 		if not self.files:
 			return None
@@ -172,16 +178,14 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
-				dir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
-				print "Moving %u files to %s" % (len(files), dir)
+				print "Moving %u files to %s" % (len(files), self.pubdir)
 				verbose = settings['verbose']
-				if not os.path.exists(dir):
-					os.mkdir(dir, 0755)
+				os.mkdir(self.pubdir, 0755)
 				for file in files:
 					if verbose:
 						print " > " + file
-					shutil.move(file, dir)
-			return os.path.join(os.path.basename(dir), 'album.xml')
+					shutil.move(file, self.pubdir)
+			return os.path.join(os.path.basename(self.pubdir), 'album.xml')
 
 	def process_audio(self):
 		for f in self.files:
