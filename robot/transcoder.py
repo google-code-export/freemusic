@@ -172,11 +172,14 @@ class Transcoder:
 				for ff in f.uploadable():
 					files.append(ff)
 			if len(files):
-				print "Moving %u files to %s" % (len(files), settings['upload_dir'])
 				dir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
+				print "Moving %u files to %s" % (len(files), dir)
+				verbose = settings['verbose']
 				if not os.path.exists(dir):
 					os.mkdir(dir, 0755)
 				for file in files:
+					if verbose:
+						print " > " + file
 					shutil.move(file, dir)
 			return os.path.join(os.path.basename(dir), 'album.xml')
 
@@ -209,11 +212,15 @@ class Transcoder:
 		for f in sorted(zip.namelist()):
 			if not f.endswith('/'):
 				try:
-					result.append(os.path.join(unicode(self.tmpdir), os.path.basename(f).decode('utf-8')))
-					out = open(result[-1], 'wb')
-					out.write(zip.read(f))
-					out.close()
-					logger.info(u"  found " + f.decode('utf-8'))
+					name = os.path.basename(f).decode('utf-8')
+					if name.startswith('.'):
+						logger.info(u'  skipped ' + name)
+					else:
+						result.append(os.path.join(unicode(self.tmpdir), name))
+						out = open(result[-1], 'wb')
+						out.write(zip.read(f))
+						out.close()
+						logger.info(u"  found " + f.decode('utf-8'))
 				except UnicodeDecodeError, e:
 					logger.debug(f)
 					logger.error(u'%s contains bad file names (non-unicode)' % zipname)
