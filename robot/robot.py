@@ -208,10 +208,14 @@ class Robot:
 		"""
 		Просит сервер добавить альбом, информация о котором находится по указанному адресу.
 		"""
-		url = self.get_api_url('api/submit/album', {
+		data = {
 			'url': url,
 			'signature': self.sign(url),
-		})
+			'replace': settings['force'],
+		}
+		if settings['force']:
+			data['replace'] = 1
+		url = self.get_api_url('api/submit/album', data)
 		self.fetch(url)
 
 	def dequeue(self, url):
@@ -264,6 +268,8 @@ def main():
 		if '-d' == option:
 			k, v = value.split('=', 1)
 			settings[k] = v
+		if '-f' == option:
+			settings['force'] = True
 		if '-h' == option:
 			settings['host'] = value
 		if '-v' == option:
@@ -280,8 +286,6 @@ def main():
 			f = open(value, 'r')
 			r.uploadAlbum(f.read())
 			f.close()
-		if '-f' == option:
-			r.force = True
 		if '-v' == option:
 			r.verbose = True
 		if '-p' == option:
