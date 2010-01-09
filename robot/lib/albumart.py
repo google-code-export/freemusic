@@ -3,7 +3,10 @@
 #
 # Функции для работы с обложками.
 
-import Image, logger, os
+import Image
+import os
+
+import logger
 
 def find(files, outname=u'__folder.jpg'):
 	logger.info(u"Looking for album art")

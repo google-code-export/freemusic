@@ -1,12 +1,23 @@
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
-import datetime, hashlib, logger, mimetypes, os, shutil, subprocess, tempfile, zipfile
-import urllib
+import datetime
+import hashlib
 import Image
+import mimetypes
+import os
+import shutil
+import subprocess
+import tempfile
+import urllib
 from xml.sax.saxutils import quoteattr as escape
-import albumart, encoder, myxml, tags
 
+import albumart
+import encoder
+import logger
+import myxml
 from settings import settings
+import tags
+import zip
 
 class File:
 	def __init__(self, name):
@@ -160,7 +171,7 @@ class Transcoder:
 			logger.warning('Target directory %s already exists.' % self.pubdir)
 			return None
 
-		self.files = [File(f) for f in self.unzip(zipname)]
+		self.files = [File(f) for f in zip.unzip(zipname, self.tmpdir)]
 		if not self.files:
 			return None
 		self.albumart = albumart.find([file.name for file in self.files], os.path.join(self.tmpdir, '__folder.jpg'))
@@ -202,36 +213,6 @@ class Transcoder:
 		if len(files):
 			encoder(tmpdir=self.tmpdir).replaygain(files)
 
-	def unzip(self, zipname):
-		"""
-		Распаковывает указанный ZIP архив во временную папку,
-		возвращает список с именами файлов.
-		"""
-		logger.info("unzipping " + zipname)
-		result = []
-		try:
-			zip = zipfile.ZipFile(zipname)
-		except zipfile.BadZipfile, e:
-			logger.error(str(e))
-			return None
-		for f in sorted(zip.namelist()):
-			if not f.endswith('/'):
-				name = os.path.basename(f)
-				try:
-					name = name.decode('utf-8')
-				except UnicodeDecodeError:
-					parts = os.path.splitext(name)
-					name = urllib.quote(parts[0]).replace('%', 'x') + parts[1]
-				if name.startswith('.'):
-					logger.info(u'  skipped ' + name)
-				else:
-					result.append(os.path.join(unicode(self.tmpdir), name))
-					out = open(result[-1], 'wb')
-					out.write(zip.read(f))
-					out.close()
-					logger.info(u"  found " + name)
-		return result
-
 	def makeDownloadableFiles(self):
 		prefix = os.path.join(self.tmpdir, os.path.splitext(self.realname)[0])
 		self.mkzip(prefix + '-ogg.zip', 'ogg_dl')
@@ -243,18 +224,10 @@ class Transcoder:
 			files = [getattr(file, attr) for file in self.files if getattr(file, attr) and file.lossless]
 		else:
 			files = [getattr(file, attr) for file in self.files if getattr(file, attr)]
-		if not len(files):
-			return
-		logger.info(u"creating " + zipname)
-		files += [file.name for file in self.files if not file.is_audio()]
-
-		zip = zipfile.ZipFile(zipname, 'a')
-		for file in files:
-			if not file.endswith('.zip'):
-				logger.info(u"  adding " + file)
-				zip.write(file, os.path.basename(file))
-		zip.close()
-		self.files.append(File(zipname))
+		if len(files):
+			zipname = zip.zip(zipname, files + [file.name for file in self.files if not file.is_audio()])
+			if zipname:
+				self.files.append(File(zipname))
 
 	def makeXML(self):
 		artist, album = self.find_meta()

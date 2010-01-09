@@ -1,10 +1,17 @@
-#! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
-#
-# Функции для работы с тэгами.
-# http://code.google.com/p/mutagen/wiki/Tutorial
 
-import base64, datetime, logger, os, re, sys
+"""
+Функции для работы с тэгами.
+http://code.google.com/p/mutagen/wiki/Tutorial
+"""
+
+import base64
+import datetime
+import os
+import re
+import sys
+
+import logger
 
 try:
 	import mutagen.easyid3

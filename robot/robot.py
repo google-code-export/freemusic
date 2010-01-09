@@ -65,8 +65,9 @@ except:
 	sys.exit(1)
 
 # local imports
-from transcoder import Transcoder
-from settings import settings
+from lib import logger
+from lib.transcoder import Transcoder
+from lib.settings import settings
 
 class Robot:
 	def uploadAlbum(self, xml):
