@@ -32,6 +32,6 @@ def resize(filename, width):
 
 	outname = os.path.splitext(filename)[0] + u'.' + str(width) + u'x' + str(width) + u'.jpg'
 	img.thumbnail((width, width))
-	img.resize((width, width), Image.BICUBIC).save(outname, 'JPEG')
+	img.resize((width, width), Image.ANTIALIAS).save(outname, 'JPEG')
 	# img.save(outname, "JPEG")
 	return outname
