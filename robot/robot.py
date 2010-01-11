@@ -77,49 +77,6 @@ from lib.transcoder import Transcoder
 from lib.settings import settings
 
 class Robot:
-	def uploadAlbum(self, xml):
-		try:
-			parseString(xml)
-		except ExpatError, e:
-			print "Invalid XML file:", e
-			sys.exit(1)
-
-		data = { 'xml': xml, 'signature': self.sign(xml) }
-		if settings['force']:
-			data['replace'] = 1
-		self.post('upload/api', data)
-
-	def post(self, url, data):
-		if not settings['host']:
-			raise Exception('host not set')
-		url = 'http://' + settings['host'] + '/' + url
-		try:
-			body = urllib.urlencode(data)
-			if settings['verbose']:
-				print "> uploading to %s: %s." % (url, body)
-			req = urllib2.Request(url, body)
-			response = urllib2.urlopen(req)
-			self.showResponse(response.read())
-		except urllib2.HTTPError, e:
-			print str(e)
-
-	def showResponse(self, response):
-		xml = parseString(response)
-		for em in xml.getElementsByTagName("response"):
-			message = unicode(em.attributes["status"].value)
-			if message == u"ok":
-				message = u""
-			try:
-				extra = unicode(em.attributes["message"].value)
-				if message:
-					message += u": "
-				message += extra
-			except KeyError:
-				pass
-			print message
-			return
-		raise Exception("FAIL")
-
 	def sign(self, data):
 		dm = hmac.new(settings['password'], data, hashlib.sha1)
 		return base64.b64encode(dm.digest())
@@ -243,7 +200,6 @@ class Robot:
 def usage():
 	print "Usage: %s [options]" % (os.path.basename(sys.argv[0]))
 	print "\nBasic options:"
-	print " -a filename.xml     upload an album from this file"
 	print " -d key=value        override config options"
 	print " -f                  force (overwrite existing albums, etc)"
 	print " -h host             host name"
@@ -290,10 +246,6 @@ def main():
 	for option, value in opts:
 		if option in ('-u', '-q'):
 			print "Working with " + settings['host']
-		if '-a' == option:
-			f = open(value, 'r')
-			r.uploadAlbum(f.read())
-			f.close()
 		if '-v' == option:
 			r.verbose = True
 		if '-p' == option:
