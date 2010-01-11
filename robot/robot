@@ -1,8 +1,9 @@
 #!/bin/sh
 # Обёртка вокруг робота, перезапускает его при падении.
 # Обработчик исключений в роботе завершает работу с кодом 2.
+cd $(dirname $0)
 while :; do
-  python robot.py $*
+  python ./robot.py $*
   [ "$?" != "2" ] && exit
   echo "Non-clean shutdown, restarting."
 done
