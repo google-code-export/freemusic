@@ -217,7 +217,7 @@ def usage():
 	print "  upload_base_url    public URL by which upload_dir is accessible"
 	print "  skip               a list of URLS to ignore if found in queue"
 	print "  verbose            send conversion log to stdout, print extra messages"
-	return 2
+	return 1
 
 def main():
 	try:
