@@ -4,6 +4,7 @@
 
 import logger
 import os
+import urllib
 import zipfile
 
 def unzip(zipname, tmpdir):
