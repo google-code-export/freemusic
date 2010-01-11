@@ -49,12 +49,19 @@
 #   его хозяином после успешной загрузки, ему отправляется уведомление
 #   по электронной почте.
 
-import getopt, sys, os
-import urllib, urllib2, urlparse
-import base64, hmac, hashlib
+import base64
+import getopt
+import hmac
+import hashlib
+import os
 import subprocess
-import traceback
+import sys
 import tempfile
+import time
+import traceback
+import urllib
+import urllib2
+import urlparse
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 
@@ -243,6 +250,7 @@ def usage():
 	print " -q                  process all incoming files"
 	print " -s urls...          submit one or more album.xml"
 	print " -u filename         process and upload a single zip file"
+	print " -w                  work; loops with -q"
 	print " -v                  be verbose"
 	print "\nConfig options (-d or ~/.config/freemusic.yaml):"
 	print "  force              new albums overwrite existing ones"
@@ -256,7 +264,7 @@ def usage():
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qsu:v")
+		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qsu:wv")
 	except getopt.GetoptError, err:
 		return usage()
 
@@ -299,6 +307,11 @@ def main():
 				r.submit_url(url)
 		if '-u' == option:
 			r.processZipFile(value)
+		if '-w' == option:
+			print "Working."
+			while True:
+				r.processQueue()
+				time.sleep(60)
 
 if __name__ == '__main__':
 	try:
