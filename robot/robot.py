@@ -146,7 +146,8 @@ class Robot:
 	def processQueue(self):
 		items = yaml.load(self.fetch('http://' + settings['host'] + '/api/queue.yaml'))
 		if items is None:
-			print "Nothing to do."
+			if settings['verbose']:
+				print "Nothing to do."
 			return
 
 		skip = settings['skip']
