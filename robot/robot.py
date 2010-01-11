@@ -245,7 +245,7 @@ def main():
 
 	r = Robot()
 	for option, value in opts:
-		if option in ('-u', '-q'):
+		if option in ('-u', '-q', '-w'):
 			print "Working with " + settings['host']
 		if '-v' == option:
 			r.verbose = True
@@ -261,7 +261,6 @@ def main():
 		if '-u' == option:
 			r.processZipFile(value)
 		if '-w' == option:
-			print "Working."
 			while True:
 				r.processQueue()
 				time.sleep(60)
