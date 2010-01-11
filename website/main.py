@@ -73,6 +73,7 @@ if __name__ == '__main__':
 		('/api/submit/album', api.SubmitAlbum),
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)$', artist.ViewHandler),
+		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),

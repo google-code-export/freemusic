@@ -91,7 +91,7 @@ form.eal ol li {
 }
 
 .left ul {
-  margin: 0;
+  margin: 0 0 2em;
   padding: 0;
   list-style-type: none;
 }

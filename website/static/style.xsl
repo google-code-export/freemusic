@@ -287,22 +287,7 @@
 
 	<xsl:template match="/page/index">
 		<div id="index" class="twocol">
-			<div class="left">
-				<ul>
-					<li><a href="/">Свежие</a></li>
-					<li><a href="/">Популярные</a></li>
-					<li><a href="/">Рекомендуемые</a></li>
-					<xsl:if test="../@label">
-						<li>
-							<xsl:value-of select="concat('С меткой «',../@label,'»')"/>
-						</li>
-					</xsl:if>
-				</ul>
-				<div class="uya">
-					<p>Музыкант?</p>
-					<a href="/upload">Загрузи свой альбом</a>
-				</div>
-			</div>
+			<xsl:call-template name="lnav"/>
 			<div class="right">
 				<xsl:apply-templates select="albums" mode="tiles"/>
 				<ul class="pager">
@@ -322,6 +307,28 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template name="lnav">
+		<div class="left">
+			<ul>
+				<li><a href="/">Свежие</a></li>
+				<li><a href="/">Популярные</a></li>
+				<li><a href="/">Рекомендуемые</a></li>
+				<xsl:if test="../@label">
+					<li>
+						<xsl:value-of select="concat('С меткой «',../@label,'»')"/>
+					</li>
+				</xsl:if>
+			</ul>
+			<ul>
+				<li><a href="/artists">Исполнители</a></li>
+			</ul>
+			<div class="uya">
+				<p>Музыкант?</p>
+				<a href="/upload">Загрузи свой альбом</a>
+			</div>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="/page/artist">
 		<div class="onecol">
 			<div class="right">
@@ -332,6 +339,25 @@
 				<xsl:if test="not(albums)">
 					<p>Об этом исполнителе пока ничего не известно.</p>
 				</xsl:if>
+			</div>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="artists">
+		<div class="twocol">
+			<xsl:call-template name="lnav"/>
+			<div class="right">
+				<h2>Все исполнители</h2>
+				<ul class="artists">
+					<xsl:for-each select="artist">
+						<xsl:sort select="@name"/>
+						<li>
+							<a href="artist/{@id}">
+								<xsl:value-of select="@name"/>
+							</a>
+						</li>
+					</xsl:for-each>
+				</ul>
 			</div>
 		</div>
 	</xsl:template>

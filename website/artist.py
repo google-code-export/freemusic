@@ -45,3 +45,11 @@ class RSSHandler(BaseRequestHandler):
 			'link': 'artist/' + str(artist.id),
 		} for artist in SiteArtist.all().order('-id').fetch(20)]
 		self.sendRSS(items, title=u'Новые исполнители')
+
+class List(BaseRequestHandler):
+	def get(self):
+		self.check_access()
+		self.sendXML(xml.em(u'artists', content=u''.join([xml.em(u'artist', {
+			'id': artist.id,
+			'name': artist.name,
+		}) for artist in SiteArtist.all().fetch(1000)])))
