@@ -276,4 +276,4 @@ if __name__ == '__main__':
 		else:
 			print "\r%s: %s" % (e.__class__.__name__, str(e))
 			traceback.print_exc()
-	sys.exit(1)
+	sys.exit(2)
