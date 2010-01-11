@@ -72,8 +72,10 @@
 					<h2>Мы ещё не открыты</h2>
 					<p>
 						<xsl:text>Сайт находится на стадии закрытого тестирования.</xsl:text>
-						<xsl:if test="@login-uri">&#160; Чтобы получить приглашене, нужно <a href="{@login-uri}">залогиниться</a>.</xsl:if>
-						<xsl:if test="not(@login-uri)">&#160; Вы получите приглашение как только придёт время.</xsl:if>
+						<xsl:choose>
+							<xsl:when test="not(@login-uri)">&#160; Вы получите приглашение как только придёт время.</xsl:when>
+							<xsl:otherwise>&#160; <a href="{@login-uri}">Оставьте свой почтовый адрес</a>, чтобы получить приглашение.</xsl:otherwise>
+						</xsl:choose>
 					</p>
 				</div>
 			</body>
