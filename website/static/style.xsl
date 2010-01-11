@@ -49,8 +49,8 @@
 						<xsl:if test="/page/@logout-uri">
 							<xsl:text> - </xsl:text>
 							<a href="{/page/@logout-uri}">Выйти</a>
-							<xsl:text> - </xsl:text>
 							<xsl:if test="contains(@logout-uri,'.appspot.com')">
+								<xsl:text> - </xsl:text>
 								<a href="https://appengine.google.com/dashboard?app_id=free-music">Админка</a>
 							</xsl:if>
 						</xsl:if>
@@ -280,7 +280,7 @@
 					</label>
 					<p class="hint">Это должна быть прямая ссылка, страницы-посредники вроде RapidShare работать не будут.</p>
 				</div>
-				<input type="submit"/>
+				<input type="submit"/> или <a href="/upload">загрузить файл</a>
 			</form>
 		</div>
 	</xsl:template>
@@ -518,7 +518,6 @@
 				-->
 				<p>Пожалуйста, подготовьте ZIP архив со всеми звуковыми файлами, картинками, буклетами и всем, что считаете нужным.&#160; Чем лучшего качества будут звуковые файлы, тем лучше; мы рекомендуем <a href="http://ru.wikipedia.org/wiki/FLAC" target="_blank">FLAC</a>, WAV или AIFF (мы сами сделаем из них MP3 и OGG).</p>
 				<p>После загрузки файла наши роботы примутся его обрабатывать, о результатах вам сообщат по электронной почте.</p>
-				<p>И будет здорово, если ваш браузер умеет показывать ход загрузки.&#160; Мы рекомендуем <a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a>.</p>
 				<label><input type="checkbox" class="toggle"/> Всё понятно</label>
 				<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data" class="hidden toggleMe fileUpload">
 					<input type="hidden" name="AWSAccessKeyId" value="{@access-key}"/>
@@ -533,7 +532,9 @@
 					<div>
 						<input type="submit" value="Начать загрузку"/>
 					</div>
+					<p>Будет здорово, если ваш браузер умеет показывать ход загрузки.&#160; Мы рекомендуем <a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a>.</p>
 				</form>
+				<p><small>Если ZIP архив уже загружен на какой-нибудь другой веб-сервер, можно просто <a href="/upload/remote">прислать ссылку на него</a>.</small></p>
 			</div>
 		</div>
 	</xsl:template>
