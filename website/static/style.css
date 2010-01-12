@@ -240,8 +240,8 @@ ul.labels li a {
 .tracklist, .tracklist .track {
   width: 100%;
 }
-.tracklist .playing .track a {
-  font-weight: bold;
+.tracklist .playing .track:after {
+  content: ' ♫';
 }
 .tracklist .u u {
   display: inline-block;
