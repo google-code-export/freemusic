@@ -43,9 +43,9 @@
 						<xsl:text>© ebm.net.ru - </xsl:text>
 						<a href="/">Главная</a>
 						<xsl:text> - </xsl:text>
-						<a href="http://code.google.com/p/freemusic/">О проекте</a>
+						<a href="http://code.google.com/p/freemusic/" target="_blank">О проекте</a>
 						<xsl:text> - </xsl:text>
-						<a href="http://code.google.com/p/freemusic/issues/list">Поддержка</a>
+						<a href="http://code.google.com/p/freemusic/issues/list" target="_blank">Поддержка</a>
 						<xsl:if test="/page/@login-uri">
 							<xsl:text> - </xsl:text>
 							<a href="{/page/@login-uri}">Войти</a>
