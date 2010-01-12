@@ -6,6 +6,9 @@ api_version: 1
 # Good example: http://code.google.com/p/rietveld/source/browse/trunk/app.yaml
 
 handlers:
+- url: /favicon.ico
+  static_files: static/favicon.2.ico
+  upload: static/favicon.2.ico
 - url: /static/
   static_dir: static
 - url: /doc/
