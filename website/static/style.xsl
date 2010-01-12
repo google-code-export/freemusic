@@ -122,6 +122,7 @@
 				<table>
 					<tbody>
 						<xsl:for-each select="tracks/track">
+							<xsl:sort select="@number" data-type="number"/>
 							<tr>
 								<td class="r">
 									<xsl:value-of select="position()"/>
@@ -187,8 +188,9 @@
 						<legend>Названия дорожек:</legend>
 						<ol>
 							<xsl:for-each select="tracks/track">
+								<xsl:sort select="@number" data-type="number"/>
 								<li>
-									<input type="text" class="text" name="track.{position()}" value="{@title}"/>
+									<input type="text" class="text" name="track.{@id}" value="{@title}"/>&#160;<a href="/track/{@id}" target="_blank">#</a>
 								</li>
 							</xsl:for-each>
 						</ol>
@@ -207,7 +209,7 @@
 				<h2>
 					<xsl:value-of select="@title"/>
 				</h2>
-				<p>Из альбома <a href="/album/{@album-id}"><xsl:value-of select="@album-name"/></a>.</p>
+				<p><xsl:if test="@number">Дорожка №<xsl:value-of select="@number"/> из</xsl:if><xsl:if test="not(@number)">Из</xsl:if> альбома <a href="/album/{@album-id}"><xsl:value-of select="@album-name"/></a>.</p>
 				<xsl:if test="@mp3-link or @ogg-link">
 					<audio controls="controls">
 						<xsl:if test="@mp3-link">

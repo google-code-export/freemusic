@@ -61,10 +61,9 @@ class Editor(Viewer):
 			if arg.startswith('track.') and self.request.get(arg):
 				data[int(arg.split('.', 1)[1])] = self.request.get(arg)
 		if data:
-			log(data)
 			for track in SiteTrack.gql('WHERE album = :1', album).fetch(1000):
-				if track.number in data:
-					track.title = data[track.number]
+				if track.id in data:
+					track.title = data[track.id]
 					track.put()
 
 
