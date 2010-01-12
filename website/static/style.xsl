@@ -20,6 +20,7 @@
 				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+				<script type="text/javascript" src="/static/modernizr-1.1.min.js"></script>
 				<script type="text/javascript" src="/static/scripts.js"></script>
 				<link rel="alternate" type="application/rss+xml" title="RSS" href="/albums.rss"/> 
 			</head>
@@ -121,7 +122,13 @@
 				</xsl:apply-templates>
 			</div>
 			<div class="right">
-				<table>
+				<div class="player">
+					<audio>
+						<source id="oggs" src="{tracks/track[position()=1]/@ogg-link}" type="audio/ogg; codecs=vorbis"/>
+						<source id="mp3s" src="{tracks/track[position()=1]/@mp3-link}" type="audio/mp3"/>
+					</audio>
+				</div>
+				<table class="tracklist">
 					<tbody>
 						<xsl:for-each select="tracks/track">
 							<xsl:sort select="@number" data-type="number"/>
@@ -130,10 +137,14 @@
 									<xsl:value-of select="position()"/>
 									<xsl:text>.</xsl:text>
 								</td>
-								<td>
+								<td class="u"></td>
+								<td class="track">
 									<a href="/track/{@id}">
 										<xsl:value-of select="@title"/>
 									</a>
+								</td>
+								<td class="dur">
+									<xsl:value-of select="@duration"/>
 								</td>
 							</tr>
 						</xsl:for-each>

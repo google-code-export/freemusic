@@ -233,3 +233,28 @@ ul.labels li a {
   background-color: #ddd;
   padding: 2px 4px;
 }
+
+#content .player {
+  margin-bottom: 20px;
+}
+.tracklist, .tracklist .track {
+  width: 100%;
+}
+.tracklist .playing .track a {
+  font-weight: bold;
+}
+.tracklist .u u {
+  display: inline-block;
+  width: 16px;
+  height: 17px;
+  background: transparent url(/static/play.gif) no-repeat top left;
+  vertical-align: bottom;
+}
+
+.tracklist .playing u {
+  background: transparent url(/static/pause.gif) no-repeat top left;
+}
+.tracklist .dur {
+  color: gray;
+  padding-left: 10px;
+}

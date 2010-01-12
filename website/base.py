@@ -106,6 +106,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		return u
 
 	def sendXML(self, content, attrs={}):
+		oldattrs = attrs
 		if users.get_current_user():
 			attrs['logout-uri'] = users.create_logout_url(self.request.uri)
 		else:
@@ -119,6 +120,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 		if 'login-uri' in attrs and 'logout-uri' in attrs:
 			logging.debug('Warning: logged IN and OUT simultaneously: %s' % attrs)
+			logging.debug('Initial attrs: %s' % oldattrs)
 
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"

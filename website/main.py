@@ -67,6 +67,7 @@ if __name__ == '__main__':
 		('/album/update-xml', album.XmlUpdater),
 		('/albums\.rss', album.RSSHandler),
 		('/api', api.Index),
+		('/api/album/tracks.json', album.JSON),
 		('/api/queue\.xml', api.Queue),
 		('/api/queue\.yaml', api.Queue),
 		('/api/queue/delete', api.Delete),

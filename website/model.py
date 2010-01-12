@@ -74,6 +74,12 @@ class SiteAlbum(db.Model):
 	def get_children_xml(self, cls, em):
 		return xml.em(em, content=u''.join([c.to_xml() for c in cls.gql('WHERE album = :1', self).fetch(1000)]))
 
+	def tracks(self):
+		tr = SiteTrack.gql('WHERE album = :1', self).fetch(1000)
+		if not tr:
+			tr = []
+		return tr
+
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
 	small = db.LinkProperty()

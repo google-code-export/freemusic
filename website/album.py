@@ -23,10 +23,20 @@ class Viewer(BaseRequestHandler):
 		self.sendXML(self.get_album(id).xml)
 
 	def get_album(self, id):
-		album = SiteAlbum.gql('WHERE id = :1', int(id)).get()
-		if album:
-			return album
+		if id:
+			album = SiteAlbum.gql('WHERE id = :1', int(id)).get()
+			if album:
+				return album
 		raise HTTPException(404, u'Нет такого альбома.')
+
+class JSON(Viewer):
+	def get(self):
+		tx = [{
+			'id': int(track.id),
+			'ogg': str(track.ogg_link),
+			'mp3': str(track.mp3_link),
+		} for track in self.get_album(self.request.get('id')).tracks()]
+		self.sendText(str(tx))
 
 class Editor(Viewer):
 	def get(self, id):
