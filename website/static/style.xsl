@@ -477,7 +477,7 @@
 	<xsl:template match="image" mode="medium">
 		<xsl:choose>
 			<xsl:when test="@medium">
-				<a href="{@original}">
+				<a href="{@original}" target="_blank">
 					<img src="{@medium}" width="200" height="200" alt="medium"/>
 				</a>
 			</xsl:when>
