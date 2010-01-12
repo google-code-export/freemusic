@@ -238,7 +238,7 @@ ul.labels li a {
   margin-bottom: 20px;
 }
 .tracklist, .tracklist .track {
-  width: 100%;
+  width: 530px;
 }
 .tracklist .playing .track:after {
   content: ' ♫';
