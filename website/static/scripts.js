@@ -35,31 +35,35 @@ function play_album_track(idx)
 	$('table.tracklist tr').removeClass('playing');
 	$('table.tracklist tr:eq(' + (idx-1) + ')').addClass('playing');
 
-	track = playlist[idx-1];
-	nowplaying = idx;
+	if (player && idx == nowplaying) {
+		player.play();
+	} else {
+		track = playlist[idx-1];
+		nowplaying = idx;
 
-	if (!player)
-		player = new Audio();
-	player.pause();
+		if (!player)
+			player = new Audio();
+		player.pause();
 
-	// Воспроизводить начинаем только когда получено достаточное количество
-	// данных для непрерывного проигрывания, см:
-	// https://developer.mozilla.org/En/Using_audio_and_video_in_FireFox#Media_events
-	player.addEventListener('canplaythrough', start_playing_track, true);
+		// Воспроизводить начинаем только когда получено достаточное количество
+		// данных для непрерывного проигрывания, см:
+		// https://developer.mozilla.org/En/Using_audio_and_video_in_FireFox#Media_events
+		player.addEventListener('canplaythrough', start_playing_track, true);
 
-	// Firefox не всегда отправляет canplaythrough, когда его кэш отказывается принимать
-	// больше данных, в этом случае отправляется suspend, см.
-	// http://weblogs.mozillazine.org/roc/archives/2009/10/
-	player.addEventListener('suspend', start_playing_track, true);
+		// Firefox не всегда отправляет canplaythrough, когда его кэш отказывается принимать
+		// больше данных, в этом случае отправляется suspend, см.
+		// http://weblogs.mozillazine.org/roc/archives/2009/10/
+		player.addEventListener('suspend', start_playing_track, true);
 
-	// В случае ошибки останавливаем воспроизведение.
-	player.addEventListener('error', function(){
-		if (!this.paused)
-			this.pause();
-		$('table.tracklist tr').removeClass('playing');
-	}, true);
-	player.src = Modernizr.audio.ogg ? track.ogg : track.mp3;
-	player.load();
+		// В случае ошибки останавливаем воспроизведение.
+		player.addEventListener('error', function(){
+			if (!this.paused)
+				this.pause();
+			$('table.tracklist tr').removeClass('playing');
+		}, true);
+		player.src = Modernizr.audio.ogg ? track.ogg : track.mp3;
+		player.load();
+	}
 }
 
 function start_playing_track()
