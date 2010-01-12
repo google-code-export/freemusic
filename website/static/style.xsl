@@ -44,6 +44,8 @@
 						<a href="/">Главная</a>
 						<xsl:text> - </xsl:text>
 						<a href="http://code.google.com/p/freemusic/">О проекте</a>
+						<xsl:text> - </xsl:text>
+						<a href="http://code.google.com/p/freemusic/issues/list">Поддержка</a>
 						<xsl:if test="/page/@login-uri">
 							<xsl:text> - </xsl:text>
 							<a href="{/page/@login-uri}">Войти</a>
