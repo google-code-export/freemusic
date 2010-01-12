@@ -117,7 +117,8 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['email'] = users.get_current_user().email()
 		attrs['class'] = type(self).__name__
 
-		logging.debug(attrs)
+		if 'login-uri' in attrs and 'logout-uri' in attrs:
+			logging.debug('Warning: logged IN and OUT simultaneously: %s' % attrs)
 
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
