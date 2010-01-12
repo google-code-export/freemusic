@@ -249,6 +249,7 @@ ul.labels li a {
   height: 17px;
   background: transparent url(/static/play.gif) no-repeat top left;
   vertical-align: bottom;
+  cursor: pointer;
 }
 
 .tracklist .playing u {
