@@ -104,7 +104,7 @@
 					<li>
 						<a href="{files/file/@uri}">Скачать альбом</a>
 					</li>
-					<xsl:if test="/page/@user = @owner or /page/@is-admin">
+					<xsl:if test="/page/@email = @owner or /page/@is-admin">
 						<li>
 							<a href="/album/{@id}/edit">Отредактировать</a>
 						</li>

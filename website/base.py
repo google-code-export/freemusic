@@ -13,6 +13,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 # Local imports
+import mail
+from model import SiteUser
 import myxml as xml
 
 class HTTPException(Exception):
@@ -48,7 +50,17 @@ class BaseRequestHandler(webapp.RequestHandler):
 	def check_access(self):
 		if not self.is_open():
 			try:
-				self.force_user()
+				user = self.force_user()
+				luser = SiteUser.gql('WHERE user = :1', user).get()
+				if not luser:
+					luser = SiteUser(user=user, invited=True, weight=0.0)
+					luser.put()
+					mail.send('justin.forest@gmail.com', self.render('new-user.html', {
+						'nickname': user.nickname(),
+						'email': user.email(),
+					}))
+				if not luser.invited:
+					raise ClosedException
 			except HTTPException:
 				raise ClosedException
 
@@ -102,6 +114,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['is-admin'] = 'yes'
 		if users.get_current_user():
 			attrs['user'] = users.get_current_user().nickname()
+			attrs['email'] = users.get_current_user().email()
 		attrs['class'] = type(self).__name__
 
 		logging.debug(attrs)

@@ -9,9 +9,10 @@ from google.appengine.ext import db
 import myxml as xml
 
 class SiteUser(db.Model):
-	user = db.UserProperty()
+	user = db.UserProperty(required=True)
 	joined = db.DateTimeProperty(auto_now_add=True)
 	weight = db.FloatProperty()
+	invited = db.BooleanProperty(required=True)
 
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
