@@ -16,7 +16,7 @@
 	<xsl:template match="/page">
 		<html lang="{@lang}">
 			<head>
-				<title>music 3.5</title>
+				<title>Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -28,7 +28,9 @@
 					<div id="header">
 						<form action="/search" method="get">
 							<h1>
-								<a href="/">new music</a>
+								<a href="/">
+									<span>free music hub</span>
+								</a>
 							</h1>
 							<input type="text" name="q" class="text"/>
 							<input type="submit" value="Найти"/>
@@ -63,7 +65,7 @@
 	<xsl:template match="/page[closed]">
 		<html lang="{@lang}">
 			<head>
-				<title>music 3.5</title>
+				<title>Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 			</head>
