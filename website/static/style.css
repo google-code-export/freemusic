@@ -259,3 +259,13 @@ ul.labels li a {
   color: gray;
   padding-left: 10px;
 }
+
+/* Ссылки на скачивание дорожек выводятся только при наведении курсора на дорожку. */
+.tracklist .dl a {
+  color: green;
+  text-decoration: none;
+  visibility: hidden;
+}
+.tracklist tr:hover .dl a {
+  visibility: visible;
+}

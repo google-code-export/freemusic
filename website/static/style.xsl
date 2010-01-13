@@ -140,6 +140,11 @@
 								<td class="dur">
 									<xsl:value-of select="@duration"/>
 								</td>
+								<td class="dl">
+									<a href="{@ogg-link}">ogg</a>
+									<xsl:text>&#160;</xsl:text>
+									<a href="{@mp3-link}">mp3</a>
+								</td>
 							</tr>
 						</xsl:for-each>
 					</tbody>
