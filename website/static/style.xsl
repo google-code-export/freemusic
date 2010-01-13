@@ -122,12 +122,6 @@
 				</xsl:apply-templates>
 			</div>
 			<div class="right">
-				<div class="player">
-					<audio>
-						<source id="oggs" src="{tracks/track[position()=1]/@ogg-link}" type="audio/ogg; codecs=vorbis"/>
-						<source id="mp3s" src="{tracks/track[position()=1]/@mp3-link}" type="audio/mp3"/>
-					</audio>
-				</div>
 				<table class="tracklist">
 					<tbody>
 						<xsl:for-each select="tracks/track">
