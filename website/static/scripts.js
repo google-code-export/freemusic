@@ -68,8 +68,7 @@ var h5p = {
 		}
 	},
 	next: function () {
-		if (h5p.nowplaying < h5p.playlist.length)
-			h5p.play(h5p.nowplaying + 1);
+		h5p.play(h5p.nowplaying < h5p.playlist.length ? h5p.nowplaying + 1 : 1);
 	},
 	toggle: function () {
 		idx = parseInt($(this).parents('tr').find('td:first').html().split('.')[0]);
