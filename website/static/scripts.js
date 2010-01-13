@@ -20,41 +20,40 @@ var h5p = {
 	},
 	on_playlist: function (data) {
 		h5p.playlist = data;
+
+		p = h5p.player = new Audio();
+
+		// Воспроизводить начинаем только когда получено достаточное количество
+		// данных для непрерывного проигрывания, см:
+		// https://developer.mozilla.org/En/Using_audio_and_video_in_FireFox#Media_events
+		p.addEventListener('canplaythrough', h5p.resume, true);
+
+		// Firefox не всегда отправляет canplaythrough, когда его кэш отказывается принимать
+		// больше данных, в этом случае отправляется suspend, см.
+		// http://weblogs.mozillazine.org/roc/archives/2009/10/
+		p.addEventListener('suspend', h5p.resume, true);
+
+		p.addEventListener('ended', h5p.next, true);
+
+		// В случае ошибки останавливаем воспроизведение.
+		p.addEventListener('error', h5p.stop, true);
+
 		$('.tracklist td.u').html('<u/>');
 		$('.tracklist u').click(h5p.toggle);
 		if (h5p.autostart)
 			h5p.play(1);
 	},
 	play: function (idx) {
-		this.stop();
-
-		if (this.player && idx == this.nowplaying) {
+		if (idx == this.nowplaying) {
 			this.resume();
 		} else if (idx <= this.playlist.length) {
+			this.stop();
+
 			track = this.playlist[idx-1];
 			this.nowplaying = idx;
 
-			if (!this.player)
-				this.player = new Audio();
-			p = this.player;
-			p.pause();
-
-			// Воспроизводить начинаем только когда получено достаточное количество
-			// данных для непрерывного проигрывания, см:
-			// https://developer.mozilla.org/En/Using_audio_and_video_in_FireFox#Media_events
-			p.addEventListener('canplaythrough', this.resume, true);
-
-			// Firefox не всегда отправляет canplaythrough, когда его кэш отказывается принимать
-			// больше данных, в этом случае отправляется suspend, см.
-			// http://weblogs.mozillazine.org/roc/archives/2009/10/
-			p.addEventListener('suspend', this.resume, true);
-
-			p.addEventListener('ended', this.next, true);
-
-			// В случае ошибки останавливаем воспроизведение.
-			p.addEventListener('error', this.stop, true);
-			p.src = Modernizr.audio.ogg ? track.ogg : track.mp3;
-			p.load();
+			this.player.src = Modernizr.audio.ogg ? track.ogg : track.mp3;
+			this.player.load();
 		}
 	},
 	stop: function () {
@@ -69,12 +68,12 @@ var h5p = {
 		}
 	},
 	next: function () {
-		if (this.nowplaying < this.playlist.length)
-			this.play(this.nowplaying + 1);
+		if (h5p.nowplaying < h5p.playlist.length)
+			h5p.play(h5p.nowplaying + 1);
 	},
 	toggle: function () {
-		idx = $(this).parents('tr').find('td:first').html().split('.')[0];
-		if (h5p.nowplaying != idx)
+		idx = parseInt($(this).parents('tr').find('td:first').html().split('.')[0]);
+		if (h5p.nowplaying != idx || (h5p.player && h5p.player.paused))
 			h5p.play(idx);
 		else
 			h5p.stop();
