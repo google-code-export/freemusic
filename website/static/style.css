@@ -240,9 +240,6 @@ ul.labels li a {
 .tracklist, .tracklist .track {
   width: 530px;
 }
-.tracklist .playing .track:after {
-  content: ' ♫';
-}
 .tracklist .u u {
   display: inline-block;
   width: 16px;
@@ -268,4 +265,12 @@ ul.labels li a {
 }
 .tracklist tr:hover .dl a {
   visibility: visible;
+}
+.tracklist .playing td.track > div {
+  background-color: gray;
+}
+.tracklist .playing .prg {
+  margin-top: 2px;
+  background-color: red;
+  height: 4px;
 }

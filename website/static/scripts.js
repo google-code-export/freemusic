@@ -38,6 +38,11 @@ var h5p = {
 		// В случае ошибки останавливаем воспроизведение.
 		p.addEventListener('error', h5p.stop, true);
 
+		p.addEventListener('timeupdate', h5p.on_time, true);
+
+		$('.tracklist td.track').append('<div><div class="prg"></div></div>');
+		$('.tracklist td.track > div').click(h5p.seek);
+
 		$('.tracklist td.u').html('<u/>');
 		$('.tracklist u').click(h5p.toggle);
 		if (h5p.autostart)
@@ -76,6 +81,15 @@ var h5p = {
 			h5p.play(idx);
 		else
 			h5p.stop();
+	},
+	on_time: function () {
+		pos = h5p.player.currentTime / h5p.player.duration * 100;
+		div = $('.tracklist tr:eq('+ (h5p.nowplaying-1) +') .prg');
+		div.css('width', parseInt(pos) + 'px');
+	},
+	seek: function () {
+		pos = 0.5; // 50%, FIXME
+		h5p.player.currentTime = h5p.player.duration * pos;
 	}
 };
 
