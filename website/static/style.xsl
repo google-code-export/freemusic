@@ -447,6 +447,34 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="userlist">
+		<div class="onecol">
+			<h2>Список пользователей</h2>
+			<form method="post">
+				<table>
+					<tbody>
+						<xsl:for-each select="user">
+							<xsl:sort select="@email"/>
+							<tr>
+								<xsl:if test="/page/@is-admin">
+									<td>
+										<xsl:if test="not(@invited)">
+											<input type="checkbox" name="email" value="{@email}"/>
+										</xsl:if>
+									</td>
+								</xsl:if>
+								<td>
+									<xsl:value-of select="@email"/>
+								</td>
+							</tr>
+						</xsl:for-each>
+					</tbody>
+				</table>
+				<input type="submit" name="invite" value="Пригласить"/>
+			</form>
+		</div>
+	</xsl:template>
+
 	<!-- additional stuff -->
 
 	<xsl:template match="albums" mode="tiles">

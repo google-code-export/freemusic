@@ -5,7 +5,6 @@
 import logging, urllib
 
 # GAE imports
-from google.appengine.api import users
 from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
@@ -19,6 +18,7 @@ import model
 import sitemap
 import tracks
 import upload
+import users
 
 class SubmitHandler(BaseRequestHandler):
 	def get(self):
@@ -84,4 +84,5 @@ if __name__ == '__main__':
 		('/upload', S3UploadHandler),
 		('/upload/remote', upload.Remote),
 		('/upload/settings', S3SettingsHandler),
+		('/users', users.List),
 	])

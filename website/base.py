@@ -47,10 +47,13 @@ class BaseRequestHandler(webapp.RequestHandler):
 		"""
 		return False
 
-	def check_access(self):
+	def check_access(self, admin=False):
 		if not self.is_open():
 			try:
-				user = self.force_user()
+				if admin:
+					user = self.force_admin()
+				else:
+					user = self.force_user()
 				luser = SiteUser.gql('WHERE user = :1', user).get()
 				if not luser:
 					luser = SiteUser(user=user, invited=False, weight=0.0)
@@ -91,7 +94,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 	def force_admin(self):
 		if not self.is_admin():
 			raise HTTPException(403, u'У вас нет доступа к этой странице.')
-		self.force_user()
+		return self.force_user()
 
 	def force_user(self):
 		user = users.get_current_user()
@@ -105,8 +108,9 @@ class BaseRequestHandler(webapp.RequestHandler):
 			raise HTTPException(401, u'Для доступа к этой странице требуется авторизация.')
 		return u
 
-	def sendXML(self, content, attrs={}):
-		oldattrs = attrs
+	def sendXML(self, content, attrs=None):
+		if attrs is None:
+			attrs = {}
 		if users.get_current_user():
 			attrs['logout-uri'] = users.create_logout_url(self.request.uri)
 		else:
@@ -117,10 +121,6 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['user'] = users.get_current_user().nickname()
 			attrs['email'] = users.get_current_user().email()
 		attrs['class'] = type(self).__name__
-
-		if 'login-uri' in attrs and 'logout-uri' in attrs:
-			logging.debug('Warning: logged IN and OUT simultaneously: %s' % attrs)
-			logging.debug('Initial attrs: %s' % oldattrs)
 
 		result = "<?xml version=\"1.0\"?>"
 		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"

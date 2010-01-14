@@ -88,7 +88,7 @@ var h5p = {
 		div.css('width', parseInt(pos) + 'px');
 	},
 	seek: function () {
-		pos = 0.5; // 50%, FIXME
+		pos = 0.95; // 50%, FIXME
 		h5p.player.currentTime = h5p.player.duration * pos;
 	}
 };
