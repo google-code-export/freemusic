@@ -36,7 +36,8 @@ class JSON(Viewer):
 			'ogg': str(track.ogg_link),
 			'mp3': str(track.mp3_link),
 		} for track in self.get_album(self.request.get('id')).tracks()]
-		self.sendText(str(tx))
+		json = str(tx).replace("'", '"')
+		self.sendAny('application/json', json) # self.sendText(str(tx))
 
 class Editor(Viewer):
 	def get(self, id):
