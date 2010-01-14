@@ -83,13 +83,15 @@ var h5p = {
 			h5p.stop();
 	},
 	on_time: function () {
-		pos = h5p.player.currentTime / h5p.player.duration * 100;
+		pos = h5p.player.currentTime * 100 / h5p.player.duration;
 		div = $('.tracklist tr:eq('+ (h5p.nowplaying-1) +') .prg');
-		div.css('width', parseInt(pos) + 'px');
+		div.css('width', parseInt(pos) + '%');
 	},
-	seek: function () {
-		pos = 0.95; // 50%, FIXME
-		h5p.player.currentTime = h5p.player.duration * pos;
+	seek: function (e) {
+		var x = e.pageX;
+		for (p = this; p; p = p.offsetParent)
+			x -= p.offsetLeft;
+		h5p.player.currentTime = h5p.player.duration * x / this.clientWidth;
 	}
 };
 
