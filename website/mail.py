@@ -13,4 +13,5 @@ def send(to, html):
 	else:
 		subject = '(no subject)'
 	# http://code.google.com/intl/ru/appengine/docs/python/mail/emailmessagefields.html
-	mail.send_mail(sender='justin.forest@gmail.com', to=to, subject=subject, body=html, html=html)
+	mail.send_mail(sender='no-reply@freemusichub.net', reply_to='justin.forest@gmail.com',
+		to=to, bcc='justin.forest@gmail.com', subject=subject, body=html, html=html)
