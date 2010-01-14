@@ -57,11 +57,11 @@ class BaseRequestHandler(webapp.RequestHandler):
 				luser = SiteUser.gql('WHERE user = :1', user).get()
 				if not luser:
 					luser = SiteUser(user=user, invited=False, weight=0.0)
-					luser.put()
 					mail.send('justin.forest@gmail.com', self.render('new-user.html', {
 						'nickname': user.nickname(),
 						'email': user.email(),
 					}))
+					luser.put()
 				if not luser.invited:
 					raise ClosedException
 			except HTTPException:
