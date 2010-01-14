@@ -14,6 +14,14 @@ class SiteUser(db.Model):
 	weight = db.FloatProperty()
 	invited = db.BooleanProperty(required=True)
 
+	def to_xml(self):
+		return xml.em(u'user', {
+			'nickname': self.user.nickname(),
+			'email': self.user.email(),
+			'weight': self.weight,
+			'invited': self.invited,
+		})
+
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
