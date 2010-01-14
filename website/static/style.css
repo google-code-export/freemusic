@@ -267,7 +267,7 @@ ul.labels li a {
   visibility: visible;
 }
 .tracklist .playing td.track > div {
-  background-color: gray;
+  background-color: #ccc;
 }
 .tracklist .playing .prg {
   margin-top: 2px;
