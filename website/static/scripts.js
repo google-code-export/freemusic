@@ -103,6 +103,13 @@ $(document).ready(function(){
 
 	if ($('.tracklist').length)
 		h5p.init(window.location.pathname.split('/')[2]);
+
+	$('.moreimg a').click(function(){
+		var p = $(this).parents('div:first');
+		$('img:first', p).attr('src', $(this).find('img').attr('src'));
+		$('a:first', p).attr('href', $(this).attr('href'));
+		return false;
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:
