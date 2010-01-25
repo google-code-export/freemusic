@@ -8,6 +8,7 @@ from base import BaseRequestHandler
 import mail
 from model import SiteUser
 import myxml
+import invite
 
 class List(BaseRequestHandler):
 	xsltName = 'users.xsl'
@@ -33,3 +34,12 @@ class List(BaseRequestHandler):
 						'link': users.create_login_url(self.getBaseURL()),
 					}))
 		self.redirect('/users')
+
+class Invite(BaseRequestHandler):
+	def post(self):
+		email = self.request.get('email')
+		if email:
+			invite.store(self, email)
+			self.redirect('/?saved')
+		else:
+			self.redirect('/')

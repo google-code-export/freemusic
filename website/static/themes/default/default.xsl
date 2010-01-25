@@ -70,20 +70,20 @@
 		<html lang="{@lang}">
 			<head>
 				<title>Free Music Hub</title>
-				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+				<link rel="stylesheet" type="text/css" href="/static/themes/{@theme}/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 			</head>
 			<body>
 				<div id="closed">
 					<xsl:choose>
-						<xsl:when test="not(@login-uri)">
+						<xsl:when test="not(@login-uri) or closed/@saved">
 							<h2>Доступа пока нет</h2>
 							<p>Вы получите приглашение как только придёт время.</p>
 						</xsl:when>
 						<xsl:otherwise>
 							<h2>Мы ещё не открыты</h2>
 							<p>Сайт находится на стадии закрытого тестирования. Вы можете оставить свой почтовый адрес, и мы пригласим вас к этому процессу, как только будем готовы.</p>
-							<form method="post" action="/invite">
+							<form method="post" action="/users/invite">
 								<input type="text" name="email"/> <input type="submit" value="Отправить"/>
 							</form>
 							<p>Если у вас уже есть приглашение, можете <a href="{@login-uri}">войти</a>.</p>

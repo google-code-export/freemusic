@@ -13,9 +13,9 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 # Local imports
-import mail
 from model import SiteUser
 import myxml as xml
+import invite
 
 class HTTPException(Exception):
 	def __init__(self, code, message):
@@ -33,11 +33,12 @@ class ForbiddenException(HTTPException):
 		HTTPException.__init__(self, 403, u'У вас нет доступа к этой странице.')
 
 class ClosedException(HTTPException):
-	def __init__(self):
+	def __init__(self, saved=False):
+		self.saved = saved
 		HTTPException.__init__(self, 403, None)
 
 	def to_xml(self):
-		return xml.em(u'closed')
+		return xml.em(u'closed', { 'saved': self.saved })
 
 class BaseRequestHandler(webapp.RequestHandler):
 	pageName = 'base'
@@ -51,24 +52,19 @@ class BaseRequestHandler(webapp.RequestHandler):
 		return False
 
 	def check_access(self, admin=False):
+		saved = 'saved' in self.request.arguments()
 		if not self.is_open():
 			try:
 				if admin:
 					user = self.force_admin()
 				else:
 					user = self.force_user()
-				luser = SiteUser.gql('WHERE user = :1', user).get()
-				if not luser:
-					luser = SiteUser(user=user, invited=False, weight=0.0)
-					mail.send('justin.forest@gmail.com', self.render('new-user.html', {
-						'nickname': user.nickname(),
-						'email': user.email(),
-					}))
-					luser.put()
+
+				luser = invite.store(self, user.email())
 				if not luser.invited:
-					raise ClosedException
+					raise ClosedException(saved)
 			except HTTPException:
-				raise ClosedException
+				raise ClosedException(saved)
 
 	def getBaseURL(self):
 		"""
