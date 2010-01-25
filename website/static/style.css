@@ -230,6 +230,9 @@ ul.altiles {
   margin-bottom: 10px;
 }
 
+.left .labels {
+  margin: 1em 0;
+}
 .labels li {
   display: inline;
   font-size: 9pt;
