@@ -14,6 +14,7 @@ import album
 import api
 import artist
 import index
+import labels
 import model
 import sitemap
 import tracks
@@ -76,6 +77,7 @@ if __name__ == '__main__':
 		('/artist/(\d+)$', artist.ViewHandler),
 		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
+		('/labels', labels.List),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
 		('/submit', SubmitHandler),

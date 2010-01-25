@@ -482,6 +482,15 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="labels">
+		<div class="onecol">
+			<h2>Метки</h2>
+			<xsl:apply-templates select="." mode="linked">
+				<xsl:with-param name="uri">/?label=</xsl:with-param>
+			</xsl:apply-templates>
+		</div>
+	</xsl:template>
+
 	<!-- additional stuff -->
 
 	<xsl:template match="albums" mode="tiles">
