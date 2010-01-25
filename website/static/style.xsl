@@ -323,7 +323,7 @@
 		<div id="index" class="twocol">
 			<xsl:call-template name="lnav"/>
 			<div class="right">
-				<p class="intro">Этот сайт поможет вам найти или распространить свою музыку легально. <a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Подробнее</a></p>
+				<p class="intro">Этот сайт поможет вам найти или распространить свою музыку легально. <a target="_blank" href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Подробнее</a></p>
 				<xsl:apply-templates select="albums" mode="tiles"/>
 				<ul class="pager">
 					<xsl:if test="@skip &gt; 14">
