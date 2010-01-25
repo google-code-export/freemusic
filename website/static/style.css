@@ -190,6 +190,9 @@ ul.altiles {
   border: none;
   margin-bottom: .5em;
 }
+#index .intro {
+  text-align: center;
+}
 #index .pager {
   clear: left;
   list-style-type: none;
