@@ -95,7 +95,7 @@
 	</xsl:template>
 
 	<xsl:template match="/page/album">
-		<div id="album">
+		<div id="album" class="twocol">
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='front']" mode="medium"/>
@@ -110,6 +110,9 @@
 						</xsl:for-each>
 					</ul>
 				</xsl:if>
+				<xsl:apply-templates select="labels" mode="linked">
+					<xsl:with-param name="uri">/?label=</xsl:with-param>
+				</xsl:apply-templates>
 				<ul>
 					<li>
 						<a href="{files/file/@uri}">Скачать альбом</a>
@@ -123,9 +126,6 @@
 						</li>
 					</xsl:if>
 				</ul>
-				<xsl:apply-templates select="labels" mode="linked">
-					<xsl:with-param name="uri">/?label=</xsl:with-param>
-				</xsl:apply-templates>
 			</div>
 			<div class="right">
 				<table class="tracklist">
