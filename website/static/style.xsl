@@ -99,7 +99,7 @@
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='front']" mode="medium"/>
-				<xsl:if test="images/image">
+				<xsl:if test="count(images/image) &gt; 1">
 					<ul class="moreimg">
 						<xsl:for-each select="images/image">
 							<li>
