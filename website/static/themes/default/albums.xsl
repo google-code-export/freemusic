@@ -41,7 +41,6 @@
 				<table class="tracklist">
 					<tbody>
 						<xsl:for-each select="tracks/track">
-							<xsl:sort select="@number" data-type="number"/>
 							<tr>
 								<td class="r">
 									<xsl:value-of select="position()"/>
