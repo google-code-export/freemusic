@@ -10,6 +10,8 @@ from model import SiteUser
 import myxml
 
 class List(BaseRequestHandler):
+	xsltName = 'users.xsl'
+
 	def get(self):
 		self.check_access(admin=True)
 		list = [user.to_xml() for user in SiteUser.all().fetch(1000)]

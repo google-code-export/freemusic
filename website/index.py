@@ -10,6 +10,8 @@ class ServiceUnavailable(HTTPException):
 		self.message = u"База данных пуста, зайдите позже."
 
 class Recent(BaseRequestHandler):
+	xsltName = 'index.xsl'
+
 	def get(self):
 		self.check_access()
 		offset = self.get_offset()

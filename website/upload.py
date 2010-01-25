@@ -20,6 +20,8 @@ from s3 import S3File
 import model, myxml, mail
 
 class Remote(BaseRequestHandler):
+	xsltName = 'upload.xsl'
+
 	def get(self):
 		self.force_user()
 		self.sendXML(u'<upload-remote/>')

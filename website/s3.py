@@ -68,6 +68,8 @@ class S3Settings(db.Model):
 		return s
 
 class S3SettingsHandler(BaseRequestHandler):
+	xsltName = 'upload.xsl'
+
 	"""
 	Обработчик формы редактирования настроек S3.  Доступен только
 	администраторам.  Выдаёт наружу элемент <s3-settings>.
@@ -92,6 +94,8 @@ class S3SettingsHandler(BaseRequestHandler):
 		self.redirect(self.request.path)
 
 class S3UploadHandler(BaseRequestHandler):
+	xsltName = 'upload.xsl'
+
 	"""
 	Обслуживание формы загрузки файла в хранилище Amazon S3.
 	"""

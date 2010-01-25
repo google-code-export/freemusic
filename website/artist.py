@@ -31,6 +31,8 @@ class FixHandler(BaseRequestHandler):
 		self.redirect('/')
 
 class ViewHandler(BaseRequestHandler):
+	xsltName = 'artists.xsl'
+
 	def get(self, id):
 		self.check_access()
 		artist = SiteArtist.gql('WHERE id = :1', long(id)).get()
@@ -47,6 +49,8 @@ class RSSHandler(BaseRequestHandler):
 		self.sendRSS(items, title=u'Новые исполнители')
 
 class List(BaseRequestHandler):
+	xsltName = 'artists.xsl'
+
 	def get(self):
 		self.check_access()
 		self.sendXML(xml.em(u'artists', content=u''.join([xml.em(u'artist', {

@@ -18,6 +18,8 @@ class XmlUpdater(BaseRequestHandler):
 		self.redirect('/')
 
 class Viewer(BaseRequestHandler):
+	xsltName = 'albums.xsl'
+
 	def get(self, id):
 		self.check_access()
 		self.sendXML(self.get_album(id).xml)
@@ -40,6 +42,8 @@ class JSON(Viewer):
 		self.sendAny('application/json', json) # self.sendText(str(tx))
 
 class Editor(Viewer):
+	xsltName = 'albums.xsl'
+
 	def get(self, id):
 		self.check_access()
 		self.sendXML('<form>' + self.get_album(id).xml + '</form>')
@@ -79,6 +83,8 @@ class Editor(Viewer):
 
 
 class Delete(Viewer):
+	xsltName = 'albums.xsl'
+
 	def get(self, id):
 		album = self.get_album(id)
 		self.sendXML(myxml.em(u'delete-album', {

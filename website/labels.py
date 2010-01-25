@@ -10,6 +10,7 @@ import myxml
 
 class List(BaseRequestHandler):
 	pageName = 'labels'
+	xsltName = 'labels.xsl'
 
 	def get(self):
 		result = {}
