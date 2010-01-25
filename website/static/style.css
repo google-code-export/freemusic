@@ -175,9 +175,11 @@ ul.altiles {
   text-align: center;
   float: left;
 }
+/*
 .altiles li div a {
   white-space: nowrap;
 }
+*/
 .altiles small {
   white-space: nowrap;
   display: block;
