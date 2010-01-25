@@ -94,6 +94,13 @@ class BaseRequestHandler(webapp.RequestHandler):
 	def is_admin(self):
 		return users.is_current_user_admin()
 
+	def is_cron(self):
+		"""
+		Возвращает True, если запрос поступил от планировщика.
+		http://code.google.com/intl/ru-RU/appengine/docs/python/config/cron.html
+		"""
+		return self.is_admin() and 'X-AppEngine-Cron' in self.request.headers and self.request.headers['X-AppEngine-Cron']
+
 	def force_admin(self):
 		if not self.is_admin():
 			raise HTTPException(403, u'У вас нет доступа к этой странице.')
