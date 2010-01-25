@@ -49,7 +49,7 @@ class SiteAlbum(db.Model):
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
 	rating = db.RatingProperty() # average album rate
-	cover_small = db.LinkProperty() # image URL
+	cover_small = db.LinkProperty() # image URL; FIXME: не используется
 	cover_large = db.LinkProperty() # image URL
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
@@ -90,14 +90,12 @@ class SiteAlbum(db.Model):
 
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
-	small = db.LinkProperty()
 	medium = db.LinkProperty()
 	original = db.LinkProperty()
 	type = db.StringProperty()
 
 	def to_xml(self):
 		return xml.em(u'image', {
-			'small': self.small,
 			'medium': self.medium,
 			'original': self.original,
 			'type': self.type,

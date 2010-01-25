@@ -34,7 +34,6 @@ class File:
 		self.duration = None
 		self.width = None
 		self.height = None
-		self.img_small = None
 		self.img_medium = None
 
 		try:
@@ -73,7 +72,6 @@ class File:
 			self.ogg_online = encoder.OGG(forweb=True, tmpdir=tmpdir, albumart=cover).file(self.wav, self.tags)
 
 		if self.is_image():
-			self.img_small = albumart.resize(self.name, 100)
 			self.img_medium = albumart.resize(self.name, 200)
 
 	def is_audio(self):
@@ -88,7 +86,7 @@ class File:
 
 	def uploadable(self):
 		lst = []
-		for k in ['mp3_online', 'ogg_online', 'img_small', 'img_medium']:
+		for k in ['mp3_online', 'ogg_online', 'img_medium']:
 			if getattr(self, k):
 				lst.append(getattr(self, k))
 		if not len(lst) or self.is_image():
@@ -127,7 +125,6 @@ class File:
 		if self.is_image():
 			return myxml.em(u'image', {
 				'original': myxml.uri(os.path.basename(self.name)),
-				'small': myxml.uri(os.path.basename(self.img_small)),
 				'medium': myxml.uri(os.path.basename(self.img_medium)),
 				})
 		return u''

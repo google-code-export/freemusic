@@ -491,7 +491,7 @@
 					<a href="/album/{@id}">
 						<img width="100" height="100">
 							<xsl:attribute name="src">
-								<xsl:value-of select="images/image[@type='front']/@small"/>
+								<xsl:value-of select="images/image[@type='front']/@medium"/>
 								<xsl:if test="not(images/image[@type='front'])">/static/cdaudio_mount.png</xsl:if>
 							</xsl:attribute>
 						</img>
@@ -519,7 +519,7 @@
 				<img src="{@medium}" alt="image" width="200" height="200"/>
 			</xsl:when>
 			<xsl:when test="$size='small'">
-				<img src="{@small}" alt="image" width="100" height="100"/>
+				<img src="{@medium}" alt="image" width="100" height="100"/>
 			</xsl:when>
 		</xsl:choose>
 	</xsl:template>
