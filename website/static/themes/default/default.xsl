@@ -17,7 +17,7 @@
 		<html lang="{@lang}">
 			<head>
 				<title>Free Music Hub</title>
-				<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+				<link rel="stylesheet" type="text/css" href="/static/themes/{@theme}/style.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 				<script type="text/javascript" src="/static/modernizr-1.1.min.js"></script>

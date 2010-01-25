@@ -40,6 +40,9 @@ class ClosedException(HTTPException):
 		return xml.em(u'closed')
 
 class BaseRequestHandler(webapp.RequestHandler):
+	pageName = 'base'
+	xsltName = 'default.xsl'
+
 	def is_open(self):
 		"""
 		Возвращает True, если сайт работает в открытом режиме и False,
@@ -121,9 +124,11 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['user'] = users.get_current_user().nickname()
 			attrs['email'] = users.get_current_user().email()
 		attrs['class'] = type(self).__name__
+		attrs['name'] = self.pageName
+		attrs['theme'] = self.request.get('theme', 'default')
 
-		result = "<?xml version=\"1.0\"?>"
-		result += "<?xml-stylesheet type=\"text/xsl\" href=\"/static/style.xsl\"?>\n"
+		result = u"<?xml version=\"1.0\"?>"
+		result += u"<?xml-stylesheet type=\"text/xsl\" href=\"/static/themes/" + attrs['theme'] + '/' + self.xsltName + u"\"?>\n"
 		result += xml.em(u'page', attrs, content)
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
