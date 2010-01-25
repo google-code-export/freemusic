@@ -126,6 +126,13 @@
 				<p>Музыкант?</p>
 				<a href="/upload">Загрузи свой альбом</a>
 			</div>
+
+			<xsl:if test="labels">
+				<h3>Метки</h3>
+				<xsl:apply-templates select="labels" mode="linked">
+					<xsl:with-param name="uri">/?label=</xsl:with-param>
+				</xsl:apply-templates>
+			</xsl:if>
 		</div>
 	</xsl:template>
 

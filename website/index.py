@@ -3,6 +3,7 @@
 # Site imports.
 from base import BaseRequestHandler, HTTPException
 from model import SiteAlbum
+import labels
 
 class ServiceUnavailable(HTTPException):
 	def __init__(self):
@@ -19,7 +20,9 @@ class Recent(BaseRequestHandler):
 		for album in self.get_albums(offset):
 			if album.xml:
 				xml += album.xml
-		xml += u'</albums></index>'
+		xml += u'</albums>'
+		xml += labels.load()
+		xml += u'</index>'
 		self.sendXML(xml, {
 			'label': self.request.get('label'),
 		})
