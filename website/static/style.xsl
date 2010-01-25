@@ -75,14 +75,20 @@
 			</head>
 			<body>
 				<div id="closed">
-					<h2>Мы ещё не открыты</h2>
-					<p>
-						<xsl:text>Сайт находится на стадии закрытого тестирования.</xsl:text>
-						<xsl:choose>
-							<xsl:when test="not(@login-uri)">&#160; Вы получите приглашение как только придёт время.</xsl:when>
-							<xsl:otherwise>&#160; <a href="{@login-uri}">Оставьте свой почтовый адрес</a>, чтобы получить приглашение.</xsl:otherwise>
-						</xsl:choose>
-					</p>
+					<xsl:choose>
+						<xsl:when test="not(@login-uri)">
+							<h2>Доступа пока нет</h2>
+							<p>Вы получите приглашение как только придёт время.</p>
+						</xsl:when>
+						<xsl:otherwise>
+							<h2>Мы ещё не открыты</h2>
+							<p>Сайт находится на стадии закрытого тестирования. Вы можете оставить свой почтовый адрес, и мы пригласим вас к этому процессу, как только будем готовы.</p>
+							<form method="post" action="/invite">
+								<input type="text" name="email"/> <input type="submit" value="Отправить"/>
+							</form>
+							<p>Если у вас уже есть приглашение, можете <a href="{@login-uri}">войти</a>.</p>
+						</xsl:otherwise>
+					</xsl:choose>
 				</div>
 			</body>
 		</html>
