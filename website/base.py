@@ -142,7 +142,6 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 	def sendJSON(self, content):
 		json = str(content).replace("'", '"')
-		logging.debug(json)
 		self.sendAny('application/json', json)
 
 	def sendAny(self, type, content):
