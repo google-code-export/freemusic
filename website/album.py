@@ -153,6 +153,8 @@ class Stars(BaseRequestHandler):
 			elif not status and star:
 				star.delete()
 
-class Favourite(Recent):
+class Collection(Recent):
+	xsltName = 'collection.xsl'
+
 	def get_albums(self, offset):
 		return [star.album for star in SiteAlbumStar.gql('WHERE user = :1', self.force_user()).fetch(1000)]

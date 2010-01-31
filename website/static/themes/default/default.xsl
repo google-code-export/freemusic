@@ -119,7 +119,7 @@
 					</li>
 				</xsl:if>
 				<xsl:if test="/page/@user">
-					<li><a href="/albums/favourite">Любимые</a></li>
+					<li><a href="/my/collection">Моя коллекция</a></li>
 				</xsl:if>
 			</ul>
 			<ul>
