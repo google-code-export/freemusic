@@ -150,8 +150,15 @@ class Stars(BaseRequestHandler):
 			status = self.request.get('status') == 'true'
 			if status and not star:
 				SiteAlbumStar(user=user, album=album).put()
+				if 1 == SiteAlbumStar.gql('WHERE user = :1', user).count():
+					return self.sendJSON({
+						'notify': 1,
+					})
 			elif not status and star:
 				star.delete()
+		self.sendJSON({
+			'notify': 0,
+		})
 
 class Collection(Recent):
 	xsltName = 'collection.xsl'

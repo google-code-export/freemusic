@@ -133,7 +133,7 @@
 
 	<xsl:template match="album" mode="h2">
 		<h2>
-			<span class="star"/>
+			<span class="star" title="Добавить в коллекцию"/>
 			<xsl:text>«</xsl:text>
 			<xsl:value-of select="@name"/>
 			<xsl:text>»</xsl:text>

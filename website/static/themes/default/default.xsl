@@ -38,6 +38,7 @@
 						</form>
 					</div>
 					<div id="content">
+						<div id="ntfctn"></div>
 						<xsl:apply-templates select="*"/>
 					</div>
 					<div id="footer">

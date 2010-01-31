@@ -120,8 +120,13 @@ $(document).ready(function(){
 			$(this).toggleClass('on');
 			$.post('/api/album/star.json', {
 				'id': window.location.pathname.split('/')[2],
-				'status': $(this).hasClass('on'),
-			});
+				'status': $(this).hasClass('on')
+			}, function (data) {
+				if (data.notify)
+					$('#ntfctn').html('<p>Альбом добавлен в <a href="/my/collection">коллекцию</a>.&nbsp; <a href="http://code.google.com/p/freemusic/wiki/Collection" target="_blank">Подробнее</a></p>');
+				else
+					$('#ntfctn').html('');
+			}, 'json');
 		});
 	});
 });
