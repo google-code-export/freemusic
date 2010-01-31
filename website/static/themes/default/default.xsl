@@ -128,7 +128,7 @@
 			</div>
 
 			<xsl:if test="labels">
-				<h3>Метки</h3>
+				<h3><a href="/labels">Метки</a></h3>
 				<xsl:apply-templates select="labels" mode="linked">
 					<xsl:with-param name="uri">/?label=</xsl:with-param>
 				</xsl:apply-templates>
@@ -207,6 +207,7 @@
 
 	<xsl:template match="labels" mode="linked">
 		<xsl:param name="uri"/>
+		<xsl:param name="weight"/>
 		<ul class="labels">
 			<xsl:for-each select="label">
 				<xsl:sort select="text()"/>
@@ -214,6 +215,11 @@
 					<a href="{$uri}{@uri}">
 						<xsl:value-of select="text()"/>
 					</a>
+					<xsl:if test="$weight">
+						<sup>
+							<xsl:value-of select="@weight"/>
+						</sup>
+					</xsl:if>
 				</li>
 			</xsl:for-each>
 		</ul>

@@ -8,6 +8,7 @@
 			<h2>Метки</h2>
 			<xsl:apply-templates select="." mode="linked">
 				<xsl:with-param name="uri">/?label=</xsl:with-param>
+				<xsl:with-param name="weight">1</xsl:with-param>
 			</xsl:apply-templates>
 		</div>
 	</xsl:template>

@@ -248,6 +248,9 @@ ul.altiles {
 .labels a:hover {
   text-decoration: underline;
 }
+.labels sup {
+  color: gray;
+}
 
 #content .player {
   margin-bottom: 20px;
