@@ -28,8 +28,16 @@ class Viewer(BaseRequestHandler):
 	xsltName = 'albums.xsl'
 
 	def get(self, id):
+		album = self.get_album(id)
+		user = users.get_current_user()
+		if user:
+			star = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get() is not None
+		else:
+			star = False
 		self.check_access()
-		self.sendXML(self.get_album(id).xml)
+		self.sendXML(album.xml, {
+			'star': star,
+		})
 
 	def get_album(self, id):
 		if id:
