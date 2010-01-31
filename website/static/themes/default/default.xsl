@@ -118,6 +118,9 @@
 						<xsl:value-of select="concat('С меткой «',../@label,'»')"/>
 					</li>
 				</xsl:if>
+				<xsl:if test="/page/@user">
+					<li><a href="/albums/favourite">Любимые</a></li>
+				</xsl:if>
 			</ul>
 			<ul>
 				<li><a href="/artists">Исполнители</a></li>

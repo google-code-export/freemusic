@@ -110,6 +110,20 @@ $(document).ready(function(){
 		$('a:first', p).attr('href', $(this).attr('href'));
 		return false;
 	});
+
+	$('#album').each(function(){
+		$.getJSON('/api/album/star.json?id=' + window.location.pathname.split('/')[2], function (data) {
+			if (data.star)
+				$('#album .star').addClass('on');
+		})
+		$('#album .star').click(function(){
+			$(this).toggleClass('on');
+			$.post('/api/album/star.json', {
+				'id': window.location.pathname.split('/')[2],
+				'status': $(this).hasClass('on'),
+			});
+		});
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

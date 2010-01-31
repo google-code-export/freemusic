@@ -140,6 +140,11 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
 		self.response.out.write(content)
 
+	def sendJSON(self, content):
+		json = str(content).replace("'", '"')
+		logging.debug(json)
+		self.sendAny('application/json', json)
+
 	def sendAny(self, type, content):
 		self.response.headers['Content-Type'] = type + '; charset=utf-8'
 		self.response.out.write(content)

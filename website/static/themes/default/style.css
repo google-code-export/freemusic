@@ -292,3 +292,15 @@ ul.altiles {
   background-color: red;
   height: 4px;
 }
+
+.star {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: transparent url(star_off.gif) no-repeat top left;
+  cursor: pointer;
+  margin-right: 4px;
+}
+.star.on {
+  background: transparent url(star_on.gif) no-repeat top left;
+}

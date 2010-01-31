@@ -5,10 +5,17 @@ from logging import debug as log
 import datetime
 
 from google.appengine.api import users
+from google.appengine.ext import db
 
 from base import BaseRequestHandler, HTTPException, ForbiddenException
 from model import SiteAlbum, SiteImage, SiteTrack, SiteFile
+from index import Recent
 import rss, myxml
+
+class SiteAlbumStar(db.Model):
+	"Хранит информацию о любимых альбомах пользователей."
+	album = db.ReferenceProperty(SiteAlbum)
+	user = db.UserProperty()
 
 class XmlUpdater(BaseRequestHandler):
 	def get(self):
@@ -33,13 +40,11 @@ class Viewer(BaseRequestHandler):
 
 class JSON(Viewer):
 	def get(self):
-		tx = [{
+		self.sendJSON([{
 			'id': int(track.id),
 			'ogg': str(track.ogg_link),
 			'mp3': str(track.mp3_link),
-		} for track in self.get_album(self.request.get('id')).tracks()]
-		json = str(tx).replace("'", '"')
-		self.sendAny('application/json', json) # self.sendText(str(tx))
+		} for track in self.get_album(self.request.get('id')).tracks()])
 
 class Editor(Viewer):
 	xsltName = 'albums.xsl'
@@ -122,3 +127,32 @@ class RSSHandler(rss.RSSHandler):
 			'link': 'album/' + str(album.id),
 		} for album in SiteAlbum.all().order('-release_date').fetch(20)]
 		self.sendRSS(items, title=u'Новые альбомы')
+
+class Stars(BaseRequestHandler):
+	def get(self):
+		if self.request.get('id'):
+			album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+			a = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', self.force_user(), album).get()
+			if a is not None:
+				return self.sendJSON({
+					'star': 1,
+				})
+		self.sendJSON({
+			'star': 0,
+		})
+
+	def post(self):
+		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+		if album is not None:
+			user = self.force_user()
+			star = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get()
+
+			status = self.request.get('status') == 'true'
+			if status and not star:
+				SiteAlbumStar(user=user, album=album).put()
+			elif not status and star:
+				star.delete()
+
+class Favourite(Recent):
+	def get_albums(self, offset):
+		return [star.album for star in SiteAlbumStar.gql('WHERE user = :1', self.force_user()).fetch(1000)]
