@@ -69,7 +69,7 @@ form.eal ol li {
 }
 
 #header {
-  margin: 10px 0 40px;
+  margin: 10px 0 20px;
 }
 #header h1 {
   display: inline;
@@ -308,6 +308,7 @@ ul.altiles {
 #ntfctn {
   text-align: center;
   font-weight: bold;
+  height: 12pt;
 }
 #ntfctn p {
   display: inline-block;
