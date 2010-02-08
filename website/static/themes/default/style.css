@@ -237,7 +237,7 @@ ul.altiles {
   padding: 0;
 }
 .labels li {
-  display: inline;
+  display: inline-block;
   font-size: 9pt;
 }
 .labels a {
