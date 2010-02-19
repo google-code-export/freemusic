@@ -30,7 +30,7 @@
 						<form action="/search" method="get">
 							<h1>
 								<a href="/">
-									<span>free music hub</span>
+									<span>Free Music Hub</span>
 								</a>
 							</h1>
 							<input type="text" name="q" class="text"/>
@@ -213,7 +213,7 @@
 		<xsl:param name="uri"/>
 		<xsl:param name="weight"/>
 		<ul class="labels">
-			<xsl:for-each select="label">
+			<xsl:for-each select="label[text()]">
 				<xsl:sort select="text()"/>
 				<li>
 					<a href="{$uri}{@uri}">
