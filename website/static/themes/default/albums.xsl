@@ -5,26 +5,13 @@
 
 	<!-- Просмотр альбома -->
 	<xsl:template match="/page/album">
-		<div id="album" class="twocol">
+		<div id="album" class="twocolrev">
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='front']" mode="album-cover"/>
 				<xsl:apply-templates select="labels" mode="linked">
 					<xsl:with-param name="uri">/?label=</xsl:with-param>
 				</xsl:apply-templates>
-				<ul>
-					<li>
-						<a href="{files/file/@uri}">Скачать альбом</a>
-					</li>
-					<xsl:if test="/page/@email = @owner or /page/@is-admin">
-						<li>
-							<a href="/album/{@id}/edit">Отредактировать</a>
-						</li>
-						<li>
-							<a href="/album/{@id}/delete">Удалить</a>
-						</li>
-					</xsl:if>
-				</ul>
 			</div>
 			<div class="right">
 				<table class="tracklist">
@@ -53,10 +40,8 @@
 						</xsl:for-each>
 					</tbody>
 				</table>
-				<xsl:if test="@pubDate">
-					<p>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></p>
-				</xsl:if>
 				<div class="reviews">
+					<h3>Мнения пользователей</h3>
 					<xsl:if test="not(../review[@author-email = /page/@email])">
 						<form action="/album/review" method="post">
 							<input type="hidden" name="id" value="{@id}"/>
@@ -245,6 +230,7 @@
 
 	<xsl:template match="album" mode="h2">
 		<div class="alh">
+			<a class="button" href="{files/file/@uri}">Скачать альбом</a>
 			<h2>
 				<span title="Добавить в коллекцию">
 					<xsl:attribute name="class">
@@ -264,6 +250,14 @@
 				<xsl:apply-templates select="@rate"/>
 				<xsl:if test="@pubDate">
 					<span>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></span>
+				</xsl:if>
+				<xsl:if test="/page/@email = @owner or /page/@is-admin">
+					<span>
+						<a href="/album/{@id}/edit">Отредактировать</a>
+					</span>
+					<span>
+						<a href="/album/{@id}/delete">Удалить</a>
+					</span>
 				</xsl:if>
 			</div>
 		</div>

@@ -96,6 +96,14 @@ form.eal ol li {
   margin-left: 170px;
 }
 
+.twocolrev .left {
+  width: 206px; /* 200 на картинку, 4 на padding, 2 на бордюр */
+  float: right;
+}
+.twocolrev .right {
+  margin-right: 220px;
+}
+
 .left ul {
   margin: 0 0 1em;
   padding: 0;
@@ -125,9 +133,6 @@ h2 small {
   margin-left: 1em;
 }
 
-#album .left {
-  float: left;
-}
 #album .left img {
   border: solid 1px #ccc;
   padding: 2px;
@@ -141,9 +146,6 @@ h2 small {
   color: gray;
 }
 
-#album .right {
-  margin-left: 220px;
-}
 #album td {
   padding: 2px 4px;
   vertical-align: top;
@@ -158,6 +160,7 @@ h2 small {
   margin-bottom: 10px;
   color: #666;
   font-size: 8pt;
+  position: relative;
 }
 .alh h2 {
   margin: 5px 0;
@@ -168,6 +171,13 @@ h2 small {
 }
 .alh2 span {
   margin-right: 1em;
+}
+.alh2 a {
+  color: #666;
+}
+.alh .button {
+  float: right;
+  margin: 1em 1em auto auto;
 }
 
 .albumcover {
@@ -417,4 +427,20 @@ textarea.hidden {
 }
 .review p {
   margin-left: 2em;
+}
+
+/**
+ * Ссылка-кнопка.
+ */
+a.button {
+  background: #e3e3e3 url(button-back.png) repeat-x center center;
+  text-decoration: none;
+  color: black;
+  border: solid 1px #888;
+  border-left: solid 1px #aaa;
+  border-top: solid 1px #aaa;
+  display: inline-block;
+  padding: 0 10px;
+  line-height: 20px;
+  white-space: nowrap;
 }
