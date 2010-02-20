@@ -163,6 +163,13 @@ $(document).ready(function(){
 		});
 		return false;
 	});
+
+	/**
+	 * Вывод дополнительных картинок альбома.
+	 */
+	$('p.fakelink').click(function(){
+		$('.moreimg').toggleClass('hidden');
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

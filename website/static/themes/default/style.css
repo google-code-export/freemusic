@@ -14,6 +14,11 @@ li {
   margin-bottom: .5em;
 }
 
+.fakelink {
+  color: blue;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
 form.gen label,
 form.gen label span {
@@ -165,10 +170,13 @@ h2 small {
   margin-right: 1em;
 }
 
-.moreimg {
+p.moreimg {
+  white-space: nowrap;
+}
+ul.moreimg {
   width: 225px;
 }
-.moreimg li {
+ul.moreimg li {
   display: inline-block;
   margin: 10px 15px 10px 0;
 }
