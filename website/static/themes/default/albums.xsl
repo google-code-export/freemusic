@@ -234,7 +234,19 @@
 				<a href="http://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D0%B8_Creative_Commons" title="Распространяется свободно" target="_blank">
 					<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons" width="80" height="31"/>
 				</a>
-				<a class="button" href="{files/file/@uri}">Скачать альбом</a>
+				<a class="button" href="{files/file/@uri}">Скачать альбом <span class="more">▼</span></a>
+				<ul class="more popup">
+					<xsl:for-each select="files/file">
+						<li>
+							<a href="{@uri}">
+								<xsl:value-of select="@name"/>
+							</a>
+						</li>
+					</xsl:for-each>
+					<li>
+						<a href="/album/{@id}/files">Показать все файлы</a>
+					</li>
+				</ul>
 			</div>
 			<h2>
 				<span title="Добавить в коллекцию">

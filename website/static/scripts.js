@@ -171,6 +171,27 @@ $(document).ready(function(){
 		$('.moreimg').toggleClass('hidden');
 		$(this).remove();
 	});
+
+	/**
+	 * Выбор файлов для скачивания.
+	 */
+	$('.dlb span.more').click(function(){
+		var o = $(this).offset();
+		var p = $('.dlb ul.more');
+		p.css({
+			'display': 'block',
+			'left': (o.left - p.width()) + 'px',
+			'top': (o.top + 4) + 'px'
+		});
+		return false;
+	});
+
+	/**
+	 * Сокрытие всплывающих меню при клике мимо.
+	 */
+	$(document).click(function(){
+		$('.popup').hide();
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

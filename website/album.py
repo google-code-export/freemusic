@@ -50,6 +50,12 @@ class Viewer(BaseRequestHandler):
 				return album
 		raise HTTPException(404, u'Нет такого альбома.')
 
+class FileViewer(Viewer):
+	xsltName = 'album-files.xsl'
+
+	def get(self, album_id):
+		self.sendXML(self.get_album(int(album_id)).xml)
+
 class JSON(Viewer):
 	def get(self):
 		self.sendJSON([{

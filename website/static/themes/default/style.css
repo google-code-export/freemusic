@@ -162,7 +162,6 @@ h2 small {
   padding: 2px 4px;
   margin-bottom: 10px;
   color: #666;
-  position: relative;
   height: 45px;
 }
 .alh h2 {
@@ -489,4 +488,23 @@ h3 a.rss {
 }
 h3:hover a.rss {
   display: inline-block;
+}
+
+/**
+ * Всплывающие меню.
+ */
+.popup {
+  position: absolute;
+  z-index: 5000;
+  display: none;
+  white-space: nowrap;
+}
+ul.popup {
+  list-style-type: none;
+  padding: 4px 8px;
+  margin: 0;
+  background-color: #eee;
+  border: solid 2px #888;
+  border-left: solid 1px #aaa;
+  border-top: solid 1px #aaa;
 }
