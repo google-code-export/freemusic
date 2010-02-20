@@ -207,6 +207,18 @@ class SiteAlbumReview(db.Model):
 			return sum(rates) / len(rates)
 		return None
 
+	def to_rss(self):
+		description = u''
+		if self.comment:
+			description += u'<p>' + self.comment + u'</p>'
+		if self.rate_average:
+			description += u'<p>Общая оценка: ' + unicode(self.rate_average) + u'/5.</p>'
+		return {
+			'title': u'Рецензия от ' + self.author.user.nickname(),
+			'link': 'album/' + str(self.album.id),
+			'description': description,
+		}
+
 def nextId(cls):
 	last = cls.gql('ORDER BY id DESC').get()
 	if last:

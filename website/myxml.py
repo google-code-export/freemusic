@@ -30,3 +30,8 @@ def escape(value):
 	if type(value) == type(str()) or type(value) == type(unicode()):
 		value = saxutils.quoteattr(value)
 	return value
+
+def cdata(value):
+	if type(value) == type(str()) or type(value) == type(unicode()):
+		value = u'<![CDATA[' + unicode(value) + ']]>'
+	return value

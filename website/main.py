@@ -16,6 +16,7 @@ import artist
 import index
 import labels
 import model
+import reviews
 import sitemap
 import tracks
 import upload
@@ -65,6 +66,7 @@ if __name__ == '__main__':
 		('/album/(\d+)$', album.Viewer),
 		('/album/(\d+)/edit$', album.Editor),
 		('/album/(\d+)/delete$', album.Delete),
+		('/album/(\d+)/reviews\.rss', reviews.AlbumRSS),
 		('/album/review', album.Review),
 		('/album/update-xml', album.XmlUpdater),
 		('/albums\.rss', album.RSSHandler),

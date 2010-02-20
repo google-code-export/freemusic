@@ -20,7 +20,7 @@ class RSSHandler(BaseRequestHandler):
 
 		content += xml.em(u'title', content=title)
 		content += xml.em(u'link', content=base + link)
-		content += xml.em(u'description', content=xml.escape(description))
+		content += xml.em(u'description', content=xml.cdata(description))
 		content += xml.em(u'atom:link', {
 			'href': self.request.url,
 			'rel': 'self',
@@ -29,11 +29,11 @@ class RSSHandler(BaseRequestHandler):
 		content += xml.em(u'language', content=u'ru')
 
 		for item in items:
-			entry = xml.em(u'title', content=xml.escape(item['title']))
+			entry = xml.em(u'title', content=xml.cdata(item['title']))
 			entry += xml.em(u'link', content=base + item['link'])
 			if 'description' not in item.keys():
 				item['description'] = item['title']
-			entry += xml.em(u'description', content=xml.escape(item['description']))
+			entry += xml.em(u'description', content=xml.cdata(item['description']))
 			entry += xml.em(u'guid', {'isPermaLink': 'true'}, content=base + item['link'])
 			if '_' in item.keys():
 				entry += item['_']
