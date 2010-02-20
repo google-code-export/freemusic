@@ -41,7 +41,7 @@
 					</tbody>
 				</table>
 				<div class="reviews">
-					<h3>Мнения пользователей</h3>
+					<h3>Мнения пользователей <a class="rss" href="/album/{@id}/reviews.rss"><span>RSS</span></a></h3>
 					<xsl:if test="not(../review[@author-email = /page/@email])">
 						<form action="/album/review" method="post">
 							<input type="hidden" name="id" value="{@id}"/>

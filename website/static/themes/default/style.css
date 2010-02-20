@@ -469,3 +469,24 @@ a.button {
   line-height: 22px;
   font-size: 12px;
 }
+
+/**
+ * Ссылка на RSS.
+ */
+a.rss {
+  background: transparent url(rss.gif) no-repeat top left;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: bottom;
+}
+a.rss span {
+  display: none;
+}
+h3 a.rss {
+  display: none;
+  margin-left: 4px;
+}
+h3:hover a.rss {
+  display: inline-block;
+}
