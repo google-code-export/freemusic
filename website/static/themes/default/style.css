@@ -87,6 +87,9 @@ form.eal ol li {
   padding: 4px;
   margin-right: 10px;
 }
+#header .search {
+  float: right;
+}
 
 .twocol .left {
   width: 150px;
@@ -507,4 +510,16 @@ ul.popup {
   border: solid 2px #888;
   border-left: solid 1px #aaa;
   border-top: solid 1px #aaa;
+}
+
+/**
+ * Вывод альбома в списке.
+ */
+li.album .cover {
+  display: inline-block;
+  height: 134px;
+  width: 141px;
+  background: transparent url(jewelcase_large.png) no-repeat top left;
+  padding: 4px 0 0 4px;;
+  text-decoration: none;
 }

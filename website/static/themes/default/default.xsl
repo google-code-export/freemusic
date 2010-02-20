@@ -33,8 +33,10 @@
 									<span>Free Music Hub</span>
 								</a>
 							</h1>
-							<input type="text" name="q" class="text"/>
-							<input type="submit" value="Найти"/>
+							<div class="search">
+								<input type="text" name="q" class="text"/>
+								<input type="submit" value="Найти"/>
+							</div>
 						</form>
 					</div>
 					<div id="content">
@@ -160,13 +162,14 @@
 		<ul class="altiles">
 			<xsl:for-each select="album">
 				<li class="album">
-					<a href="/album/{@id}">
-						<img width="100" height="100">
+					<a href="/album/{@id}" class="cover">
+						<img width="126" height="126">
 							<xsl:attribute name="src">
 								<xsl:value-of select="images/image[@type='front']/@medium"/>
 								<xsl:if test="not(images/image[@type='front'])">/static/cdaudio_mount.png</xsl:if>
 							</xsl:attribute>
 						</img>
+						<span class="jewelcase"/>
 					</a>
 					<div>
 						<a class="n" href="/album/{@id}">
