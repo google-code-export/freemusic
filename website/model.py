@@ -74,7 +74,8 @@ class SiteAlbum(db.Model):
 
 	def get_avg_rate(self):
 		rates = [r.rate_average for r in SiteAlbumReview.gql('WHERE album = :1', self).fetch(1000) if r.rate_average is not None]
-		return sum(rates) / len(rates)
+		if len(rates):
+			return sum(rates) / len(rates)
 
 	def to_xml(self):
 		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
