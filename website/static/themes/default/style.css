@@ -240,9 +240,9 @@ ul.altiles {
 .altiles li {
   display: block;
   width: 150px;
-  height: 170px;
+  height: 190px;
   list-style-type: none;
-  margin: 0 10px 10px;
+  margin: 0 20px 20px;
   padding: 0;
   text-align: center;
   float: left;

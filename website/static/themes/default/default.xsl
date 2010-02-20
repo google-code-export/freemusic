@@ -166,7 +166,7 @@
 						<img width="126" height="126">
 							<xsl:attribute name="src">
 								<xsl:value-of select="images/image[@type='front']/@medium"/>
-								<xsl:if test="not(images/image[@type='front'])">/static/cdaudio_mount.png</xsl:if>
+								<xsl:if test="not(images/image[@type='front'])">/static/default_album_large.png</xsl:if>
 							</xsl:attribute>
 						</img>
 						<span class="jewelcase"/>
@@ -207,7 +207,7 @@
 				</a>
 			</xsl:when>
 			<xsl:otherwise>
-				<img src="/static/cdaudio_mount.png" width="200" height="200" alt="default image"/>
+				<img src="/static/default_album_large.png" width="200" height="200" alt="default image"/>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
