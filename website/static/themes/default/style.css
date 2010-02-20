@@ -170,8 +170,24 @@ h2 small {
   margin-right: 1em;
 }
 
+.albumcover {
+  position: relative;
+}
 p.moreimg {
   white-space: nowrap;
+  position: absolute;
+  top: 170px;
+  left: 2px;
+  width: 198px;
+  font-size: 8pt;
+  z-index: 100;
+  background-color: white;
+  padding: 2px;
+  text-align: center;
+  display: none;
+}
+.albumcover:hover p.moreimg {
+  display: block;
 }
 ul.moreimg {
   width: 225px;

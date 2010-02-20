@@ -8,19 +8,7 @@
 		<div id="album" class="twocol">
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
-				<xsl:apply-templates select="images/image[@type='front']" mode="medium"/>
-				<xsl:if test="count(images/image) &gt; 1">
-					<p class="moreimg fakelink">Показать другие картинки</p>
-					<ul class="moreimg hidden">
-						<xsl:for-each select="images/image">
-							<li>
-								<a href="{@original}" target="_blank">
-									<img src="{@medium}" width="50" height="50" alt="{@name}"/>
-								</a>
-							</li>
-						</xsl:for-each>
-					</ul>
-				</xsl:if>
+				<xsl:apply-templates select="images/image[@type='front']" mode="album-cover"/>
 				<xsl:apply-templates select="labels" mode="linked">
 					<xsl:with-param name="uri">/?label=</xsl:with-param>
 				</xsl:apply-templates>
@@ -81,6 +69,29 @@
 			</div>
 		</div>
 	</xsl:template>
+
+		<!-- Вывод обложки альбома. Если есть больше одной картинки,
+		     выводятся скрытые уменьшеныне копии и специальная ссылка
+			 для их вывода. -->
+		<xsl:template match="image" mode="album-cover">
+			<div class="albumcover">
+				<a class="main" href="{@original}" target="_blank">
+					<img src="{@medium}" alt="image" width="200" height="200"/>
+				</a>
+				<xsl:if test="count(../image) &gt; 1">
+					<p class="moreimg fakelink">Показать другие картинки</p>
+					<ul class="moreimg hidden">
+						<xsl:for-each select="../image">
+							<li>
+								<a href="{@original}" target="_blank">
+									<img src="{@medium}" width="50" height="50" alt="{@name}"/>
+								</a>
+							</li>
+						</xsl:for-each>
+					</ul>
+				</xsl:if>
+			</div>
+		</xsl:template>
 
 		<xsl:template name="review-stars">
 			<table class="stars hidden">

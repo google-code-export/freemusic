@@ -169,6 +169,7 @@ $(document).ready(function(){
 	 */
 	$('p.fakelink').click(function(){
 		$('.moreimg').toggleClass('hidden');
+		$(this).remove();
 	});
 });
 
