@@ -145,6 +145,9 @@ h2 small {
   background-color: #ccc;
   color: gray;
 }
+#album .lic {
+  margin: 1em 0;
+}
 
 #album td {
   padding: 2px 4px;
@@ -159,14 +162,17 @@ h2 small {
   padding: 2px 4px;
   margin-bottom: 10px;
   color: #666;
-  font-size: 8pt;
   position: relative;
+  height: 45px;
 }
 .alh h2 {
   margin: 5px 0;
   color: black;
+  font-size: 20px;
 }
 .alh2 {
+  font-size: 10px;
+  line-height: 12px;
   margin-left: 20px;
 }
 .alh2 span {
@@ -175,9 +181,21 @@ h2 small {
 .alh2 a {
   color: #666;
 }
-.alh .button {
+.alh .dlb {
   float: right;
-  margin: 1em 1em auto auto;
+  margin: 7px 7px auto auto;
+}
+.alh img {
+  margin-right: 4px;
+  vertical-align: bottom;
+  display: none;
+}
+.alh:hover img {
+  display: inline-block;
+}
+.alh .button {
+  line-height: 29px;
+  font-size: 14px;
 }
 
 .albumcover {
@@ -310,6 +328,9 @@ ul.altiles {
 .tracklist, .tracklist .track {
   width: 530px;
 }
+.tracklist td {
+  line-height: 17px; /* подстраиваемся под высоту таблицы с кнопкой проигрывания */
+}
 .tracklist .u u {
   display: inline-block;
   width: 16px;
@@ -387,6 +408,9 @@ ul.altiles {
 /**
  * Рецензии
  */
+.reviews {
+  margin-top: 50px;
+}
 .reviews textarea {
   width: 500px;
   max-width: 500px;
@@ -441,6 +465,7 @@ a.button {
   border-top: solid 1px #aaa;
   display: inline-block;
   padding: 0 10px;
-  line-height: 20px;
   white-space: nowrap;
+  line-height: 22px;
+  font-size: 12px;
 }

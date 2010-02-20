@@ -230,7 +230,12 @@
 
 	<xsl:template match="album" mode="h2">
 		<div class="alh">
-			<a class="button" href="{files/file/@uri}">Скачать альбом</a>
+			<div class="dlb">
+				<a href="http://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D0%B8_Creative_Commons" title="Распространяется свободно" target="_blank">
+					<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons" width="80" height="31"/>
+				</a>
+				<a class="button" href="{files/file/@uri}">Скачать альбом</a>
+			</div>
 			<h2>
 				<span title="Добавить в коллекцию">
 					<xsl:attribute name="class">
