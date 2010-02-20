@@ -240,9 +240,7 @@
 						<xsl:if test="/page/@star"> on</xsl:if>
 					</xsl:attribute>
 				</span>
-				<xsl:text>«</xsl:text>
 				<xsl:value-of select="@name"/>
-				<xsl:text>»</xsl:text>
 				<small>
 					<xsl:text> от </xsl:text>
 					<a href="/artist/{@artist-id}">
@@ -251,9 +249,7 @@
 				</small>
 			</h2>
 			<div class="alh2">
-				<span>
-					<xsl:apply-templates select="@rate"/>
-				</span>
+				<xsl:apply-templates select="@rate"/>
 				<xsl:if test="@pubDate">
 					<span>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></span>
 				</xsl:if>

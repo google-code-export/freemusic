@@ -116,7 +116,8 @@ h2 {
 }
 h2 small {
   font-weight: normal;
-  font-size: 12pt;
+  font-size: 10pt;
+  margin-left: 1em;
 }
 
 #album .left {
@@ -154,7 +155,7 @@ h2 small {
   font-size: 8pt;
 }
 .alh h2 {
-  margin: 0 0 5px;
+  margin: 5px 0;
   color: black;
 }
 .alh2 {
