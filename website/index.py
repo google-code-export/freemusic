@@ -8,7 +8,7 @@ import labels
 class ServiceUnavailable(HTTPException):
 	def __init__(self):
 		self.code = 503
-		self.message = u"База данных пуста, зайдите позже."
+		self.message = u"База данных пуста, зайдите позже. (Если нужно загрузить альбом, см. <a href='/api'>сюда</a>.)"
 
 class Recent(BaseRequestHandler):
 	xsltName = 'index.xsl'
