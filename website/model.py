@@ -214,7 +214,7 @@ class SiteAlbumReview(db.Model):
 		if self.rate_average:
 			description += u'<p>Общая оценка: ' + unicode(self.rate_average) + u'/5.</p>'
 		return {
-			'title': u'Рецензия от ' + self.author.user.nickname(),
+			'title': u'Рецензия на «%s» от %s' % (self.album.name, self.author.user.nickname()),
 			'link': 'album/' + str(self.album.id),
 			'description': description,
 		}
