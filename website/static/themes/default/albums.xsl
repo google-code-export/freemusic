@@ -237,6 +237,7 @@
 				<a class="button" href="{files/file/@uri}">
 					<xsl:text>Скачать альбом</xsl:text>
 					<xsl:if test="count(files/file) &gt; 1">
+						<xsl:text> </xsl:text>
 						<span class="more">▼</span>
 					</xsl:if></a>
 				<ul class="more popup">
