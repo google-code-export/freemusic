@@ -4,3 +4,8 @@ indexes:
   - name: labels
   - name: release_date
     direction: desc
+- kind: SiteAlbumReview
+  properties:
+  - name: album
+  - name: published
+    direction: desc

@@ -84,6 +84,7 @@ if __name__ == '__main__':
 		('/artists\.rss', artist.RSSHandler),
 		('/labels', labels.List),
 		('/my/collection', album.Collection),
+		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),
 		('/submit', SubmitHandler),

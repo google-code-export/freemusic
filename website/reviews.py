@@ -10,5 +10,10 @@ class AlbumRSS(RSSHandler):
 		album = SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
 		if album is None:
 			raise HTTPException(404, 'Нет такого альбома.')
-		entries = [r.to_rss() for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(10)]
+		entries = [r.to_rss() for r in SiteAlbumReview.gql('WHERE album = :1 ORDER BY published DESC', album).fetch(10)]
 		self.sendRSS(entries, title=u'Рецензии на "%s" от %s' % (album.name, album.artist.name))
+
+class AllRSS(RSSHandler):
+	def get(self):
+		entries = [r.to_rss() for r in SiteAlbumReview.all().order('-published').fetch(10)]
+		self.sendRSS(entries, title=u'Все Рецензии')
