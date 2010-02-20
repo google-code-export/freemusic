@@ -111,7 +111,10 @@ $(document).ready(function(){
 		return false;
 	});
 
-	$('#album .star').click(function(){
+	/**
+	 * Добавление альбома в закладки.
+	 */
+	$('#album h2 .star').click(function(){
 		$(this).toggleClass('on');
 		$.post('/api/album/star.json', {
 			'id': window.location.pathname.split('/')[2],
@@ -122,6 +125,43 @@ $(document).ready(function(){
 			else
 				$('#ntfctn').html('');
 		}, 'json');
+	});
+
+	/**
+	 * Рецензии.
+	 */
+	$('.reviews textarea').focus(function(){
+		if ($(this).hasClass('hidden'))
+			$(this).html('');
+		$(this).parents('.reviews:first').find('.hidden').removeClass('hidden');
+		$(this).focus();
+	});
+	$('.reviews .star').click(function(){
+		var p = $(this).parents('td:first');
+		p.find('.star').removeClass('on');
+		$(this).addClass('on');
+		$(this).prevAll().addClass('on');
+		p.find('input').val(p.find('span.on').length);
+	});
+	$('.reviews form').submit(function(){
+		$(this).find('input[type="submit"]').attr('disabled', 'disabled');
+		$.ajax({
+			type: 'POST',
+			url: '/album/review',
+			data: $(this).serialize(),
+			dataType: 'json',
+			success: function (data) {
+				if (data.message)
+					alert(data.message);
+				else
+					window.location.reload()
+			},
+			error: function (a, b) {
+				$('.reviews input[type="submit"]').attr('disabled', '');
+				alert('Error ' + a.status + ': ' + a.statusText);
+			}
+		});
+		return false;
 	});
 });
 

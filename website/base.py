@@ -11,6 +11,7 @@ import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+from simplejson.encoder import JSONEncoder
 
 # Local imports
 from model import SiteUser
@@ -102,6 +103,17 @@ class BaseRequestHandler(webapp.RequestHandler):
 			raise HTTPException(403, u'У вас нет доступа к этой странице.')
 		return self.force_user()
 
+	def get_current_user(self):
+		"""
+		Возвращает текущего пользователя (SiteUser), при необходимости создавая объект.
+		"""
+		luser = self.force_user()
+		duser = SiteUser.gql('WHERE user = :1', luser).get()
+		if duser is None:
+			duser = SiteUser(user=luser, weight=0.5)
+			duser.put()
+		return duser
+
 	def force_user(self):
 		user = users.get_current_user()
 		if not user:
@@ -131,7 +143,8 @@ class BaseRequestHandler(webapp.RequestHandler):
 		attrs['theme'] = self.request.get('theme', 'default')
 
 		result = u"<?xml version=\"1.0\"?>"
-		result += u"<?xml-stylesheet type=\"text/xsl\" href=\"/static/themes/" + attrs['theme'] + '/' + self.xsltName + u"\"?>\n"
+		if 'xml' not in self.request.arguments():
+			result += u"<?xml-stylesheet type=\"text/xsl\" href=\"/static/themes/" + attrs['theme'] + '/' + self.xsltName + u"\"?>\n"
 		result += xml.em(u'page', attrs, content)
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
@@ -141,7 +154,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.out.write(content)
 
 	def sendJSON(self, content):
-		json = str(content).replace("'", '"')
+		json = JSONEncoder().encode(content)
 		self.sendAny('application/json', json)
 
 	def sendAny(self, type, content):

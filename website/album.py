@@ -8,7 +8,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 from base import BaseRequestHandler, HTTPException, ForbiddenException
-from model import SiteAlbum, SiteImage, SiteTrack, SiteFile
+from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser
 from index import Recent
 import rss, myxml
 
@@ -35,7 +35,11 @@ class Viewer(BaseRequestHandler):
 		else:
 			star = False
 		self.check_access()
-		self.sendXML(album.xml, {
+
+		xml = album.xml
+		xml += u''.join([r.xml for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)])
+
+		self.sendXML(xml, {
 			'star': star,
 		})
 
@@ -170,3 +174,42 @@ class Collection(Recent):
 
 	def get_albums(self, offset):
 		return [star.album for star in SiteAlbumStar.gql('WHERE user = :1', self.force_user()).fetch(1000)]
+
+class Review(BaseRequestHandler):
+	def get(self):
+		"""
+		Вывод рецензий.
+		"""
+		if self.request.get('album'):
+			album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
+			xml = u''.join([one.xml for one in SiteAlbumReview.gql('WHERE album = :1', album)])
+			self.sendXML(myxml.em(u'reviews', None, xml))
+
+	def post(self):
+		"""
+		Добавление новой рецензии. Обрабатываются поля формы: id, comment, sound,
+		arrangement, vocals, lyrics, prof.
+		
+		Возвращается JSON объект со свойствами status и message. В случае ошибки
+		message будет содержать сообщение.
+		"""
+		user = self.get_current_user()
+		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+		response = { 'status': 'ok', 'message': '' }
+
+		review = SiteAlbumReview.gql('WHERE album = :1 AND author = :2', album, user).get()
+		if review is not None:
+			response['status'] = 'duplicate'
+			response['message'] = 'Вы уже писали рецензию на этот альбом.'
+		else:
+			status = 'ok'
+			review = SiteAlbumReview(user=user, album=SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get())
+			for k in ('sound', 'arrangement', 'vocals', 'lyrics', 'prof'):
+				rate = self.request.get(k)
+				if rate and int(rate) <= 5:
+					setattr(review, 'rate_' + k, int(rate))
+			review.comment = self.request.get('comment')
+			review.put()
+			album.put() # сохраняем альбом для обновления средней оценки
+
+		self.sendJSON(response)

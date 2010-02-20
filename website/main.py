@@ -65,6 +65,7 @@ if __name__ == '__main__':
 		('/album/(\d+)$', album.Viewer),
 		('/album/(\d+)/edit$', album.Editor),
 		('/album/(\d+)/delete$', album.Delete),
+		('/album/review', album.Review),
 		('/album/update-xml', album.XmlUpdater),
 		('/albums\.rss', album.RSSHandler),
 		('/api', api.Index),

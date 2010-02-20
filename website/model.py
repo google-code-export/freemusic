@@ -4,9 +4,14 @@
 import logging
 import urllib
 from xml.sax.saxutils import escape
+from google.appengine.api import users
 from google.appengine.ext import db
 
 import myxml as xml
+
+def get_current_user():
+	user = SiteUser.gql('WHERE user = :1', users.get_current_user()).get()
+	return user
 
 class SiteUser(db.Model):
 	user = db.UserProperty(required=True)
@@ -55,15 +60,21 @@ class SiteAlbum(db.Model):
 	owner = db.UserProperty()
 	xml = db.TextProperty() # updated on save
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
+	rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
 
 	def put(self, quick=False):
 		if not self.id:
 			self.id = nextId(SiteAlbum)
 			logging.info('New album: %s (album/%u)' % (self.name, self.id))
 		if not quick:
+			self.rate = self.get_avg_rate()
 			self.xml = self.to_xml()
 			logging.info('album/%u: xml updated' % self.id)
 		return db.Model.put(self)
+
+	def get_avg_rate(self):
+		rates = [r.rate_average for r in SiteAlbumReview.gql('WHERE album = :1', self).fetch(1000) if r.rate_average is not None]
+		return sum(rates) / len(rates)
 
 	def to_xml(self):
 		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
@@ -76,7 +87,8 @@ class SiteAlbum(db.Model):
 			'artist-name': self.artist.name,
 			'pubDate': self.release_date.isoformat(),
 			'owner': self.owner,
-			'text': self.text
+			'text': self.text,
+			'rate': self.rate,
 		}, content)
 
 	def get_children_xml(self, cls, em):
@@ -147,9 +159,52 @@ class SiteFile(db.Model):
 		})
 
 class SiteAlbumReview(db.Model):
+	# рецензируемый альбом
 	album = db.ReferenceProperty(SiteAlbum)
+	# автор рецензии
 	author = db.ReferenceProperty(SiteUser)
-	created = db.DateTimeProperty(auto_now_add=True)
+	# дата написания рецензии
+	published = db.DateTimeProperty(auto_now_add=True)
+	# оценки
+	rate_sound = db.RatingProperty()
+	rate_arrangement = db.RatingProperty()
+	rate_vocals = db.RatingProperty()
+	rate_lyrics = db.RatingProperty()
+	rate_prof = db.RatingProperty()
+	rate_average = db.RatingProperty()
+	# комментарий
+	comment = db.TextProperty()
+	# кэш
+	xml = db.TextProperty()
+
+	def put(self):
+		if self.author is None:
+			self.author = get_current_user()
+		self.rate_average = self.get_avg()
+		self.xml = self.to_xml()
+		return db.Model.put(self)
+
+	def to_xml(self):
+		return xml.em(u'review', {
+			'pubDate': self.published.isoformat(),
+			'album-id': self.album.id,
+			'album-name': self.album.name,
+			'author-nickname': self.author.user.nickname(),
+			'author-email': self.author.user.email(),
+			'sound': self.rate_sound,
+			'arrangement': self.rate_arrangement,
+			'vocals': self.rate_vocals,
+			'lyrics': self.rate_lyrics,
+			'prof': self.rate_prof,
+			'average': self.rate_average,
+			'comment': self.comment,
+		})
+
+	def get_avg(self):
+		rates = [rate for rate in [self.rate_sound, self.rate_arrangement, self.rate_vocals, self.rate_lyrics, self.rate_prof] if rate is not None]
+		if len(rates):
+			return sum(rates) / len(rates)
+		return None
 
 def nextId(cls):
 	last = cls.gql('ORDER BY id DESC').get()

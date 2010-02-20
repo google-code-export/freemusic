@@ -67,9 +67,109 @@
 				<xsl:if test="@pubDate">
 					<p>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></p>
 				</xsl:if>
+				<div class="reviews">
+					<xsl:if test="not(../review[@author-email = /page/@email])">
+						<form action="/album/review" method="post">
+							<input type="hidden" name="id" value="{@id}"/>
+							<textarea name="comment" class="hidden">Здесь можно написать рецензию.</textarea>
+							<xsl:call-template name="review-stars"/>
+						</form>
+					</xsl:if>
+					<xsl:apply-templates select="/page/review" mode="inside"/>
+				</div>
 			</div>
 		</div>
 	</xsl:template>
+
+		<xsl:template name="review-stars">
+			<table class="stars hidden">
+				<tbody>
+					<tr>
+						<th>Звук:</th>
+						<td>
+							<input type="hidden" name="sound"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Вокал:</th>
+						<td>
+							<input type="hidden" name="vocals"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Аранжировка:</th>
+						<td>
+							<input type="hidden" name="arrangement"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Текст:</th>
+						<td>
+							<input type="hidden" name="lyrics"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Профессионализм:</th>
+						<td>
+							<input type="hidden" name="prof"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+							<span class="star"/>
+						</td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="2">
+							<p class="hint">Будьте внимательны, рецензию нельзя будет исправить.</p>
+							<input type="submit" value="Отправить"/>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</xsl:template>
+
+		<xsl:template match="review[@comment]" mode="inside">
+			<div class="review">
+				<div class="meta">
+					<a href="/user/{@author-email}">
+						<xsl:value-of select="@author-nickname"/>
+					</a>
+					<xsl:text> </xsl:text>
+					<span>
+						<xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/>
+					</span>
+					<span>
+						<xsl:apply-templates select="@average"/>
+					</span>
+				</div>
+				<p>
+					<xsl:value-of select="@comment"/>
+				</p>
+			</div>
+		</xsl:template>
 
 	<!-- Форма редактирования альбома -->
 	<xsl:template match="/page/form/album">
@@ -132,23 +232,33 @@
 	</xsl:template>
 
 	<xsl:template match="album" mode="h2">
-		<h2>
-			<span title="Добавить в коллекцию">
-				<xsl:attribute name="class">
-					<xsl:text>star</xsl:text>
-					<xsl:if test="/page/@star"> on</xsl:if>
-				</xsl:attribute>
-			</span>
-			<xsl:text>«</xsl:text>
-			<xsl:value-of select="@name"/>
-			<xsl:text>»</xsl:text>
-			<small>
-				<xsl:text> от </xsl:text>
-				<a href="/artist/{@artist-id}">
-					<xsl:value-of select="@artist-name"/>
-				</a>
-			</small>
-		</h2>
+		<div class="alh">
+			<h2>
+				<span title="Добавить в коллекцию">
+					<xsl:attribute name="class">
+						<xsl:text>star</xsl:text>
+						<xsl:if test="/page/@star"> on</xsl:if>
+					</xsl:attribute>
+				</span>
+				<xsl:text>«</xsl:text>
+				<xsl:value-of select="@name"/>
+				<xsl:text>»</xsl:text>
+				<small>
+					<xsl:text> от </xsl:text>
+					<a href="/artist/{@artist-id}">
+						<xsl:value-of select="@artist-name"/>
+					</a>
+				</small>
+			</h2>
+			<div class="alh2">
+				<span>
+					<xsl:apply-templates select="@rate"/>
+				</span>
+				<xsl:if test="@pubDate">
+					<span>Выпущен <xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/></span>
+				</xsl:if>
+			</div>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="delete-album">

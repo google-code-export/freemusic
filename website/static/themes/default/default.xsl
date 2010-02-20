@@ -228,4 +228,57 @@
 			</xsl:for-each>
 		</ul>
 	</xsl:template>
+
+	<!-- Вывод звёздочек для альбома -->
+	<xsl:template match="album/@rate|review/@average">
+		<!--
+		<xsl:value-of select="concat('[',.,'/5]')"/>
+		-->
+		<span class="smallstars">
+			<xsl:choose>
+				<xsl:when test=".=5">
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+				</xsl:when>
+				<xsl:when test=".=4">
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+					<span class="off"/>
+				</xsl:when>
+				<xsl:when test=".=3">
+					<span class="on"/>
+					<span class="on"/>
+					<span class="on"/>
+					<span class="off"/>
+					<span class="off"/>
+				</xsl:when>
+				<xsl:when test=".=2">
+					<span class="on"/>
+					<span class="on"/>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+				</xsl:when>
+				<xsl:when test=".=1">
+					<span class="on"/>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+					<span class="off"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</span>
+	</xsl:template>
 </xsl:stylesheet>
