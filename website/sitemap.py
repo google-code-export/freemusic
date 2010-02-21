@@ -13,10 +13,12 @@ class SitemapHandler(BaseRequestHandler):
 
 		base = self.getBaseURL()
 
+		"""
 		for artist in SiteArtist.all().fetch(1000):
 			content += "<url><loc>%sartist/%u</loc></url>\n" % (base, artist.id)
+		"""
 
-		for album in SiteAlbum.all().fetch(1000):
+		for album in SiteAlbum.all().order('-id').fetch(1000):
 			content += "<url><loc>%salbum/%u</loc></url>\n" % (base, album.id)
 
 		content += "</urlset>"
