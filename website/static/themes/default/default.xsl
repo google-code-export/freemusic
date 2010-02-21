@@ -35,7 +35,9 @@
 							</h1>
 							<div class="search">
 								<input type="text" name="q" class="text"/>
-								<input type="submit" value="Найти"/>
+								<button type="submit">
+									<span>Найти</span>
+								</button>
 							</div>
 						</form>
 					</div>

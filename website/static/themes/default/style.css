@@ -81,14 +81,25 @@ form.eal ol li {
   font-weight: normal;
   font-size: 18pt;
 }
+#header .search {
+  float: right;
+}
 #header .text {
   width: 300px;
   border: solid 1px #ccc;
-  padding: 4px;
-  margin-right: 10px;
+  padding: 4px 20px 4px 4px;
 }
-#header .search {
-  float: right;
+#header .search button {
+  background: transparent url(search.png) no-repeat center center;
+  border: none;
+  cursor: pointer;
+  margin-left: -20px;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+}
+#header .search button span {
+  display: none;
 }
 
 .twocol .left {
