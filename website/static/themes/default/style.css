@@ -282,6 +282,12 @@ ul.altiles {
   padding: 0;
   text-align: center;
   float: left;
+  position: relative;
+}
+.altiles .smallstars {
+  position: absolute;
+  top: 121px;
+  left: 89px;
 }
 /*
 .altiles li div a {
