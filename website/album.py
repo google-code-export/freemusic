@@ -51,13 +51,17 @@ class Viewer(BaseRequestHandler):
 		raise HTTPException(404, u'Нет такого альбома.')
 
 class Playlist(Viewer):
-	def get(self, id):
+	def get(self, id, format):
 		album = self.get_album(id)
 		tracks = SiteTrack.gql('WHERE album = :1', album).fetch(1000)
 		output = u'[playlist]\nNumberOfEntries=%u\n' % len(tracks)
 		index = 1
 		for track in tracks:
-			output += u'File%u=%s\nTitle%u=%s\n' % (index, track.mp3_link, index, track.title)
+			if format == 'mp3':
+				url = track.mp3_link
+			else:
+				url = track.ogg_link
+			output += u'File%u=%s\nTitle%u=%s\n' % (index, url, index, track.title)
 			index += 1
 		self.sendAny('text/plain', output) # audio/x-scpls
 
