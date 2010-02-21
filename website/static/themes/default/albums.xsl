@@ -232,7 +232,7 @@
 		<div class="alh">
 			<div class="dlb">
 				<a href="http://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D0%B8_Creative_Commons" title="Распространяется свободно" target="_blank">
-					<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons" width="80" height="31"/>
+					<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons" width="88" height="31"/>
 				</a>
 				<a class="button" href="{files/file/@uri}">
 					<xsl:text>Скачать альбом</xsl:text>

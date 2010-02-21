@@ -10,6 +10,9 @@ body {
 .hidden {
   display: none;
 }
+img {
+  border: none;
+}
 li {
   margin-bottom: .5em;
 }
@@ -92,6 +95,7 @@ form.eal ol li {
   border: solid 1px #ccc;
   padding: 4px 20px 4px 4px;
   font-family: sans-serif;
+  font-size: 12px;
 }
 #header .search button {
   background: transparent url(search.png) no-repeat center center;
@@ -101,6 +105,7 @@ form.eal ol li {
   padding: 0;
   width: 16px;
   height: 16px;
+  vertical-align: middle;
 }
 #header .search button span {
   display: none;
@@ -433,7 +438,7 @@ ul.altiles {
   max-width: 500px;
   height: 100px;
   border: solid 1px gray;
-  padding-left: 10px;
+  padding: 2px 2px 20px 10px;
 }
 textarea.hidden {
   display: block;
@@ -485,6 +490,7 @@ a.button {
   white-space: nowrap;
   line-height: 22px;
   font-size: 12px;
+  outline: none;
 }
 a.button span.more:hover {
   color: blue;
