@@ -163,7 +163,11 @@
 	<xsl:template match="albums" mode="tiles">
 		<ul class="altiles">
 			<xsl:for-each select="album">
-				<li class="album">
+				<li>
+					<xsl:attribute name="class">
+						<xsl:text>album pos</xsl:text>
+						<xsl:value-of select="position() mod 3"/>
+					</xsl:attribute>
 					<a href="/album/{@id}" class="cover">
 						<img width="126" height="126">
 							<xsl:attribute name="src">
