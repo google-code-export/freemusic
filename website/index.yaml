@@ -9,3 +9,7 @@ indexes:
   - name: album
   - name: published
     direction: desc
+- kind: SiteTrack
+  properties:
+  - name: album
+  - name: number

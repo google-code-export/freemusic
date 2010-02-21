@@ -53,7 +53,7 @@ class Viewer(BaseRequestHandler):
 class Playlist(Viewer):
 	def get(self, id, format):
 		album = self.get_album(id)
-		tracks = SiteTrack.gql('WHERE album = :1', album).fetch(1000)
+		tracks = SiteTrack.gql('WHERE album = :1 ORDER BY number', album).fetch(1000)
 		output = u'[playlist]\nNumberOfEntries=%u\n' % len(tracks)
 		index = 1
 		for track in tracks:
