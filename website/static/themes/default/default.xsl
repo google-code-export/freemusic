@@ -184,6 +184,7 @@
 							</a>
 						</small>
 					</div>
+					<xsl:apply-templates select="@rate"/>
 				</li>
 			</xsl:for-each>
 		</ul>
@@ -236,54 +237,25 @@
 
 	<!-- Вывод звёздочек для альбома -->
 	<xsl:template match="album/@rate|review/@average">
-		<!--
-		<xsl:value-of select="concat('[',.,'/5]')"/>
-		-->
-		<span class="smallstars">
-			<xsl:choose>
-				<xsl:when test=".=5">
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-				</xsl:when>
-				<xsl:when test=".=4">
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-					<span class="off"/>
-				</xsl:when>
-				<xsl:when test=".=3">
-					<span class="on"/>
-					<span class="on"/>
-					<span class="on"/>
-					<span class="off"/>
-					<span class="off"/>
-				</xsl:when>
-				<xsl:when test=".=2">
-					<span class="on"/>
-					<span class="on"/>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-				</xsl:when>
-				<xsl:when test=".=1">
-					<span class="on"/>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-					<span class="off"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</span>
+		<xsl:choose>
+			<xsl:when test=".=5">
+				<span class="smallstars rate-5"><span>5/5</span></span>
+			</xsl:when>
+			<xsl:when test=".=4">
+				<span class="smallstars rate-4"><span>4/5</span></span>
+			</xsl:when>
+			<xsl:when test=".=3">
+				<span class="smallstars rate-3"><span>3/5</span></span>
+			</xsl:when>
+			<xsl:when test=".=2">
+				<span class="smallstars rate-2">2/5</span>
+			</xsl:when>
+			<xsl:when test=".=1">
+				<span class="smallstars rate-1">1/5</span>
+			</xsl:when>
+			<xsl:otherwise>
+				<span class="smallstars rate-0">нет оценок</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 </xsl:stylesheet>
