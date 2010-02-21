@@ -170,61 +170,59 @@
 
 	<!-- Форма редактирования альбома -->
 	<xsl:template match="/page/form/album">
-		<div class="twocol">
-			<div class="right">
-				<xsl:apply-templates select="." mode="h2"/>
-				<form method="post" class="gen eal">
-					<div>
-						<label>
-							<span>Заголовок:</span>
-							<input type="text" class="text" name="name" value="{@name}"/>
-						</label>
-					</div>
-					<div>
-						<label>
-							<span>Дата публикации:</span>
-							<input type="text" class="text" name="pubDate" value="{@pubDate}"/>
-						</label>
-					</div>
-					<div>
-						<label>
-							<span>Описание:</span>
-							<textarea class="text" name="text">
-								<xsl:value-of select="@text"/>
-							</textarea>
-						</label>
-					</div>
-					<div>
-						<label>
-							<span>Метки:</span>
-							<input type="text" class="text" name="labels">
-								<xsl:attribute name="value">
-									<xsl:for-each select="labels/label">
-										<xsl:value-of select="text()"/>
-										<xsl:if test="position()!=last()">
-											<xsl:text>, </xsl:text>
-										</xsl:if>
-									</xsl:for-each>
-								</xsl:attribute>
-							</input>
-						</label>
-					</div>
-					<fieldset>
-						<legend>Названия дорожек:</legend>
-						<ol>
-							<xsl:for-each select="tracks/track">
-								<xsl:sort select="@number" data-type="number"/>
-								<li>
-									<input type="text" class="text" name="track.{@id}" value="{@title}"/>&#160;<a href="/track/{@id}" target="_blank">#</a>
-								</li>
-							</xsl:for-each>
-						</ol>
-					</fieldset>
-					<div>
-						<input type="submit" value="Сохранить изменения"/> или <a href="/album/{@id}">вернуться без сохранения</a>
-					</div>
-				</form>
-			</div>
+		<div class="onecol">
+			<xsl:apply-templates select="." mode="h2"/>
+			<form method="post" class="gen eal">
+				<div>
+					<label>
+						<span>Заголовок:</span>
+						<input type="text" class="text" name="name" value="{@name}"/>
+					</label>
+				</div>
+				<div>
+					<label>
+						<span>Дата публикации:</span>
+						<input type="text" class="text" name="pubDate" value="{@pubDate}"/>
+					</label>
+				</div>
+				<div>
+					<label>
+						<span>Описание:</span>
+						<textarea class="text" name="text">
+							<xsl:value-of select="@text"/>
+						</textarea>
+					</label>
+				</div>
+				<div>
+					<label>
+						<span>Метки:</span>
+						<input type="text" class="text" name="labels">
+							<xsl:attribute name="value">
+								<xsl:for-each select="labels/label">
+									<xsl:value-of select="text()"/>
+									<xsl:if test="position()!=last()">
+										<xsl:text>, </xsl:text>
+									</xsl:if>
+								</xsl:for-each>
+							</xsl:attribute>
+						</input>
+					</label>
+				</div>
+				<fieldset>
+					<legend>Названия дорожек:</legend>
+					<ol>
+						<xsl:for-each select="tracks/track">
+							<xsl:sort select="@number" data-type="number"/>
+							<li>
+								<input type="text" class="text" name="track.{@id}" value="{@title}"/>&#160;<a href="/track/{@id}" target="_blank">#</a>
+							</li>
+						</xsl:for-each>
+					</ol>
+				</fieldset>
+				<div>
+					<input type="submit" value="Сохранить изменения"/> или <a href="/album/{@id}">вернуться без сохранения</a>
+				</div>
+			</form>
 		</div>
 	</xsl:template>
 

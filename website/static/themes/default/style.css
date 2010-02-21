@@ -49,6 +49,9 @@ form.gen div {
 /**
  * Редактирование альбома.
  */
+form.eal {
+  margin-left: 40px;
+}
 form.eal fieldset {
   margin: 1em 0 0 -40px;
   padding: 10px;
@@ -115,7 +118,7 @@ form.eal ol li {
   width: 150px;
   float: left;
 }
-.twocol .right, .onecol {
+.twocol .right {
   margin-left: 170px;
 }
 
@@ -492,8 +495,11 @@ a.button {
   font-size: 12px;
   outline: none;
 }
+a.button span.more {
+  color: #aaa;
+}
 a.button span.more:hover {
-  color: blue;
+  color: black;
 }
 
 /**
