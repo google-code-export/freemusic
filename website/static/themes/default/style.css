@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
+  padding: 10px 0;
   font: normal 10pt/12pt arial, sans-serif;
 }
 
@@ -79,19 +79,32 @@ form.eal ol li {
 }
 
 #header {
-  margin: 10px 0 20px;
+  margin-bottom: 20px;
+  position: relative;
 }
 #header h1 {
   display: inline;
-  margin-right: 1em;
+  margin: 0;
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 28px;
+  font-variant: small-caps;
+  color: #008;
+}
+#header small {
+  color: green;
+  font-variant: normal;
+  font-size: 70%;
+  margin-left: 1em;
 }
 #header h1 a {
   text-decoration: none;
-  font-weight: normal;
-  font-size: 18pt;
+  color: inherit;
 }
 #header .search {
-  float: right;
+  position: absolute;
+  top: 0;
+  left: 434px;
 }
 #header .text {
   width: 300px;

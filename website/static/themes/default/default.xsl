@@ -27,18 +27,18 @@
 			<body>
 				<div id="wrapper">
 					<div id="header">
-						<form action="/search" method="get">
-							<h1>
-								<a href="/">
-									<span>Free Music Hub</span>
-								</a>
-							</h1>
-							<div class="search">
-								<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
-								<button type="submit">
-									<span>Найти</span>
-								</button>
-							</div>
+						<h1>
+							<a href="/">
+								<span>Free Music Hub</span>
+							</a>
+							<xsl:text> </xsl:text>
+							<small><a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" target="_blank">об этом сайте</a></small>
+						</h1>
+						<form action="/search" method="get" class="search">
+							<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
+							<button type="submit">
+								<span>Найти</span>
+							</button>
 						</form>
 					</div>
 					<div id="content">
