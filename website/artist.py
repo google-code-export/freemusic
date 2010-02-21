@@ -56,4 +56,5 @@ class List(BaseRequestHandler):
 		self.sendXML(xml.em(u'artists', content=u''.join([xml.em(u'artist', {
 			'id': artist.id,
 			'name': artist.name,
+			'sortname': artist.sortname,
 		}) for artist in SiteArtist.all().fetch(1000)])))

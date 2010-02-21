@@ -8,6 +8,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 import myxml as xml
+import util
 
 def get_current_user():
 	user = SiteUser.gql('WHERE user = :1', users.get_current_user()).get()
@@ -30,12 +31,14 @@ class SiteUser(db.Model):
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
+	sortname = db.StringProperty(required=False)
 	xml = db.TextProperty()
 
 	def put(self, quick=False):
 		if not self.id:
 			self.id = nextId(SiteArtist)
 			logging.info('New artist: %s (artist/%u)' % (self.name, self.id))
+		self.sortname = util.mksortname(self.name)
 		if not quick:
 			self.xml = self.to_xml()
 		return db.Model.put(self)
@@ -45,6 +48,7 @@ class SiteArtist(db.Model):
 		return xml.em(u'artist', attrs={
 			'id': self.id,
 			'name': self.name,
+			'sortname': self.sortname,
 		}, content=albums)
 
 class SiteAlbum(db.Model):

@@ -13,6 +13,7 @@ from s3 import S3SettingsHandler, S3UploadHandler
 import album
 import api
 import artist
+import events
 import index
 import labels
 import model
@@ -78,10 +79,12 @@ if __name__ == '__main__':
 		('/api/queue\.yaml', api.Queue),
 		('/api/queue/delete', api.Delete),
 		('/api/submit/album', api.SubmitAlbum),
+		('/api/update', api.Update),
 		('/artist/fix', artist.FixHandler),
 		('/artist/(\d+)$', artist.ViewHandler),
 		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
+		('/events/update', events.Update),
 		('/labels', labels.List),
 		('/my/collection', album.Collection),
 		('/reviews\.rss', reviews.AllRSS),

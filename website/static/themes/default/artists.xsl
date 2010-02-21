@@ -26,7 +26,7 @@
 				<h2>Все исполнители</h2>
 				<ul class="artists">
 					<xsl:for-each select="artist">
-						<xsl:sort select="@name"/>
+						<xsl:sort select="@sortname"/>
 						<li>
 							<a href="artist/{@id}">
 								<xsl:value-of select="@name"/>

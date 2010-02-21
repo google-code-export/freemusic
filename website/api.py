@@ -14,6 +14,7 @@ import myxml, model
 from base import BaseRequestHandler, HTTPException
 from s3 import S3File, sign
 import mail
+import util
 
 class APIRequest(BaseRequestHandler):
 	def check_access(self, text):
@@ -97,7 +98,7 @@ class SubmitAlbum(APIRequest):
 		keys = [] # ключи создаваемых объектов для удаления в случае исключения
 		user = users.get_current_user()
 		try:
-			artist = model.SiteArtist.gql('WHERE name = :1', data['artist']).get()
+			artist = model.SiteArtist.gql('WHERE sortname = :1', util.mksortname(data['artist'])).get()
 			if not artist:
 				artist = model.SiteArtist(name=data['artist'])
 				keys.append(artist.put(quick=True))
@@ -216,3 +217,15 @@ class SubmitAlbum(APIRequest):
 		if not value:
 			return None
 		return int(value)
+
+class Update(BaseRequestHandler):
+	def get(self):
+		self.force_admin()
+		if self.request.get('kind') == 'artist':
+			cls = model.SiteArtist
+		elif self.request.get('kind') == 'album':
+			cls = model.SiteAlbum
+		else:
+			return
+		for obj in cls.all().fetch(1000):
+			obj.put()
