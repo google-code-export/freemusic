@@ -50,6 +50,17 @@ class Viewer(BaseRequestHandler):
 				return album
 		raise HTTPException(404, u'Нет такого альбома.')
 
+class Playlist(Viewer):
+	def get(self, id):
+		album = self.get_album(id)
+		tracks = SiteTrack.gql('WHERE album = :1', album).fetch(1000)
+		output = u'[playlist]\nNumberOfEntries=%u\n' % len(tracks)
+		index = 1
+		for track in tracks:
+			output += u'File%u=%s\nTitle%u=%s\n' % (index, track.mp3_link, index, track.title)
+			index += 1
+		self.sendAny('text/plain', output) # audio/x-scpls
+
 class FileViewer(Viewer):
 	xsltName = 'album-files.xsl'
 

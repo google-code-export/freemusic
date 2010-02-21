@@ -65,6 +65,7 @@ if __name__ == '__main__':
 		('/', index.Recent),
 		('/add/file', AddFileHandler),
 		('/album/(\d+)$', album.Viewer),
+		('/album/(\d+)\.pls$', album.Playlist),
 		('/album/(\d+)/delete$', album.Delete),
 		('/album/(\d+)/edit$', album.Editor),
 		('/album/(\d+)/files$', album.FileViewer),
