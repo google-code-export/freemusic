@@ -34,7 +34,7 @@
 								</a>
 							</h1>
 							<div class="search">
-								<input type="text" name="q" class="text"/>
+								<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
 								<button type="submit">
 									<span>Найти</span>
 								</button>

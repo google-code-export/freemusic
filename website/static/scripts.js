@@ -187,6 +187,14 @@ $(document).ready(function(){
 	});
 
 	/**
+	 * Удаление дефолтного текста из полей.
+	 */
+	$('.clearme').focus(function(){
+		$(this).val('');
+		$(this).removeClass('clearme');
+	});
+
+	/**
 	 * Сокрытие всплывающих меню при клике мимо.
 	 */
 	$(document).click(function(){

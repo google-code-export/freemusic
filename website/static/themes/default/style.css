@@ -39,6 +39,9 @@ form.gen .hint {
 form.gen div {
   margin-bottom: 1em;
 }
+.clearme {
+  color: gray;
+}
 
 /**
  * Редактирование альбома.
@@ -88,6 +91,7 @@ form.eal ol li {
   width: 300px;
   border: solid 1px #ccc;
   padding: 4px 20px 4px 4px;
+  font-family: sans-serif;
 }
 #header .search button {
   background: transparent url(search.png) no-repeat center center;
@@ -481,6 +485,9 @@ a.button {
   white-space: nowrap;
   line-height: 22px;
   font-size: 12px;
+}
+a.button span.more:hover {
+  color: blue;
 }
 
 /**
