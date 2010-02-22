@@ -40,7 +40,7 @@
 						</xsl:for-each>
 					</tbody>
 				</table>
-				<xsl:apply-templates select="../events"/>
+				<xsl:apply-templates select="../events" mode="inside"/>
 				<div class="info expando">
 					<h3 class="fakelink"><span>Дополнительная информация</span></h3>
 					<ul>
@@ -64,7 +64,7 @@
 		</div>
 	</xsl:template>
 
-		<xsl:template match="events">
+		<xsl:template match="events" mode="inside">
 			<div class="events">
 				<h3>Предстоящие концерты</h3>
 				<ul>
