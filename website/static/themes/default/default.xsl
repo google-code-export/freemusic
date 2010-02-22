@@ -51,12 +51,19 @@
 								</xsl:if>
 								<a href="/radio">Радио</a>
 							</li>
-							<li>
-								<xsl:if test="/page/@class='Collection'">
-									<xsl:attribute name="class">active</xsl:attribute>
-								</xsl:if>
-								<a href="/my/collection">Коллекция</a>
-							</li>
+							<xsl:if test="/page/@logout-uri">
+								<li>
+									<xsl:if test="/page/@class='Collection'">
+										<xsl:attribute name="class">active</xsl:attribute>
+									</xsl:if>
+									<a href="/my/collection">Моё</a>
+								</li>
+							</xsl:if>
+							<xsl:if test="/page/@login-uri">
+								<li>
+									<a href="{/page/@login-rui}">Войти</a>
+								</li>
+							</xsl:if>
 							<li>♪♫♬</li>
 						</ul>
 						<form action="/search" method="get" class="search">
