@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 #
 # Робот, обрабатывающий поступающие от пользователей архивы
@@ -75,6 +74,7 @@ except:
 from lib import logger
 from lib.transcoder import Transcoder
 from lib.settings import settings
+import lib.jabberbot
 
 class Robot:
 	def sign(self, data):
@@ -204,6 +204,7 @@ def usage():
 	print " -d key=value        override config options"
 	print " -f                  force (overwrite existing albums, etc)"
 	print " -h host             host name"
+	print " -j                  run the Jabber bot"
 	print " -q                  process all incoming files"
 	print " -s urls...          submit one or more album.xml"
 	print " -u filename         process and upload a single zip file"
@@ -221,7 +222,7 @@ def usage():
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:p:qsu:wv")
+		opts, args = getopt.getopt(sys.argv[1:], "a:d:fh:jp:qsu:wv")
 	except getopt.GetoptError, err:
 		return usage()
 
@@ -247,6 +248,8 @@ def main():
 	for option, value in opts:
 		if option in ('-u', '-q', '-w'):
 			print "Working with " + settings['host']
+		if '-j' == option:
+			lib.jabberbot.run(settings)
 		if '-v' == option:
 			r.verbose = True
 		if '-p' == option:
