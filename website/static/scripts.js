@@ -200,6 +200,14 @@ $(document).ready(function(){
 	$(document).click(function(){
 		$('.popup').hide();
 	});
+
+	/**
+	 * Раскрываемые информационные блоки.
+	 */
+	$('.expando .fakelink').click(function(){
+		$(this).removeClass('fakelink');
+		$(this).parents('.expando:first').removeClass('expando');
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

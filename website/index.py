@@ -33,7 +33,7 @@ class Recent(BaseRequestHandler):
 			list = SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
 		else:
 			list = SiteAlbum.all().order('-release_date')
-		result = list.fetch(15, offset)
+		result = list.fetch(16, offset)
 		if not result and not offset:
 			raise ServiceUnavailable()
 		return result

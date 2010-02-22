@@ -40,6 +40,15 @@
 						</xsl:for-each>
 					</tbody>
 				</table>
+				<xsl:apply-templates select="../events"/>
+				<div class="info expando">
+					<h3 class="fakelink"><span>Дополнительная информация</span></h3>
+					<ul>
+						<li>Связаться с автором можно через пользователя, опубликовавшего это произведение: <a href="/u/{@owner}"><xsl:value-of select="@owner"/></a>.</li>
+						<li>Этот альбом на других сайтах: <a href="http://www.lastfm.ru/music/{@artist-name}/{@name}" target="_blank">Last.fm</a>.</li>
+						<li>Плейлисты для настольных проигрывателей: <a href="/album/{@id}.mp3.pls">MP3</a>, <a href="/album/{@id}.ogg.pls">OGG</a>.</li>
+					</ul>
+				</div>
 				<div class="reviews">
 					<h3>Мнения пользователей <a class="rss" href="/album/{@id}/reviews.rss"><span>RSS</span></a></h3>
 					<xsl:if test="not(../review[@author-email = /page/@email])">
@@ -55,6 +64,21 @@
 		</div>
 	</xsl:template>
 
+		<xsl:template match="events">
+			<div class="events">
+				<h3>Предстоящие концерты</h3>
+				<ul>
+					<xsl:for-each select="event">
+						<li>
+							<a href="{@url}" target="_blank">
+								<xsl:value-of select="concat(@title,' @ ',@venue,' (',@city,')')"/>
+							</a>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</div>
+		</xsl:template>
+
 		<!-- Вывод обложки альбома. Если есть больше одной картинки,
 		     выводятся скрытые уменьшеныне копии и специальная ссылка
 			 для их вывода. -->
@@ -64,7 +88,7 @@
 					<img src="{@medium}" alt="image" width="200" height="200"/>
 				</a>
 				<xsl:if test="count(../image) &gt; 1">
-					<p class="moreimg fakelink">Показать другие картинки</p>
+					<p class="moreimg fakelink"><span>Показать другие картинки</span></p>
 					<ul class="moreimg hidden">
 						<xsl:for-each select="../image">
 							<li>
@@ -151,7 +175,7 @@
 		<xsl:template match="review[@comment]" mode="inside">
 			<div class="review">
 				<div class="meta">
-					<a href="/user/{@author-email}">
+					<a href="/u/{@author-nickname}">
 						<xsl:value-of select="@author-nickname"/>
 					</a>
 					<xsl:text> </xsl:text>

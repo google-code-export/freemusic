@@ -223,6 +223,11 @@ class SiteAlbumReview(db.Model):
 			'description': description,
 		}
 
+class SiteEvent(db.Model):
+	artist = db.ReferenceProperty(SiteArtist)
+	id = db.IntegerProperty()
+	xml = db.TextProperty()
+
 def nextId(cls):
 	last = cls.gql('ORDER BY id DESC').get()
 	if last:

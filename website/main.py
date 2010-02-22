@@ -85,6 +85,7 @@ if __name__ == '__main__':
 		('/artist/(\d+)$', artist.ViewHandler),
 		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
+		('/events', events.All),
 		('/events/update', events.Update),
 		('/labels', labels.List),
 		('/my/collection', album.Collection),

@@ -1,6 +1,9 @@
 cron:
-  - description: update labels cache
+  - description: Update labels cache
     url: /labels
     schedule: every 1 hours
+  - description: Update event schedule from last.fm
+    url: /events/update
+    schedule: every 4 hours
 
 # vim: set ts=2 sts=2 sw=2 et:

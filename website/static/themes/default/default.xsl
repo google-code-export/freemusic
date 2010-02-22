@@ -25,15 +25,24 @@
 				<link rel="alternate" type="application/rss+xml" title="RSS" href="/albums.rss"/> 
 			</head>
 			<body>
-				<div id="wrapper">
-					<div id="header">
+				<div id="header">
+					<div class="corsette">
 						<h1>
 							<a href="/">
 								<span>Free Music Hub</span>
 							</a>
-							<xsl:text> </xsl:text>
-							<small><a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" target="_blank">об этом сайте</a></small>
 						</h1>
+						<ul>
+							<li>
+								<a href="/">Музыка</a>
+							</li>
+							<li>
+								<a href="/events">Афиша</a>
+							</li>
+							<li>
+								<a href="/my/collection">Коллекция</a>
+							</li>
+						</ul>
 						<form action="/search" method="get" class="search">
 							<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
 							<button type="submit">
@@ -41,6 +50,8 @@
 							</button>
 						</form>
 					</div>
+				</div>
+				<div id="wrapper">
 					<div id="content">
 						<div id="ntfctn"></div>
 						<xsl:apply-templates select="*"/>
@@ -49,7 +60,9 @@
 						<xsl:text>© ebm.net.ru - </xsl:text>
 						<a href="/">Главная</a>
 						<xsl:text> - </xsl:text>
-						<a href="http://code.google.com/p/freemusic/" target="_blank">О проекте</a>
+						<a href="/upload">Загрузить альбом</a>
+						<xsl:text> - </xsl:text>
+						<a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" target="_blank">Об этом сайте</a>
 						<xsl:text> - </xsl:text>
 						<a href="http://code.google.com/p/freemusic/issues/list" target="_blank">Поддержка</a>
 						<xsl:if test="/page/@login-uri">
@@ -113,6 +126,7 @@
 	</xsl:template>
 
 	<xsl:template name="lnav">
+		<!--
 		<div class="left">
 			<ul>
 				<li><a href="/">Свежие</a></li>
@@ -142,6 +156,7 @@
 				</xsl:apply-templates>
 			</xsl:if>
 		</div>
+		-->
 	</xsl:template>
 
 	<xsl:template match="/page/message">
@@ -166,7 +181,7 @@
 				<li>
 					<xsl:attribute name="class">
 						<xsl:text>album pos</xsl:text>
-						<xsl:value-of select="position() mod 3"/>
+						<xsl:value-of select="(position() - 1) mod 4"/>
 					</xsl:attribute>
 					<a href="/album/{@id}" class="cover">
 						<img width="126" height="126">

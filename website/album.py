@@ -8,7 +8,7 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 from base import BaseRequestHandler, HTTPException, ForbiddenException
-from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser
+from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser, SiteEvent
 from index import Recent
 import rss, myxml
 
@@ -38,10 +38,18 @@ class Viewer(BaseRequestHandler):
 
 		xml = album.xml
 		xml += u''.join([r.xml for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)])
+		xml += self.get_events(album)
 
 		self.sendXML(xml, {
 			'star': star,
 		})
+
+	def get_events(self, album):
+		xml = u''
+		events = [e.xml for e in SiteEvent.gql('WHERE artist = :1', album.artist).fetch(1000)]
+		if len(events):
+			xml = myxml.em(u'events', content=u''.join(events))
+		return xml
 
 	def get_album(self, id):
 		if id:
