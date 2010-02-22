@@ -167,6 +167,24 @@ form.eal ol li {
   display: none;
 }
 
+/**
+ * Метки при входе в поиск.
+ */
+#plh {
+  background-color: #f8f8f8;
+  border: solid 1px #f0f0f0;
+  padding: 10px;
+  text-align: center;
+  display: none;
+}
+#plh a {
+  margin-right: 1em;
+  color: green;
+}
+#plh p {
+  margin-top: 0;
+}
+
 .twocol .left {
   width: 150px;
   float: left;

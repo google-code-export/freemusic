@@ -40,4 +40,7 @@ class List(BaseRequestHandler):
 	xsltName = 'labels.xsl'
 
 	def get(self):
-		self.sendXML(load(force_update=self.is_cron()))
+		update = self.is_cron()
+		if not update and self.is_admin() and 'update' in self.request.arguments():
+			update = True
+		self.sendXML(load(force_update=update))

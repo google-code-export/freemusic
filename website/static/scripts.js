@@ -208,6 +208,23 @@ $(document).ready(function(){
 		$(this).removeClass('fakelink');
 		$(this).parents('.expando:first').removeClass('expando');
 	});
+
+	$('.search .text').focus(function(){
+		if ($('#plh:hidden').length) {
+			$.ajax({
+				url: '/labels',
+				dataType: 'xml',
+				success: function (data) {
+					var html = '';
+					$(data).find('label').each(function(){
+						var l = $(this);
+						html += '<a class="weight' + l.attr('weight') + '" href="?label='+ l.attr('uri') +'">' + l.text() + '</a>';
+					});
+					$('#plh').append(html).show('slow');
+				}
+			});
+		}
+	});
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

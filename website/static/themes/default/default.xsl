@@ -70,6 +70,9 @@
 				<div id="wrapper">
 					<div id="content">
 						<div id="ntfctn"></div>
+						<div id="plh">
+							<p>Вы можете использовать метки для поиска интересующей музыки:</p>
+						</div>
 						<xsl:apply-templates select="*"/>
 					</div>
 					<div id="footer">
