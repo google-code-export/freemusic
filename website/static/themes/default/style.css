@@ -88,6 +88,7 @@ form.eal ol li {
 #wrapper, .corsette {
   width: 760px;
   margin: 0 auto;
+  position: relative;
 }
 
 #header {
