@@ -34,14 +34,30 @@
 						</h1>
 						<ul>
 							<li>
+								<xsl:if test="/page/@class='Recent'">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
 								<a href="/">Музыка</a>
 							</li>
 							<li>
+								<xsl:if test="/page/@class='All'">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
 								<a href="/events">Афиша</a>
 							</li>
 							<li>
+								<xsl:if test="/page/@class='ShowRadio'">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
+								<a href="/radio">Радио</a>
+							</li>
+							<li>
+								<xsl:if test="/page/@class='Collection'">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
 								<a href="/my/collection">Коллекция</a>
 							</li>
+							<li>♪♫♬</li>
 						</ul>
 						<form action="/search" method="get" class="search">
 							<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
@@ -58,8 +74,10 @@
 					</div>
 					<div id="footer">
 						<xsl:text>© ebm.net.ru - </xsl:text>
+						<!--
 						<a href="/">Главная</a>
 						<xsl:text> - </xsl:text>
+						-->
 						<a href="/upload">Загрузить альбом</a>
 						<xsl:text> - </xsl:text>
 						<a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" target="_blank">Об этом сайте</a>

@@ -19,9 +19,16 @@ img {
 li {
   margin-bottom: .5em;
 }
+table {
+  border-collapse: collapse;
+}
 td, th {
   vertical-align: top;
   text-align: left;
+}
+pre {
+  padding: 10px;
+  background-color: #ddd;
 }
 
 .fakelink {
@@ -117,9 +124,18 @@ form.eal ol li {
   display: inline;
   padding: 0;
   margin: 0;
+  color: gray;
 }
 #header li {
   margin-left: 1em;
+}
+#header li a {
+  padding: 2px 4px;
+}
+#header .active a {
+  text-decoration: none;
+  color: black;
+  background-color: #ddd;
 }
 #header h1 a {
   text-decoration: none;
@@ -194,6 +210,9 @@ h2 small {
   font-weight: normal;
   font-size: 10pt;
   margin-left: 1em;
+}
+h2 .help {
+  color: green;
 }
 
 #album .left img {
@@ -627,9 +646,6 @@ li.album .cover {
 /**
  * Расписание событий.
  */
-#events table {
-  border-collapse: collapse;
-}
 #events td, #events th {
   padding: 2px 4px;
 }

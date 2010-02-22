@@ -5,7 +5,7 @@
 
 	<xsl:template match="/page/events">
 		<div id="events" class="onecol">
-			<h2>Расписание концертов</h2>
+			<h2>Расписание концертов <small><a class="help" href="http://code.google.com/p/freemusic/wiki/Events" target="_blank">как это работает?</a></small></h2>
 			<xsl:choose>
 				<xsl:when test="event">
 					<table>
@@ -42,7 +42,6 @@
 					<p>Нет информации о предстоящих концертах музыкантов, представленных на нашем сайте.</p>
 				</xsl:otherwise>
 			</xsl:choose>
-			<p>Для создания этой афиши используются данные сайта <a href="http://www.lastfm.ru/">Last.fm</a>. Чтобы попасть в неё, <a href="http://www.lastfm.ru/events/add">добавьте событие</a>.</p>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>
