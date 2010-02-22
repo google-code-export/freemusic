@@ -70,6 +70,7 @@
 				<ul>
 					<xsl:for-each select="event">
 						<li>
+							<xsl:value-of select="concat(substring(@date,9,2),'.',substring(@date,6,2),'.',substring(@date,3,2),' ')"/>
 							<a href="{@url}" target="_blank">
 								<xsl:value-of select="concat(@title,' @ ',@venue,' (',@city,')')"/>
 							</a>
