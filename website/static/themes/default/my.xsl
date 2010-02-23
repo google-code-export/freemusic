@@ -10,15 +10,15 @@
 				<xsl:when test="albums/album">
 					<xsl:apply-templates select="albums" mode="tiles"/>
 					<ul class="pager">
-						<xsl:if test="@skip &gt; 14">
+						<xsl:if test="@skip &gt; 15">
 							<li>
-								<a href="?skip={@skip - 15}">« Назад</a>
+								<a href="?skip={@skip - 16}">« Назад</a>
 							</li>
 						</xsl:if>
-						<xsl:if test="count(albums/album) = 15">
-							<!-- TODO: аяксовая подгрузка ещё 15 альбомов сюда же -->
+						<xsl:if test="count(albums/album) = 16">
+							<!-- TODO: аяксовая подгрузка ещё 16 альбомов сюда же -->
 							<li>
-								<a href="?skip={@skip + 15}">Ещё »</a>
+								<a href="?skip={@skip + 16}">Ещё »</a>
 							</li>
 						</xsl:if>
 					</ul>
