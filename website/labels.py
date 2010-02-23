@@ -31,7 +31,7 @@ def load(force_update=False):
 							result[label] = 1
 						else:
 							result[label] += 1
-			saved.xml = myxml.em(u'labels', content=u''.join([myxml.em(u'label', {'weight': result[k], 'uri': myxml.uri(k)}, k) for k in result]))
+			saved.xml = myxml.em(u'labels', content=u''.join([myxml.em(u'label', {'weight': result[k], 'uri': myxml.uri(k)}, k) for k in sorted(result)]))
 			saved.put()
 		cached = saved.xml
 	return cached
