@@ -218,7 +218,7 @@ $(document).ready(function(){
 					var html = '';
 					$(data).find('label').each(function(){
 						var l = $(this);
-						html += '<a class="weight' + l.attr('weight') + '" href="?label='+ l.attr('uri') +'">' + l.text() + '</a>';
+						html += ' <a class="weight' + l.attr('weight') + '" href="?label='+ l.attr('uri') +'">' + l.text() + '</a>';
 					});
 					$('#plh').append(html).show('slow');
 				}

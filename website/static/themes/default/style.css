@@ -181,7 +181,15 @@ form.eal ol li {
 #plh a {
   margin-right: 1em;
   color: green;
+  white-space: nowrap;
+  font-size: 14pt;
 }
+#plh a.weight1 { font-size: 8pt; }
+#plh a.weight2 { font-size: 9pt; }
+#plh a.weight3 { font-size: 10pt; }
+#plh a.weight4 { font-size: 11pt; }
+#plh a.weight5 { font-size: 12pt; }
+#plh a.weight6 { font-size: 13pt; }
 #plh p {
   margin-top: 0;
 }
