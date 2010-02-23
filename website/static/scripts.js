@@ -225,6 +225,11 @@ $(document).ready(function(){
 			});
 		}
 	});
+
+	/**
+	 * Открытие внешних ссылок в новой вкладке.
+	 */
+	$('a.ext').attr('target', '_blank');
 });
 
 // vim: set ts=4 sts=4 sw=4 noet:

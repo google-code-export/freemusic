@@ -5,7 +5,7 @@
 
 	<xsl:template match="/page/events">
 		<div id="events" class="onecol">
-			<h2>Расписание концертов <small><a class="help" href="http://code.google.com/p/freemusic/wiki/Events" target="_blank">как это работает?</a></small></h2>
+			<h2>Расписание концертов <small><a class="help ext" href="http://code.google.com/p/freemusic/wiki/Events">как это работает?</a></small></h2>
 			<xsl:choose>
 				<xsl:when test="event">
 					<table>
@@ -29,7 +29,7 @@
 										</a>
 									</td>
 									<td>
-										<a href="{@url}" target="_blank">
+										<a href="{@url}" class="ext">
 											<xsl:value-of select="concat(@title,' @ ',@venue,' (',@city,')')"/>
 										</a>
 									</td>

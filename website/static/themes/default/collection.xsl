@@ -9,7 +9,7 @@
 			<xsl:call-template name="lnav"/>
 			-->
 			<div class="right">
-				<h2>Твоя коллекция <small><a href="http://code.google.com/p/freemusic/wiki/Collection" class="help" target="_blank">что это?</a></small></h2>
+				<h2>Твоя коллекция <small><a href="http://code.google.com/p/freemusic/wiki/Collection" class="help ext">что это?</a></small></h2>
 				<xsl:choose>
 					<xsl:when test="albums/album">
 						<xsl:apply-templates select="albums" mode="tiles"/>

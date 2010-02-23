@@ -5,7 +5,7 @@
 
 	<xsl:template match="/page/index">
 		<div id="index" class="onecol">
-			<p class="intro">Этот сайт помогает искать и распространять свободную музыку. <a target="_blank" href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Подробнее</a></p>
+			<p class="intro">Этот сайт помогает искать и распространять свободную музыку. <a class="ext" href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Подробнее</a></p>
 			<xsl:call-template name="lnav"/>
 			<div class="right">
 				<xsl:apply-templates select="albums" mode="tiles"/>

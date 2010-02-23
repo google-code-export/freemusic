@@ -90,9 +90,9 @@
 						-->
 						<a href="/upload">Загрузить альбом</a>
 						<xsl:text> - </xsl:text>
-						<a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" target="_blank">Об этом сайте</a>
+						<a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6" class="ext">Об этом сайте</a>
 						<xsl:text> - </xsl:text>
-						<a href="http://code.google.com/p/freemusic/issues/list" target="_blank">Поддержка</a>
+						<a href="http://code.google.com/p/freemusic/issues/list" class="ext">Поддержка</a>
 						<xsl:if test="/page/@login-uri">
 							<xsl:text> - </xsl:text>
 							<a href="{/page/@login-uri}">Войти</a>
@@ -102,7 +102,7 @@
 							<a href="{/page/@logout-uri}">Выйти</a>
 							<xsl:if test="/page/@is-admin">
 								<xsl:text> - </xsl:text>
-								<a href="https://appengine.google.com/dashboard?app_id=free-music" target="_blank">Админка</a>
+								<a href="https://appengine.google.com/dashboard?app_id=free-music" class="ext">Админка</a>
 							</xsl:if>
 						</xsl:if>
 					</div>
@@ -252,7 +252,7 @@
 	<xsl:template match="image" mode="medium">
 		<xsl:choose>
 			<xsl:when test="@medium">
-				<a href="{@original}" target="_blank">
+				<a href="{@original}" class="ext">
 					<img src="{@medium}" width="200" height="200" alt="medium"/>
 				</a>
 			</xsl:when>

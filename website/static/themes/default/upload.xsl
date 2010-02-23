@@ -116,7 +116,7 @@
 				<!--
 				http://docs.amazonwebservices.com/AmazonS3/2006-03-01/index.html?UsingHTTPPOST.html
 				-->
-				<p>Пожалуйста, подготовьте ZIP архив со всеми звуковыми файлами, картинками, буклетами и всем, что считаете нужным.&#160; Чем лучшего качества будут звуковые файлы, тем лучше; мы рекомендуем <a href="http://ru.wikipedia.org/wiki/FLAC" target="_blank">FLAC</a>, WAV или AIFF (мы сами сделаем из них MP3 и OGG).</p>
+				<p>Пожалуйста, подготовьте ZIP архив со всеми звуковыми файлами, картинками, буклетами и всем, что считаете нужным.&#160; Чем лучшего качества будут звуковые файлы, тем лучше; мы рекомендуем <a href="http://ru.wikipedia.org/wiki/FLAC" class="ext">FLAC</a>, WAV или AIFF (мы сами сделаем из них MP3 и OGG).</p>
 				<p>После загрузки файла наши роботы примутся его обрабатывать, о результатах вам сообщат по электронной почте.</p>
 				<label><input type="checkbox" class="toggle"/> Всё понятно</label>
 				<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data" class="hidden toggleMe fileUpload">
@@ -132,7 +132,7 @@
 					<div>
 						<input type="submit" value="Начать загрузку"/>
 					</div>
-					<p>Будет здорово, если ваш браузер умеет показывать ход загрузки.&#160; Мы рекомендуем <a href="http://www.google.com/chrome/" target="_blank">Google Chrome</a>.</p>
+					<p>Будет здорово, если ваш браузер умеет показывать ход загрузки.&#160; Мы рекомендуем <a href="http://www.google.com/chrome/" class="ext">Google Chrome</a>.</p>
 				</form>
 				<p><small>Если ZIP архив уже загружен на какой-нибудь другой веб-сервер, можно просто <a href="/upload/remote">прислать ссылку на него</a>.</small></p>
 			</div>
