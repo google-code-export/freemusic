@@ -64,7 +64,7 @@
 									<a href="{/page/@login-rui}">Войти</a>
 								</li>
 							</xsl:if>
-							<li>♪♫♬</li>
+							<li title=":)">♪♫♬</li>
 						</ul>
 						<form action="/search" method="get" class="search">
 							<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
