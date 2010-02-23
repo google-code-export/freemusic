@@ -11,7 +11,7 @@ import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
-from simplejson.encoder import JSONEncoder
+from django.utils import simplejson
 
 # Local imports
 from model import SiteUser
@@ -154,7 +154,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.out.write(content)
 
 	def sendJSON(self, content):
-		json = JSONEncoder().encode(content)
+		json = simplejson.dumps(content)
 		self.sendAny('application/json', json)
 
 	def sendAny(self, type, content):
