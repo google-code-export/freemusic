@@ -21,6 +21,7 @@ from google.appengine.api import users
 
 from base import BaseRequestHandler, HTTPException
 import myxml as xml
+import util
 
 class S3File(db.Model):
 	"""
@@ -134,6 +135,7 @@ class S3UploadHandler(BaseRequestHandler):
 			'signature': sign(policy, settings),
 			'base': base,
 			'owner': users.get_current_user().email(),
+			'robot-is-online': util.robot.is_online(),
 		}))
 
 	def get_confirm(self):

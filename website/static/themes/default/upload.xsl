@@ -35,11 +35,25 @@
 						<input type="text" name="url" class="text"/>
 					</label>
 					<p class="hint">Это должна быть прямая ссылка, страницы-посредники вроде RapidShare работать не будут.</p>
+					<xsl:apply-templates select="." mode="robot-status"/>
 				</div>
 				<input type="submit"/> или <a href="/upload">загрузить файл</a>
 			</form>
 		</div>
 	</xsl:template>
+
+		<xsl:template match="upload-remote|s3-upload-form" mode="robot-status">
+			<xsl:choose>
+				<xsl:when test="not(@robot-is-online)">
+					<p class="statuserr">Робот в отключке, альбом будет обработан не сразу. Вы получите уведомление по электронной почте.</p>
+				</xsl:when>
+				<!--
+				<xsl:otherwise>
+					<p class="statusok">Робот здоров, альбом будет обработан максимально быстро.</p>
+				</xsl:otherwise>
+				-->
+			</xsl:choose>
+		</xsl:template>
 
 	<xsl:template match="/page/queue">
 		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
@@ -118,6 +132,7 @@
 				-->
 				<p>Пожалуйста, подготовьте ZIP архив со всеми звуковыми файлами, картинками, буклетами и всем, что считаете нужным.&#160; Чем лучшего качества будут звуковые файлы, тем лучше; мы рекомендуем <a href="http://ru.wikipedia.org/wiki/FLAC" class="ext">FLAC</a>, WAV или AIFF (мы сами сделаем из них MP3 и OGG).</p>
 				<p>После загрузки файла наши роботы примутся его обрабатывать, о результатах вам сообщат по электронной почте.</p>
+				<xsl:apply-templates select="." mode="robot-status"/>
 				<label><input type="checkbox" class="toggle"/> Всё понятно</label>
 				<form action="http://{@bucket}.s3-external-3.amazonaws.com/" method="post" enctype="multipart/form-data" class="hidden toggleMe fileUpload">
 					<input type="hidden" name="AWSAccessKeyId" value="{@access-key}"/>

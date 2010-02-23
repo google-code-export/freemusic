@@ -228,6 +228,10 @@ form.eal ol li {
 .uya p {
   margin: .25em 0;
 }
+.statuserr {
+  font-style: italic;
+  color: red;
+}
 
 h2 {
   font-size: 16pt;

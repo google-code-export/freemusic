@@ -3,6 +3,8 @@
 import re
 import urllib
 
+from google.appengine.api import xmpp
+
 # Different versions of ElementTree can exist in different locations depending
 # on the installed Python version.
 try:
@@ -33,3 +35,8 @@ def fetchxml(url, args=None):
 
 def to_xml(et):
 	return tostring(et)
+
+class robot:
+	@classmethod
+	def is_online(cls):
+		return xmpp.get_presence('robot@freemusichub.net')

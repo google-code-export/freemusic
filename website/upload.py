@@ -18,13 +18,16 @@ from google.appengine.ext.webapp.util import login_required
 from base import BaseRequestHandler, run, HTTPException
 from s3 import S3File
 import model, myxml, mail
+import util
 
 class Remote(BaseRequestHandler):
 	xsltName = 'upload.xsl'
 
 	def get(self):
 		self.force_user()
-		self.sendXML(u'<upload-remote/>')
+		self.sendXML(myxml.em(u'upload-remote', {
+			'robot-is-online': util.robot.is_online(),
+		}))
 
 	def post(self):
 		user = self.force_user()
