@@ -40,12 +40,13 @@
 						</xsl:for-each>
 					</tbody>
 				</table>
+				<p class="noaudio">Вы могли бы прослушивать музыку прямо на сайте, если бы у Вас был современный браузер, поддерживающий <a class="ext" href="http://ru.wikipedia.org/wiki/HTML5">HTML5</a> (<a href="http://chrome.google.com/" class="ext">Google Chrome</a>, <a href="http://www.getfirefox.com/" class="ext">Firefox</a> 3.5+, <a href="http://www.opera.com/" class="ext">Opera</a> 10.5+, <a href="http://www.apple.com/safari/" class="ext">Safari</a>).</p>
 				<xsl:apply-templates select="../events" mode="inside"/>
 				<div class="info expando">
 					<h3 class="fakelink"><span>Дополнительная информация</span></h3>
 					<ul>
 						<li>Связаться с автором можно через пользователя, опубликовавшего это произведение: <a href="/u/{@owner}"><xsl:value-of select="@owner"/></a>.</li>
-						<li>Этот альбом на других сайтах: <a href="http://www.lastfm.ru/music/{@artist-name}/{@name}" target="_blank">Last.fm</a>.</li>
+						<li>Этот альбом на других сайтах: <a href="http://www.lastfm.ru/music/{@artist-name}/{@name}" class="ext">Last.fm</a>.</li>
 						<li>Плейлисты для настольных проигрывателей: <a href="/album/{@id}.mp3.pls">MP3</a>, <a href="/album/{@id}.ogg.pls">OGG</a>.</li>
 					</ul>
 				</div>
@@ -71,7 +72,7 @@
 					<xsl:for-each select="event">
 						<li>
 							<xsl:value-of select="concat(substring(@date,9,2),'.',substring(@date,6,2),'.',substring(@date,3,2),' ')"/>
-							<a href="{@url}" target="_blank">
+							<a href="{@url}" class="ext">
 								<xsl:value-of select="concat(@title,' @ ',@venue,' (',@city,')')"/>
 							</a>
 						</li>
@@ -85,7 +86,7 @@
 			 для их вывода. -->
 		<xsl:template match="image" mode="album-cover">
 			<div class="albumcover">
-				<a class="main" href="{@original}" target="_blank">
+				<a class="main ext" href="{@original}">
 					<img src="{@medium}" alt="image" width="200" height="200"/>
 				</a>
 				<xsl:if test="count(../image) &gt; 1">
@@ -93,7 +94,7 @@
 					<ul class="moreimg hidden">
 						<xsl:for-each select="../image">
 							<li>
-								<a href="{@original}" target="_blank">
+								<a href="{@original}" class="ext">
 									<img src="{@medium}" width="50" height="50" alt="{@name}"/>
 								</a>
 							</li>
@@ -239,7 +240,7 @@
 						<xsl:for-each select="tracks/track">
 							<xsl:sort select="@number" data-type="number"/>
 							<li>
-								<input type="text" class="text" name="track.{@id}" value="{@title}"/>&#160;<a href="/track/{@id}" target="_blank">#</a>
+								<input type="text" class="text" name="track.{@id}" value="{@title}"/>&#160;<a href="/track/{@id}" class="ext">#</a>
 							</li>
 						</xsl:for-each>
 					</ol>
@@ -254,7 +255,7 @@
 	<xsl:template match="album" mode="h2">
 		<div class="alh">
 			<div class="dlb">
-				<a href="http://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D0%B8_Creative_Commons" title="Распространяется свободно" target="_blank">
+				<a href="http://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D0%B8_Creative_Commons" title="Распространяется свободно" class="ext">
 					<img src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" alt="Creative Commons" width="88" height="31"/>
 				</a>
 				<a class="button" href="{files/file/@uri}">

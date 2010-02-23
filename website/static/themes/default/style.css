@@ -439,6 +439,12 @@ ul.altiles {
   color: gray;
 }
 
+.noaudio {
+  font-style: italic;
+}
+html.audio .noaudio {
+  display: none;
+}
 #content .player {
   margin-bottom: 20px;
 }
