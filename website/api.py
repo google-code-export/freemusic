@@ -225,6 +225,8 @@ class Update(BaseRequestHandler):
 			cls = model.SiteArtist
 		elif self.request.get('kind') == 'album':
 			cls = model.SiteAlbum
+		elif self.request.get('kind') == 'review':
+			cls = model.SiteAlbumReview
 		else:
 			return
 		for obj in cls.all().fetch(1000):

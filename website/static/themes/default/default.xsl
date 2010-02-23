@@ -53,10 +53,10 @@
 							</li>
 							<xsl:if test="/page/@logout-uri">
 								<li>
-									<xsl:if test="/page/@class='Collection'">
+									<xsl:if test="/page/@class='My'">
 										<xsl:attribute name="class">active</xsl:attribute>
 									</xsl:if>
-									<a href="/my/collection">Моё</a>
+									<a href="/my">Моё</a>
 								</li>
 							</xsl:if>
 							<xsl:if test="/page/@login-uri">
@@ -304,5 +304,9 @@
 				<span class="smallstars rate-0">нет оценок</span>
 			</xsl:otherwise>
 		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="@pubDate">
+		<xsl:value-of select="concat(substring(.,9,2),'.',substring(.,6,2),'.',substring(.,1,4))"/>
 	</xsl:template>
 </xsl:stylesheet>

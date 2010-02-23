@@ -181,7 +181,7 @@
 					</a>
 					<xsl:text> </xsl:text>
 					<span>
-						<xsl:value-of select="concat(substring(@pubDate,9,2),'.',substring(@pubDate,6,2),'.',substring(@pubDate,1,4))"/>
+						<xsl:apply-templates select="@pubDate"/>
 					</span>
 					<span>
 						<xsl:apply-templates select="@average"/>

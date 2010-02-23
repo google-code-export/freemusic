@@ -105,6 +105,11 @@ class SiteAlbum(db.Model):
 			tr = []
 		return tr
 
+class SiteAlbumStar(db.Model):
+	"Хранит информацию о любимых альбомах пользователей."
+	album = db.ReferenceProperty(SiteAlbum)
+	user = db.UserProperty()
+
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
 	medium = db.LinkProperty()
@@ -194,6 +199,8 @@ class SiteAlbumReview(db.Model):
 			'pubDate': self.published.isoformat(),
 			'album-id': self.album.id,
 			'album-name': self.album.name,
+			'artist-id': self.album.artist.id,
+			'artist-name': self.album.artist.name,
 			'author-nickname': self.author.user.nickname(),
 			'author-email': self.author.user.email(),
 			'sound': self.rate_sound,

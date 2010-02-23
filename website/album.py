@@ -8,14 +8,9 @@ from google.appengine.api import users
 from google.appengine.ext import db
 
 from base import BaseRequestHandler, HTTPException, ForbiddenException
-from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser, SiteEvent
+from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser, SiteEvent, SiteAlbumStar
 from index import Recent
 import rss, myxml
-
-class SiteAlbumStar(db.Model):
-	"Хранит информацию о любимых альбомах пользователей."
-	album = db.ReferenceProperty(SiteAlbum)
-	user = db.UserProperty()
 
 class XmlUpdater(BaseRequestHandler):
 	def get(self):
@@ -197,12 +192,6 @@ class Stars(BaseRequestHandler):
 			if status:
 				return self.sendJSON({'notify':1})
 		self.sendJSON({'notify':0})
-
-class Collection(Recent):
-	xsltName = 'collection.xsl'
-
-	def get_albums(self, offset):
-		return [star.album for star in SiteAlbumStar.gql('WHERE user = :1', self.force_user()).fetch(1000)]
 
 class Review(BaseRequestHandler):
 	def get(self):

@@ -518,6 +518,7 @@ ul.altiles {
 #ntfctn {
   text-align: center;
   font-weight: bold;
+  margin: 10px 0;
 }
 #ntfctn p {
   display: inline-block;
@@ -676,4 +677,14 @@ li.album .cover {
   font-style: italic;
   font-family: serif;
   opacity: 0.5;
+}
+
+/**
+ * Моя страница.
+ */
+#my h2 {
+  clear: both;
+}
+#my blockquote {
+  margin-left: 2em;
 }
