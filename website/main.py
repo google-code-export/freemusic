@@ -13,6 +13,7 @@ from s3 import S3SettingsHandler, S3UploadHandler
 import album
 import api
 import artist
+import chart
 import events
 import index
 import labels
@@ -87,6 +88,7 @@ if __name__ == '__main__':
 		('/artist/(\d+)$', artist.ViewHandler),
 		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
+		('/chart', chart.ShowChart),
 		('/events', events.All),
 		('/events/update', events.Update),
 		('/labels', labels.List),

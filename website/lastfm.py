@@ -18,3 +18,10 @@ def get_events(artist_name):
 		'artist': artist_name.encode('utf-8'),
 		'api_key': LASTFM_KEY,
 	})
+
+def get_artist(artist_name):
+	return util.fetchxml('http://ws.audioscrobbler.com/2.0/', {
+		'method': 'artist.getInfo',
+		'artist': artist_name.encode('utf-8'),
+		'api_key': LASTFM_KEY,
+	})

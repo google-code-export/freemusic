@@ -51,6 +51,12 @@
 								</xsl:if>
 								<a href="/radio">Радио</a>
 							</li>
+							<li>
+								<xsl:if test="/page/@class='ShowChart'">
+									<xsl:attribute name="class">active</xsl:attribute>
+								</xsl:if>
+								<a href="/chart">Рейтинг</a>
+							</li>
 							<xsl:if test="/page/@logout-uri">
 								<li>
 									<xsl:if test="/page/@class='My'">

@@ -706,3 +706,12 @@ li.album .cover {
 #my blockquote {
   margin-left: 2em;
 }
+
+/**
+ * Рейтинг исполнителей.
+ */
+#chart small a {
+  color: green;
+  font-size: 8pt;
+  margin-left: 1em;
+}
