@@ -18,10 +18,10 @@ class ShowChart(base.BaseRequestHandler):
 
 	def get_xml(self):
 		xml = memcache.get('/chart')
-		if xml is None or ('update' in self.request.arguments() and self.is_admin()):
+		if xml is None or self.should_update():
 			xml = u''
 			for artist in model.SiteArtist.all().fetch(1000):
-				if artist.name != 'Various Artists':
+				if artist.name != 'Various Artists' and artist.name != 'Error':
 					tmp = lastfm.get_artist(artist.name)
 					xml += myxml.em(u'artist', {
 						'id': artist.id,
@@ -33,3 +33,6 @@ class ShowChart(base.BaseRequestHandler):
 			xml = u'<chart>' + xml + u'</chart>'
 			memcache.set('/chart', xml)
 		return xml
+
+	def should_update(self):
+		return self.is_cron() or (self.is_admin() and 'update' in self.request.arguments())

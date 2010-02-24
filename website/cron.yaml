@@ -1,9 +1,14 @@
+# http://code.google.com/intl/ru-RU/appengine/docs/python/config/cron.html
+
 cron:
-  - description: Update labels cache
+  - description: Update labels cache.
     url: /labels
     schedule: every 1 hours
-  - description: Update event schedule from last.fm
+  - description: Update event schedule from last.fm.
     url: /events/update
     schedule: every 4 hours
+  - description: Update charts.
+    url: /chart
+    schedule: every 24 hours
 
 # vim: set ts=2 sts=2 sw=2 et:

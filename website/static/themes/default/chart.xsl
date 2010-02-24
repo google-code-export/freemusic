@@ -9,7 +9,7 @@
 
 			<ol>
 				<xsl:for-each select="artist">
-					<xsl:sort select="@listeners" order="descending"/>
+					<xsl:sort select="@listeners" order="descending" data-type="number"/>
 					<li>
 						<a href="/artist/{@id}">
 							<xsl:value-of select="@name"/>
