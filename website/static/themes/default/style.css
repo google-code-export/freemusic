@@ -250,6 +250,15 @@ h2 .help {
   border: solid 1px #ccc;
   padding: 2px;
 }
+#album .left .labels h3 {
+  display: inline;
+  font-weight: normal;
+  font-size: 1em;
+  opacity: 0.5;
+}
+#album .left .labels ul {
+  display: inline;
+}
 #album .left .dl {
   display: block;
   height: 30px;
@@ -575,7 +584,7 @@ textarea.hidden {
 .reviews .hint {
   font-style: italic;
   font-family: serif;
-  background-color: cyan;
+  background-color: pink;
   padding: 2px 4px;
 }
 .review .meta {
