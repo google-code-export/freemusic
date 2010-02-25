@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # vim: set ts=4 sts=4 sw=4 noet:
 
+import hashlib
 import logging
 import urllib
+
 from xml.sax.saxutils import escape
 from google.appengine.api import users
 from google.appengine.ext import db
@@ -19,6 +21,11 @@ class SiteUser(db.Model):
 	joined = db.DateTimeProperty(auto_now_add=True)
 	weight = db.FloatProperty()
 	invited = db.BooleanProperty(required=True)
+	xml = db.TextProperty()
+
+	def put(self):
+		self.xml = self.to_xml()
+		db.Model.put(self)
 
 	def to_xml(self):
 		return xml.em(u'user', {
@@ -26,6 +33,8 @@ class SiteUser(db.Model):
 			'email': self.user.email(),
 			'weight': self.weight,
 			'invited': self.invited,
+			'hash': hashlib.md5(self.user.email()).hexdigest(),
+			'pubDate': self.joined.isoformat(),
 		})
 
 class SiteArtist(db.Model):

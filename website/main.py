@@ -104,6 +104,6 @@ if __name__ == '__main__':
 		('/upload', S3UploadHandler),
 		('/upload/remote', upload.Remote),
 		('/upload/settings', S3SettingsHandler),
+		('/u/([^/]+)$', users.ShowUser),
 		('/users', users.List),
-		('/users/invite', users.Invite),
 	])

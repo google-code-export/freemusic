@@ -35,11 +35,11 @@ class List(BaseRequestHandler):
 					}))
 		self.redirect('/users')
 
-class Invite(BaseRequestHandler):
-	def post(self):
-		email = self.request.get('email')
-		if email:
-			invite.store(self, email)
-			self.redirect('/?saved')
-		else:
-			self.redirect('/')
+class ShowUser(BaseRequestHandler):
+	xsltName = 'user.xsl'
+
+	def get(self, username):
+		user = SiteUser.gql('WHERE user = :1', users.User(username + '@gmail.com')).get()
+		if user is None:
+			raise HTTPException(404, u'Нет такого пользователя.')
+		self.sendXML(user.xml)
