@@ -10,6 +10,7 @@
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='front']" mode="album-cover"/>
 				<xsl:apply-templates select="labels" mode="linked">
+					<xsl:with-param name="text">Метки:</xsl:with-param>
 					<xsl:with-param name="uri">/?label=</xsl:with-param>
 				</xsl:apply-templates>
 			</div>

@@ -271,6 +271,10 @@
 	<xsl:template match="labels" mode="linked">
 		<xsl:param name="uri"/>
 		<xsl:param name="weight"/>
+		<xsl:param name="text"/>
+		<xsl:if test="$text">
+			<p><xsl:value-of select="$text"/></p>
+		</xsl:if>
 		<ul class="labels">
 			<xsl:for-each select="label[text()]">
 				<xsl:sort select="text()"/>

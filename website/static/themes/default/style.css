@@ -101,9 +101,9 @@ form.eal ol li {
 #header {
   margin-bottom: 20px;
   position: relative;
-  background-color: #eee;
-  border-top: solid 4px #eee;
-  border-bottom: solid 4px #eee;
+  background-color: #ddd;
+  border-top: solid 4px #ddd;
+  border-bottom: solid 4px #ddd;
 }
 #header h1 {
   display: inline;
@@ -112,7 +112,7 @@ form.eal ol li {
   font-weight: normal;
   line-height: 28px;
   font-variant: small-caps;
-  color: #008;
+  color: black;
 }
 #header small {
   color: green;
@@ -270,7 +270,7 @@ h2 .help {
  * Заголовок альбома.
  */
 .alh {
-  background-color: cyan;
+  background-color: #ddd;
   padding: 2px 4px;
   margin-bottom: 10px;
   color: #666;
