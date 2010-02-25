@@ -28,7 +28,7 @@ td, th {
 }
 pre {
   padding: 10px;
-  background-color: #ddd;
+  background-color: #dcdcdc;
 }
 
 .fakelink {
@@ -101,9 +101,9 @@ form.eal ol li {
 #header {
   margin-bottom: 20px;
   position: relative;
-  background-color: #ddd;
-  border-top: solid 4px #ddd;
-  border-bottom: solid 4px #ddd;
+  background-color: #dcdcdc;
+  border-top: solid 4px #dcdcdc;
+  border-bottom: solid 4px #dcdcdc;
 }
 #header h1 {
   display: inline;
@@ -128,6 +128,7 @@ form.eal ol li {
 }
 #header li {
   margin-left: 1em;
+  position: relative;
 }
 #header li a {
   padding: 2px 4px;
@@ -135,7 +136,7 @@ form.eal ol li {
 #header .active a {
   text-decoration: none;
   color: black;
-  background-color: #ddd;
+  background-color: #ccc;
 }
 #header h1 a {
   text-decoration: none;
@@ -279,7 +280,7 @@ h2 .help {
  * Заголовок альбома.
  */
 .alh {
-  background-color: #ddd;
+  background-color: #dcdcdc;
   padding: 2px 4px;
   margin-bottom: 10px;
   color: #666;
@@ -723,4 +724,27 @@ li.album .cover {
   color: green;
   font-size: 8pt;
   margin-left: 1em;
+}
+
+/**
+ * Меню в заголовке.
+ */
+#header .submenu {
+  display: none;
+}
+#header li:hover .submenu {
+  display: block;
+  position: absolute;
+  z-index: 5000;
+  background-color: #ccc;
+  padding: 4px 10px;
+  margin: -2px 0 0;
+  border: solid 1px #888;
+  border-left: none;
+  border-top: none;
+  white-space: nowrap;
+}
+#header .submenu li {
+  display: block;
+  margin: .5em 0;
 }

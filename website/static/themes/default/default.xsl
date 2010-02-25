@@ -38,6 +38,19 @@
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
 								<a href="/">Музыка</a>
+								<ul class="submenu">
+									<li>
+										<a href="/artists">Исполнители</a>
+									</li>
+									<li>
+										<a href="/reviews">Рецензии</a>
+									</li>
+									<!--
+									<li>
+										<a href="/chart">Рейтинг</a>
+									</li>
+									-->
+								</ul>
 							</li>
 							<li>
 								<xsl:if test="/page/@class='All'">
@@ -63,11 +76,22 @@
 										<xsl:attribute name="class">active</xsl:attribute>
 									</xsl:if>
 									<a href="/my">Моё</a>
+									<ul class="submenu">
+										<li>
+											<a href="/u/{/page/@user}">Профиль</a>
+										</li>
+										<li>
+											<a href="/upload">Загрузить альбом</a>
+										</li>
+										<li>
+											<a href="{/page/@logout-uri}">Выйти</a>
+										</li>
+									</ul>
 								</li>
 							</xsl:if>
 							<xsl:if test="/page/@login-uri">
 								<li>
-									<a href="{/page/@login-rui}">Войти</a>
+									<a href="{/page/@login-uri}">Войти</a>
 								</li>
 							</xsl:if>
 							<li title=":)">♪♫♬</li>
