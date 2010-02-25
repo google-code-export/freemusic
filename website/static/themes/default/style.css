@@ -580,7 +580,7 @@ textarea.hidden {
   text-align: right;
 }
 .review {
-  margin-top: 20px;
+  margin: 20px 0 40px;
 }
 .reviews .hint {
   font-style: italic;
@@ -592,12 +592,12 @@ textarea.hidden {
   color: #666;
   font-size: 9pt;
 }
-.review .meta a {
+.review .meta a.u {
   color: black;
   font-weight: bold;
   text-decoration: none;
 }
-.review .meta * {
+.review .meta span {
   margin-right: 1em;
 }
 .review p {

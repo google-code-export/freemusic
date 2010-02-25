@@ -37,9 +37,10 @@
 							</xsl:for-each>
 						</tbody>
 					</table>
+					<p><a href="http://www.lastfm.ru/events/add" class="ext">Добавить концерт</a></p>
 				</xsl:when>
 				<xsl:otherwise>
-					<p>Нет информации о предстоящих концертах музыкантов, представленных на нашем сайте.</p>
+					<p>Нет информации о предстоящих концертах музыкантов, представленных на нашем сайте.&#160; <a href="http://www.lastfm.ru/events/add" class="ext">Добавить концерт</a>?</p>
 				</xsl:otherwise>
 			</xsl:choose>
 		</div>

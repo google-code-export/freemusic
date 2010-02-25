@@ -34,7 +34,7 @@
 						</h1>
 						<ul>
 							<li>
-								<xsl:if test="/page/@class='Recent'">
+								<xsl:if test="/page/@class='Recent' or /page/@class='ShowReviews'">
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
 								<a href="/">Музыка</a>
@@ -315,6 +315,42 @@
 					</li>
 				</xsl:for-each>
 			</ul>
+		</div>
+	</xsl:template>
+
+	<!-- Вывод рецензии на альбом. -->
+	<xsl:template match="review[@comment]">
+		<xsl:param name="title"/>
+		<div class="review">
+			<div class="meta">
+				<span>
+					<xsl:apply-templates select="@pubDate"/>
+				</span>
+				<span>
+					<a href="/u/{@author-nickname}" class="u">
+						<xsl:value-of select="@author-nickname"/>
+					</a>
+					<xsl:text> </xsl:text>
+					<xsl:if test="$title">
+						<xsl:text> на </xsl:text>
+						<span>
+							<a href="/album/{@album-id}">
+								<xsl:value-of select="@album-name"/>
+							</a>
+							<xsl:text> от </xsl:text>
+							<a href="/artist/{@artist-id}">
+								<xsl:value-of select="@artist-name"/>
+							</a>
+						</span>
+					</xsl:if>
+				</span>
+				<span>
+					<xsl:apply-templates select="@average"/>
+				</span>
+			</div>
+			<p>
+				<xsl:value-of select="@comment"/>
+			</p>
 		</div>
 	</xsl:template>
 

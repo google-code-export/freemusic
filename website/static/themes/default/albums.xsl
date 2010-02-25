@@ -53,14 +53,14 @@
 				</div>
 				<div class="reviews">
 					<h3>Мнения пользователей <a class="rss" href="/album/{@id}/reviews.rss"><span>RSS</span></a></h3>
-					<xsl:if test="not(../review[@author-email = /page/@email])">
+					<xsl:if test="not(../reviews/review[@author-email=/page/@email]) and /page/@logout-uri">
 						<form action="/album/review" method="post">
 							<input type="hidden" name="id" value="{@id}"/>
 							<textarea name="comment" class="hidden">Здесь можно написать рецензию.</textarea>
 							<xsl:call-template name="review-stars"/>
 						</form>
 					</xsl:if>
-					<xsl:apply-templates select="/page/review" mode="inside"/>
+					<xsl:apply-templates select="/page/review"/>
 				</div>
 			</div>
 		</div>
@@ -173,26 +173,6 @@
 					</tr>
 				</tfoot>
 			</table>
-		</xsl:template>
-
-		<xsl:template match="review[@comment]" mode="inside">
-			<div class="review">
-				<div class="meta">
-					<a href="/u/{@author-nickname}">
-						<xsl:value-of select="@author-nickname"/>
-					</a>
-					<xsl:text> </xsl:text>
-					<span>
-						<xsl:apply-templates select="@pubDate"/>
-					</span>
-					<span>
-						<xsl:apply-templates select="@average"/>
-					</span>
-				</div>
-				<p>
-					<xsl:value-of select="@comment"/>
-				</p>
-			</div>
 		</xsl:template>
 
 	<!-- Форма редактирования альбома -->

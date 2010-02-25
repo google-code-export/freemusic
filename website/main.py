@@ -95,6 +95,7 @@ if __name__ == '__main__':
 		('/my', my.My),
 		# ('/my/collection', album.Collection),
 		('/radio', radio.ShowRadio),
+		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),
 		('/sitemap.xml', sitemap.SitemapHandler),

@@ -50,7 +50,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		Возвращает True, если сайт работает в открытом режиме и False,
 		если только по приглашениям (анонимные пользователи не допускаются).
 		"""
-		return False
+		return True
 
 	def check_access(self, admin=False):
 		saved = 'saved' in self.request.arguments()

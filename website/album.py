@@ -32,7 +32,7 @@ class Viewer(BaseRequestHandler):
 		self.check_access()
 
 		xml = album.xml
-		xml += u''.join([r.xml for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)])
+		xml += u'<reviews>' + u''.join([r.xml for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)]) + u'</reviews>'
 		xml += self.get_events(album)
 
 		self.sendXML(xml, {
