@@ -272,24 +272,26 @@
 		<xsl:param name="uri"/>
 		<xsl:param name="weight"/>
 		<xsl:param name="text"/>
-		<xsl:if test="$text">
-			<p><xsl:value-of select="$text"/></p>
-		</xsl:if>
-		<ul class="labels">
-			<xsl:for-each select="label[text()]">
-				<xsl:sort select="text()"/>
-				<li>
-					<a href="{$uri}{@uri}">
-						<xsl:value-of select="text()"/>
-					</a>
-					<xsl:if test="$weight">
-						<sup>
-							<xsl:value-of select="@weight"/>
-						</sup>
-					</xsl:if>
-				</li>
-			</xsl:for-each>
-		</ul>
+		<div class="labels">
+			<xsl:if test="$text">
+				<h3><xsl:value-of select="$text"/></h3>
+			</xsl:if>
+			<ul class="labels">
+				<xsl:for-each select="label[text()]">
+					<xsl:sort select="text()"/>
+					<li>
+						<a href="{$uri}{@uri}">
+							<xsl:value-of select="text()"/>
+						</a>
+						<xsl:if test="$weight">
+							<sup>
+								<xsl:value-of select="@weight"/>
+							</sup>
+						</xsl:if>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</div>
 	</xsl:template>
 
 	<!-- Вывод звёздочек для альбома -->
