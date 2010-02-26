@@ -4,6 +4,7 @@
 
 import logger
 import os
+import sys
 import urllib
 import zipfile
 
@@ -42,7 +43,15 @@ def zip(filename, files):
 	z = zipfile.ZipFile(filename, 'w')
 	for file in files:
 		if not file.endswith('.zip'):
-			logger.info(u"+ " + file)
-			z.write(file, os.path.basename(file))
+			try:
+				localname = os.path.basename(file).encode('utf-8')
+				try:
+					z.write(file, localname)
+				except UnicodeDecodeError:
+					z.write(file, urllib.quote(localname).replace('%', 'x'))
+				logger.info(u'+ ' + file)
+			except Exception, e:
+				print >>sys.stderr, 'Failed to zip', file, 'as', os.path.basename(file)
+				logger.info(u'Failed to zip %s as %s: %s' % (file, os.path.basename(file), e))
 	z.close()
 	return filename
