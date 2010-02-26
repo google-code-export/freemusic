@@ -153,7 +153,7 @@ class Robot:
 		skip = settings['skip']
 
 		for item in items:
-			if item['uri'] not in skip:
+			if skip is None or item['uri'] not in skip:
 				print "A file from " + item['owner']
 				try:
 					zipname = self.fetch_file(item['uri'])
