@@ -373,8 +373,8 @@ ul.altiles {
 }
 .altiles .smallstars {
   position: absolute;
-  top: 121px;
-  left: 89px;
+  top: 118px;
+  left: 88px;
 }
 /*
 .altiles li div a {
@@ -517,31 +517,19 @@ html.audio .noaudio {
 .smallstars {
   display: inline-block;
   width: 50px;
-  height: 9px;
+  height: 10px;
   background-position: top left;
   background-repeat: no-repeat;
+  background: transparent url(stars-5x6-small.png) no-repeat top left;
 }
 .smallstars span {
   display: none;
 }
-.rate-0 {
-  background-image: url(srate-0.gif);
-}
-.rate-1 {
-  background-image: url(srate-1.gif);
-}
-.rate-2 {
-  background-image: url(srate-2.gif);
-}
-.rate-3 {
-  background-image: url(srate-3.gif);
-}
-.rate-4 {
-  background-image: url(srate-4.gif);
-}
-.rate-5 {
-  background-image: url(srate-5.gif);
-}
+.rate-1 { background-position-y: -10px; }
+.rate-2 { background-position-y: -20px; }
+.rate-3 { background-position-y: -30px; }
+.rate-4 { background-position-y: -40px; }
+.rate-5 { background-position-y: -50px; }
 
 #ntfctn {
   text-align: center;
