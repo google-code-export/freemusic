@@ -259,12 +259,14 @@
 				</ul>
 			</div>
 			<h2>
-				<span title="Добавить в коллекцию">
-					<xsl:attribute name="class">
-						<xsl:text>star</xsl:text>
-						<xsl:if test="/page/@star"> on</xsl:if>
-					</xsl:attribute>
-				</span>
+				<xsl:if test="/page/@user-logout">
+					<span title="Добавить в коллекцию">
+						<xsl:attribute name="class">
+							<xsl:text>star</xsl:text>
+							<xsl:if test="/page/@star"> on</xsl:if>
+						</xsl:attribute>
+					</span>
+				</xsl:if>
 				<xsl:value-of select="@name"/>
 				<small>
 					<xsl:text> от </xsl:text>
