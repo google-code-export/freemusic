@@ -9,9 +9,14 @@ handlers:
 - url: /favicon.ico
   static_files: static/favicon.2.ico
   upload: static/favicon.2.ico
+- url: /google4c14bfd1bdbab0dd.html
+  static_files: static/google4c14bfd1bdbab0dd.html
+  upload: static/google4c14bfd1bdbab0dd.html
 - url: /static/
   static_dir: static
 - url: /doc/
   static_dir: doc
 - url: .*
   script: main.py
+
+# vim: set ts=2 sts=2 sw=2 et:
