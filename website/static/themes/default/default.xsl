@@ -23,6 +23,7 @@
 				<script type="text/javascript" src="/static/modernizr-1.1.min.js"></script>
 				<script type="text/javascript" src="/static/scripts.js"></script>
 				<link rel="alternate" type="application/rss+xml" title="RSS" href="/albums.rss"/> 
+				<meta name="google-site-verification" content="1YzbBazX2CGFQgRb0kDx_Y8rqw4oOfS_g3rVC6faZP8"/>
 			</head>
 			<body>
 				<div id="header">
