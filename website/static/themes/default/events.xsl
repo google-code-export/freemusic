@@ -20,6 +20,9 @@
 							<xsl:for-each select="event">
 								<xsl:sort select="@date"/>
 								<tr>
+									<xsl:if test="not(position() mod 2)">
+										<xsl:attribute name="class">odd</xsl:attribute>
+									</xsl:if>
 									<td>
 										<xsl:value-of select="concat(substring(@date,9,2),'.',substring(@date,6,2),'.',substring(@date,3,2))"/>
 									</td>

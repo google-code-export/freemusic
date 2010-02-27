@@ -694,6 +694,9 @@ li.album .cover {
   font-family: serif;
   opacity: 0.5;
 }
+#events tr.odd {
+  background-color: #f0f0f0;
+}
 
 /**
  * Моя страница.
