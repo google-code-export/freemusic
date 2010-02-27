@@ -14,6 +14,7 @@ import album
 import api
 import artist
 import chart
+import clips
 import events
 import index
 import labels
@@ -89,6 +90,8 @@ if __name__ == '__main__':
 		('/artists', artist.List),
 		('/artists\.rss', artist.RSSHandler),
 		('/chart', chart.ShowChart),
+		('/clips', clips.ShowClips),
+		('/clips/random\.json', clips.GetRandomClip),
 		('/events', events.All),
 		('/events/update', events.Update),
 		('/labels', labels.List),

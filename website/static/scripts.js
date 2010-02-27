@@ -230,6 +230,25 @@ $(document).ready(function(){
 	 * Открытие внешних ссылок в новой вкладке.
 	 */
 	$('a.ext').attr('target', '_blank');
+
+	/**
+	 * Вывод случайного текстового фрагмента.
+	 */
+	$('#ntfctn').after('<div id="clip"><span></span><span class="c">+</span></div>');
+	$('#clip .c').click(show_random_clip);
+	show_random_clip();
 });
+
+function show_random_clip()
+{
+	$.ajax({
+		type: 'GET',
+		url: '/clips/random.json',
+		dataType: 'json',
+		success: function (clip) {
+			$('#clip span:first').html(clip.text);
+		}
+	});
+}
 
 // vim: set ts=4 sts=4 sw=4 noet:

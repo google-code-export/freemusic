@@ -1,189 +1,189 @@
 body {
-  margin: 0;
-  padding: 10px 0;
-  font: normal 10pt/12pt arial, sans-serif;
+	margin: 0;
+	padding: 10px 0;
+	font: normal 10pt/12pt arial, sans-serif;
 }
 
 a {
-  color: #008;
+	color: #008;
 }
 .r {
-  text-align: right;
+	text-align: right;
 }
 .hidden {
-  display: none;
+	display: none;
 }
 img {
-  border: none;
+	border: none;
 }
 li {
-  margin-bottom: .5em;
+	margin-bottom: .5em;
 }
 table {
-  border-collapse: collapse;
+	border-collapse: collapse;
 }
 td, th {
-  vertical-align: top;
-  text-align: left;
+	vertical-align: top;
+	text-align: left;
 }
 pre {
-  padding: 10px;
-  background-color: #dcdcdc;
+	padding: 10px;
+	background-color: #dcdcdc;
 }
 
 .fakelink {
-  color: blue;
-  cursor: pointer;
-  /*
-  text-decoration: underline;
-  */
+	color: blue;
+	cursor: pointer;
+	/*
+	text-decoration: underline;
+	*/
 }
 .fakelink span {
-  border-bottom: dashed 1px blue;
+	border-bottom: dashed 1px blue;
 }
 
 form.gen label,
 form.gen label span {
-  display: block;
+	display: block;
 }
 form.gen .text {
-  padding: 4px;
-  width: 400px;
-  max-width: 400px;
-  border: solid 1px #ccc;
+	padding: 4px;
+	width: 400px;
+	max-width: 400px;
+	border: solid 1px #ccc;
 }
 form.gen .hint {
-  width: 400px;
-  color: gray;
-  font-size: 0.8em;
-  margin: 0 0 .5em;
+	width: 400px;
+	color: gray;
+	font-size: 0.8em;
+	margin: 0 0 .5em;
 }
 form.gen div {
-  margin-bottom: 1em;
+	margin-bottom: 1em;
 }
 .clearme {
-  color: gray;
+	color: gray;
 }
 
 /**
  * Редактирование альбома.
  */
 form.eal {
-  margin-left: 40px;
+	margin-left: 40px;
 }
 form.eal fieldset {
-  margin: 1em 0 0 -40px;
-  padding: 10px;
-  border-left: none;
-  border-right: none;
-  border-bottom: none;
+	margin: 1em 0 0 -40px;
+	padding: 10px;
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
 }
 form.eal legend {
-  font-size: 10pt;
-  font-style: italic;
-  margin-left: 30px;
+	font-size: 10pt;
+	font-style: italic;
+	margin-left: 30px;
 }
 form.eal ol {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 form.eal ol li {
-  margin-left: 30px;
+	margin-left: 30px;
 }
 
 
 #wrapper, .corsette {
-  width: 760px;
-  margin: 0 auto;
-  position: relative;
+	width: 760px;
+	margin: 0 auto;
+	position: relative;
 }
 
 #header {
-  margin-bottom: 20px;
-  position: relative;
-  background-color: #dcdcdc;
-  border-top: solid 4px #dcdcdc;
-  border-bottom: solid 4px #dcdcdc;
+	margin-bottom: 20px;
+	position: relative;
+	background-color: #dcdcdc;
+	border-top: solid 4px #dcdcdc;
+	border-bottom: solid 4px #dcdcdc;
 }
 #header h1 {
-  display: inline;
-  margin: 0 1em 0 0;
-  font-size: 18px;
-  font-weight: normal;
-  line-height: 28px;
-  font-variant: small-caps;
-  color: black;
+	display: inline;
+	margin: 0 1em 0 0;
+	font-size: 18px;
+	font-weight: normal;
+	line-height: 28px;
+	font-variant: small-caps;
+	color: black;
 }
 #header small {
-  color: green;
-  font-variant: normal;
-  font-size: 70%;
-  margin-left: 1em;
+	color: green;
+	font-variant: normal;
+	font-size: 70%;
+	margin-left: 1em;
 }
 #header ul, #header li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  color: gray;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+	color: gray;
 }
 #header li {
-  margin-left: 1em;
-  position: relative;
+	margin-left: 1em;
+	position: relative;
 }
 #header li a {
-  padding: 2px 4px;
+	padding: 2px 4px;
 }
 #header .active a {
-  text-decoration: none;
-  color: black;
-  background-color: #ccc;
+	text-decoration: none;
+	color: black;
+	background-color: #ccc;
 }
 #header h1 a {
-  text-decoration: none;
-  color: inherit;
+	text-decoration: none;
+	color: inherit;
 }
 #header .search {
-  position: absolute;
-  top: 0;
-  left: 534px;
+	position: absolute;
+	top: 0;
+	left: 534px;
 }
 #header .text {
-  width: 200px;
-  border: solid 1px #ccc;
-  padding: 4px 20px 4px 4px;
-  font-family: sans-serif;
-  font-size: 12px;
+	width: 200px;
+	border: solid 1px #ccc;
+	padding: 4px 20px 4px 4px;
+	font-family: sans-serif;
+	font-size: 12px;
 }
 #header .search button {
-  background: transparent url(search.png) no-repeat center center;
-  border: none;
-  cursor: pointer;
-  margin-left: -20px;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  vertical-align: middle;
+	background: transparent url(search.png) no-repeat center center;
+	border: none;
+	cursor: pointer;
+	margin-left: -20px;
+	padding: 0;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
 }
 #header .search button span {
-  display: none;
+	display: none;
 }
 
 /**
  * Метки при входе в поиск.
  */
 #plh {
-  background-color: #f8f8f8;
-  border: solid 1px #f0f0f0;
-  padding: 10px;
-  margin: 10px 0;
-  text-align: center;
-  display: none;
+	background-color: #f8f8f8;
+	border: solid 1px #f0f0f0;
+	padding: 10px;
+	margin: 10px 0;
+	text-align: center;
+	display: none;
 }
 #plh a {
-  margin-right: 1em;
-  color: green;
-  white-space: nowrap;
-  font-size: 14pt;
+	margin-right: 1em;
+	color: green;
+	white-space: nowrap;
+	font-size: 14pt;
 }
 #plh a.weight1 { font-size: 8pt; }
 #plh a.weight2 { font-size: 9pt; }
@@ -192,338 +192,335 @@ form.eal ol li {
 #plh a.weight5 { font-size: 12pt; }
 #plh a.weight6 { font-size: 13pt; }
 #plh p {
-  margin-top: 0;
+	margin-top: 0;
 }
 
 .twocol .left {
-  width: 150px;
-  float: left;
+	width: 150px;
+	float: left;
 }
 .twocol .right {
-  margin-left: 170px;
+	margin-left: 170px;
 }
 
 .twocolrev .left {
-  width: 206px; /* 200 на картинку, 4 на padding, 2 на бордюр */
-  float: right;
+	width: 206px; /* 200 на картинку, 4 на padding, 2 на бордюр */
+	float: right;
 }
 .twocolrev .right {
-  margin-right: 220px;
+	margin-right: 220px;
 }
 
 .left ul {
-  margin: 0 0 1em;
-  padding: 0;
-  list-style-type: none;
+	margin: 0 0 1em;
+	padding: 0;
+	list-style-type: none;
 }
 .left ul li {
-  line-height: 1.5em;
+	line-height: 1.5em;
 }
 
 /* upload your album */
 .uya {
-  color: gray;
-  font-size: 9pt;
-  margin-top: 3em;
+	color: gray;
+	font-size: 9pt;
+	margin-top: 3em;
 }
 .uya p {
-  margin: .25em 0;
+	margin: .25em 0;
 }
 .statuserr {
-  font-style: italic;
-  color: red;
+	font-style: italic;
+	color: red;
 }
 
 h2 {
-  font-size: 16pt;
-  font-weight: normal;
+	font-size: 16pt;
+	font-weight: normal;
 }
 h2 small {
-  font-weight: normal;
-  font-size: 10pt;
-  margin-left: 1em;
+	font-weight: normal;
+	font-size: 10pt;
+	margin-left: 1em;
 }
 h2 .help {
-  color: green;
+	color: green;
 }
 
 #album .left img {
-  border: solid 1px #ccc;
-  padding: 2px;
+	border: solid 1px #ccc;
+	padding: 2px;
 }
 #album .left .labels h3 {
-  display: inline;
-  font-weight: normal;
-  font-size: 1em;
-  opacity: 0.5;
+	display: inline;
+	font-weight: normal;
+	font-size: 1em;
+	opacity: 0.5;
 }
 #album .left .labels ul {
-  display: inline;
+	display: inline;
 }
 #album .left .dl {
-  display: block;
-  height: 30px;
-  line-height: 30px;
-  text-align: center;
-  background-color: #ccc;
-  color: gray;
+	display: block;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-color: #ccc;
+	color: gray;
 }
 #album .lic {
-  margin: 1em 0;
+	margin: 1em 0;
 }
 
 #album td {
-  padding: 2px 4px;
+	padding: 2px 4px;
 }
 
 /**
  * Заголовок альбома.
  */
 .alh {
-  background-color: #dcdcdc;
-  padding: 2px 4px;
-  margin-bottom: 10px;
-  color: #666;
-  height: 45px;
+	background-color: #dcdcdc;
+	padding: 2px 4px;
+	margin-bottom: 10px;
+	color: #666;
+	height: 45px;
 }
 .alh h2 {
-  margin: 5px 0;
-  color: black;
-  font-size: 20px;
+	margin: 5px 0;
+	color: black;
+	font-size: 20px;
 }
 .alh2 {
-  font-size: 10px;
-  line-height: 12px;
-  margin-left: 20px;
+	font-size: 10px;
+	line-height: 12px;
+	margin-left: 20px;
 }
 .alh2 span {
-  margin-right: 1em;
+	margin-right: 1em;
 }
 .alh2 a {
-  color: #666;
+	color: #666;
 }
 .alh .dlb {
-  float: right;
-  margin: 7px 7px auto auto;
+	float: right;
+	margin: 7px 7px auto auto;
 }
 .alh img {
-  margin-right: 4px;
-  vertical-align: bottom;
-  display: none;
+	margin-right: 4px;
+	vertical-align: bottom;
+	display: none;
 }
 .alh:hover img {
-  display: inline-block;
+	display: inline-block;
 }
 .alh .button {
-  line-height: 29px;
-  font-size: 14px;
+	line-height: 29px;
+	font-size: 14px;
 }
 
 .albumcover {
-  position: relative;
+	position: relative;
 }
 p.moreimg {
-  white-space: nowrap;
-  position: absolute;
-  top: 170px;
-  left: 2px;
-  width: 198px;
-  font-size: 8pt;
-  z-index: 100;
-  background-color: white;
-  padding: 2px;
-  text-align: center;
-  display: none;
+	white-space: nowrap;
+	position: absolute;
+	top: 170px;
+	left: 2px;
+	width: 198px;
+	font-size: 8pt;
+	z-index: 100;
+	background-color: white;
+	padding: 2px;
+	text-align: center;
+	display: none;
 }
 .albumcover:hover p.moreimg {
-  display: block;
+	display: block;
 }
 ul.moreimg {
-  width: 225px;
+	width: 225px;
 }
 ul.moreimg li {
-  display: inline-block;
-  margin: 10px 15px 10px 0;
+	display: inline-block;
+	margin: 10px 15px 10px 0;
 }
 
 #footer {
-  text-align: center;
-  padding: 50px 0 10px;
-  color: gray;
+	text-align: center;
+	padding: 50px 0 10px;
+	color: gray;
 }
 
 ul.altiles {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 .altiles li {
-  display: block;
-  width: 150px;
-  height: 190px;
-  list-style-type: none;
-  margin-bottom: 20px;
-  padding: 0;
-  text-align: center;
-  float: left;
-  position: relative;
-  margin-left: 50px;
+	display: block;
+	width: 150px;
+	height: 190px;
+	list-style-type: none;
+	margin-bottom: 20px;
+	padding: 0;
+	text-align: center;
+	float: left;
+	position: relative;
+	margin-left: 50px;
 }
 .altiles li.pos0 {
-  margin-left: 0;
+	margin-left: 0;
 }
 .altiles .smallstars {
-  position: absolute;
-  top: 118px;
-  left: 88px;
+	position: absolute;
+	top: 118px;
+	left: 88px;
 }
 /*
 .altiles li div a {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 */
 .altiles small {
-  white-space: nowrap;
-  display: block;
-  color: #444;
+	white-space: nowrap;
+	display: block;
+	color: #444;
 }
 .altiles small a {
-  color: inherit;
+	color: inherit;
 }
 .altiles img {
-  border: none;
-  margin-bottom: .5em;
-}
-#index .intro {
-  text-align: center;
+	border: none;
+	margin-bottom: .5em;
 }
 #index .pager {
-  clear: left;
-  list-style-type: none;
-  text-align: center;
-  width: 520px;
-  margin: 0;
-  padding: 0;
+	clear: left;
+	list-style-type: none;
+	text-align: center;
+	width: 520px;
+	margin: 0;
+	padding: 0;
 }
 #index .pager li {
-  display: inline;
-  margin: 0 2em 0 0;
-  padding: 0;
+	display: inline;
+	margin: 0 2em 0 0;
+	padding: 0;
 }
 
 
 #closed {
-  width: 500px;
-  text-align: center;
-  margin: 100px auto 0;
+	width: 500px;
+	text-align: center;
+	margin: 100px auto 0;
 }
 
 
 #footer {
-  clear: both;
+	clear: both;
 }
 
 .fileUpload {
-  background-color: #eee;
-  padding: 10px;
-  margin-top: 1em;
+	background-color: #eee;
+	padding: 10px;
+	margin-top: 1em;
 }
 .fileUpload div {
-  margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .left .labels {
-  margin: 1em 0;
+	margin: 1em 0;
 }
 .labels {
-  padding: 0;
+	padding: 0;
 }
 .labels li {
-  display: inline-block;
-  font-size: 9pt;
+	display: inline-block;
+	font-size: 9pt;
 }
 .labels a {
-  text-decoration: none;
-  color: green;
-  margin-right: 2px;
+	text-decoration: none;
+	color: green;
+	margin-right: 2px;
 }
 .labels a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 .labels sup {
-  color: gray;
+	color: gray;
 }
 
 .noaudio {
-  font-style: italic;
+	font-style: italic;
 }
 html.audio .noaudio {
-  display: none;
+	display: none;
 }
 #content .player {
-  margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 .tracklist, .tracklist .track {
-  width: 530px;
+	width: 530px;
 }
 .tracklist td {
-  line-height: 17px; /* подстраиваемся под высоту таблицы с кнопкой проигрывания */
+	line-height: 17px; /* подстраиваемся под высоту таблицы с кнопкой проигрывания */
 }
 .tracklist .u u {
-  display: inline-block;
-  width: 16px;
-  height: 17px;
-  background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMnSAPczkO92Ra9OLcQ9OYewIHaSGJml5neGJ5hnFleRGMRIex83xMJADs=);
-  vertical-align: bottom;
-  cursor: pointer;
+	display: inline-block;
+	width: 16px;
+	height: 17px;
+	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMnSAPczkO92Ra9OLcQ9OYewIHaSGJml5neGJ5hnFleRGMRIex83xMJADs=);
+	vertical-align: bottom;
+	cursor: pointer;
 }
 
 .tracklist .playing u {
-  background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMtSAPczkO92Ra9OIPAGQ/X53WUuJGTaabk+qjo28YODGo4bumSFhGCoHA4JCQAADs=);
+	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMtSAPczkO92Ra9OIPAGQ/X53WUuJGTaabk+qjo28YODGo4bumSFhGCoHA4JCQAADs=);
 }
 .tracklist .dur {
-  color: gray;
-  padding-left: 10px;
+	color: gray;
+	padding-left: 10px;
 }
 
 /* Ссылки на скачивание дорожек выводятся только при наведении курсора на дорожку. */
 .tracklist .dl a {
-  color: green;
-  text-decoration: none;
-  visibility: hidden;
+	color: green;
+	text-decoration: none;
+	visibility: hidden;
 }
 .tracklist tr:hover .dl a {
-  visibility: visible;
+	visibility: visible;
 }
 .tracklist .playing td.track > div {
-  background-color: #ccc;
+	background-color: #ccc;
 }
 .tracklist .playing .prg {
-  margin-top: 2px;
-  background-color: red;
-  height: 4px;
+	margin-top: 2px;
+	background-color: red;
+	height: 4px;
 }
 
 .star {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhDwAPALMPAP///8zj++r7/7vb/rHW/tPt/9Lk+qzT/rbY/sHh/8Te/N7q+Nzy/7nY/djn+f///yH5BAEAAA8ALAAAAAAPAA8AAARg8MkZjpo4k0KyNwlQBB42MICAfEF7APDRBsYzIEkewGKeDI1DgUckMg6GTdFIqC0QgyUgQVhgGkOi4OBBCJYdzILAywIGNcoOgCAQvowBRpE4kgzCQgPjQCAcEwsNTRIRADs=);
-  cursor: pointer;
-  margin-right: 4px;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhDwAPALMPAP///8zj++r7/7vb/rHW/tPt/9Lk+qzT/rbY/sHh/8Te/N7q+Nzy/7nY/djn+f///yH5BAEAAA8ALAAAAAAPAA8AAARg8MkZjpo4k0KyNwlQBB42MICAfEF7APDRBsYzIEkewGKeDI1DgUckMg6GTdFIqC0QgyUgQVhgGkOi4OBBCJYdzILAywIGNcoOgCAQvowBRpE4kgzCQgPjQCAcEwsNTRIRADs=);
+	cursor: pointer;
+	margin-right: 4px;
 }
 .star.on {
-  background-image: url(data:image/gif;base64,R0lGODlhDwAPAMQfAF9h4RYVnZeQJC0u0lRQU42R6P/7Fv74L05NrRkZxi4tW52XXv71D8nAIWxnjnRxr3NuMJKOluXbBe7kCa2x7UFD1vPoB77D8Jqe6n6B5tvTUr62BMrP8lJPh1xbuv///yH5BAEAAB8ALAAAAAAPAA8AAAWD4CeOWQKMaDpESepi3tFlLgpExlK9RT9ohkYi08N8KhWP8nEwMBwIDyJRSTgO2CaDYcBOCAlMgtDYmhmTDSFQ+HAqgbLZIlAMLqiKw7m1EAYuFQsGEhITEwItKBc/EgIEAhINAUYkCBIQAQMBEGonIwAKa21iCgo7IxQDFRQjF1VtHyEAOw==);
+	background-image: url(data:image/gif;base64,R0lGODlhDwAPAMQfAF9h4RYVnZeQJC0u0lRQU42R6P/7Fv74L05NrRkZxi4tW52XXv71D8nAIWxnjnRxr3NuMJKOluXbBe7kCa2x7UFD1vPoB77D8Jqe6n6B5tvTUr62BMrP8lJPh1xbuv///yH5BAEAAB8ALAAAAAAPAA8AAAWD4CeOWQKMaDpESepi3tFlLgpExlK9RT9ohkYi08N8KhWP8nEwMBwIDyJRSTgO2CaDYcBOCAlMgtDYmhmTDSFQ+HAqgbLZIlAMLqiKw7m1EAYuFQsGEhITEwItKBc/EgIEAhINAUYkCBIQAQMBEGonIwAKa21iCgo7IxQDFRQjF1VtHyEAOw==);
 }
 .smallstars {
-  display: inline-block;
-  width: 50px;
-  height: 10px;
-  background-position: top left;
-  background-repeat: no-repeat;
-  background: transparent url(stars-5x6-small.png) no-repeat top left;
+	display: inline-block;
+	width: 50px;
+	height: 10px;
+	background-position: top left;
+	background-repeat: no-repeat;
+	background: transparent url(stars-5x6-small.png) no-repeat top left;
 }
 .smallstars span {
-  display: none;
+	display: none;
 }
 .rate-1 { background-position-y: -10px; }
 .rate-2 { background-position-y: -20px; }
@@ -532,15 +529,15 @@ html.audio .noaudio {
 .rate-5 { background-position-y: -50px; }
 
 #ntfctn {
-  text-align: center;
-  font-weight: bold;
-  margin: 10px 0;
+	text-align: center;
+	font-weight: bold;
+	margin: 10px 0;
 }
 #ntfctn p {
-  display: inline-block;
-  background-color: #80ff80;
-  padding: 2px 10px;
-  margin: 0;
+	display: inline-block;
+	background-color: #80ff80;
+	padding: 2px 10px;
+	margin: 0;
 }
 
 
@@ -548,194 +545,219 @@ html.audio .noaudio {
  * Рецензии
  */
 .reviews {
-  margin-top: 30px;
+	margin-top: 30px;
 }
 .reviews textarea {
-  width: 500px;
-  max-width: 500px;
-  height: 100px;
-  border: solid 1px gray;
-  padding: 2px 2px 20px 10px;
+	width: 500px;
+	max-width: 500px;
+	height: 100px;
+	border: solid 1px gray;
+	padding: 2px 2px 20px 10px;
 }
 textarea.hidden {
-  display: block;
-  height: 50px;
-  color: #888;
+	display: block;
+	height: 50px;
+	color: #888;
 }
 .reviews form th {
-  font-size: 9pt;
-  font-weight: normal;
-  text-align: right;
+	font-size: 9pt;
+	font-weight: normal;
+	text-align: right;
 }
 .review {
-  margin: 20px 0 40px;
+	margin: 20px 0 40px;
 }
 .reviews .hint {
-  font-style: italic;
-  font-family: serif;
-  background-color: pink;
-  padding: 2px 4px;
+	font-style: italic;
+	font-family: serif;
+	background-color: pink;
+	padding: 2px 4px;
 }
 .review .meta {
-  color: #666;
-  font-size: 9pt;
+	color: #666;
+	font-size: 9pt;
 }
 .review .meta a.u {
-  color: black;
-  font-weight: bold;
-  text-decoration: none;
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
 }
 .review .meta span {
-  margin-right: 1em;
+	margin-right: 1em;
 }
 .review p {
-  margin-left: 2em;
+	margin-left: 2em;
 }
 
 /**
  * Ссылка-кнопка.
  */
 a.button {
-  background: #e3e3e3 url(button-back.png) repeat-x center center;
-  text-decoration: none;
-  color: black;
-  border: solid 1px #888;
-  border-left: solid 1px #aaa;
-  border-top: solid 1px #aaa;
-  display: inline-block;
-  padding: 0 10px;
-  white-space: nowrap;
-  line-height: 22px;
-  font-size: 12px;
-  outline: none;
+	background: #e3e3e3 url(button-back.png) repeat-x center center;
+	text-decoration: none;
+	color: black;
+	border: solid 1px #888;
+	border-left: solid 1px #aaa;
+	border-top: solid 1px #aaa;
+	display: inline-block;
+	padding: 0 10px;
+	white-space: nowrap;
+	line-height: 22px;
+	font-size: 12px;
+	outline: none;
 }
 a.button span.more {
-  color: #aaa;
+	color: #aaa;
 }
 a.button span.more:hover {
-  color: black;
+	color: black;
 }
 
 /**
  * Ссылка на RSS.
  */
 a.rss {
-  background: transparent url(rss.gif) no-repeat top left;
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  vertical-align: bottom;
+	background: transparent url(rss.gif) no-repeat top left;
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	vertical-align: bottom;
 }
 a.rss span {
-  display: none;
+	display: none;
 }
 h3 a.rss {
-  display: none;
-  margin-left: 4px;
+	display: none;
+	margin-left: 4px;
 }
 h3:hover a.rss {
-  display: inline-block;
+	display: inline-block;
 }
 
 /**
  * Всплывающие меню.
  */
 .popup {
-  position: absolute;
-  z-index: 5000;
-  display: none;
-  white-space: nowrap;
+	position: absolute;
+	z-index: 5000;
+	display: none;
+	white-space: nowrap;
 }
 ul.popup {
-  list-style-type: none;
-  padding: 4px 8px;
-  margin: 0;
-  background-color: #eee;
-  border: solid 2px #888;
-  border-left: solid 1px #aaa;
-  border-top: solid 1px #aaa;
+	list-style-type: none;
+	padding: 4px 8px;
+	margin: 0;
+	background-color: #eee;
+	border: solid 2px #888;
+	border-left: solid 1px #aaa;
+	border-top: solid 1px #aaa;
 }
 
 /**
  * Вывод альбома в списке.
  */
 li.album .cover {
-  display: inline-block;
-  height: 134px;
-  width: 141px;
-  background: transparent url(jewelcase_large.png) no-repeat top left;
-  padding: 4px 0 0 4px;;
-  text-decoration: none;
+	display: inline-block;
+	height: 134px;
+	width: 141px;
+	background: transparent url(jewelcase_large.png) no-repeat top left;
+	padding: 4px 0 0 4px;;
+	text-decoration: none;
 }
 
 /**
  * Разворачиваемый информационный блок.
  */
 .expando h3 {
-  font-size: 1em;
-  font-weight: normal;
+	font-size: 1em;
+	font-weight: normal;
 }
 .expando ul {
-  display: none;
+	display: none;
 }
 
 /**
  * Расписание событий.
  */
 #events td, #events th {
-  padding: 2px 4px;
+	padding: 2px 4px;
 }
 #events .artist {
-  white-space: nowrap;
+	white-space: nowrap;
 }
 #events th {
-  font-weight: normal;
-  font-style: italic;
-  font-family: serif;
-  opacity: 0.5;
+	font-weight: normal;
+	font-style: italic;
+	font-family: serif;
+	opacity: 0.5;
 }
 #events tr.odd {
-  background-color: #f0f0f0;
+	background-color: #f0f0f0;
 }
 
 /**
  * Моя страница.
  */
 #my h2 {
-  clear: both;
+	clear: both;
 }
 #my blockquote {
-  margin-left: 2em;
+	margin-left: 2em;
 }
 
 /**
  * Рейтинг исполнителей.
  */
 #chart small a {
-  color: green;
-  font-size: 8pt;
-  margin-left: 1em;
+	color: green;
+	font-size: 8pt;
+	margin-left: 1em;
 }
 
 /**
  * Меню в заголовке.
  */
 #header .submenu {
-  display: none;
+	display: none;
 }
 #header li:hover .submenu {
-  display: block;
-  position: absolute;
-  z-index: 5000;
-  background-color: #ccc;
-  padding: 4px 10px;
-  margin: -2px 0 0;
-  border: solid 1px #888;
-  border-left: none;
-  border-top: none;
-  white-space: nowrap;
+	display: block;
+	position: absolute;
+	z-index: 5000;
+	background-color: #ccc;
+	padding: 4px 10px;
+	margin: -2px 0 0;
+	border: solid 1px #888;
+	border-left: none;
+	border-top: none;
+	white-space: nowrap;
 }
 #header .submenu li {
-  display: block;
-  margin: .5em 0;
+	display: block;
+	margin: .5em 0;
 }
+
+
+/**
+ * Оформление случайной фразы на главной странице.
+ */
+#clip {
+	border: solid 1px #ddd;
+	background-color: #eee;
+	padding: 2px 2px 2px 4px;
+	margin-bottom: 10px;
+	height: 16px;
+	font: 12px/18px;
+	vertical-align: middle;
+}
+#clip .c {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	text-align: center;
+	cursor: pointer;
+	background-color: #ddd;
+	float: right;
+}
+
+/* vim: set ts=4 sts=4 sw=4 noet ft=css nocindent noautoindent: */
