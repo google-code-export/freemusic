@@ -42,3 +42,13 @@ class GetRandomClip(base.BaseRequestHandler):
 		if clip.url:
 			text += u' ' + myxml.em(u'a', {'href': clip.url, 'class': 'ext'}, content=u'Подробнее…')
 		self.sendJSON({ 'text': text })
+
+class GetRecentClips(base.BaseRequestHandler):
+	def get(self):
+		xml = u''
+		for clip in SiteClip.all().order('-added').fetch(10):
+			text = clip.text
+			if clip.url:
+				text += u' ' + myxml.em(u'a', {'href': clip.url, 'class': 'ext'}, content=u'Подробнее…')
+			xml += myxml.em(u'li', content=text)
+		self.sendXML(myxml.em(u'ul', content=xml))

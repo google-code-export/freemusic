@@ -92,6 +92,7 @@ if __name__ == '__main__':
 		('/chart', chart.ShowChart),
 		('/clips', clips.ShowClips),
 		('/clips/random\.json', clips.GetRandomClip),
+		('/clips/recent.xml', clips.GetRecentClips),
 		('/events', events.All),
 		('/events/update', events.Update),
 		('/labels', labels.List),

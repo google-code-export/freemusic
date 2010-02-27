@@ -763,5 +763,13 @@ li.album .cover {
 #clip .c:hover {
 	color: #888;
 }
+#clip ul, #clip li {
+	margin: 0;
+	padding: 0;
+}
+#clip li {
+	list-style-type: none;
+	display: none;
+}
 
 /* vim: set ts=4 sts=4 sw=4 noet ft=css nocindent noautoindent: */

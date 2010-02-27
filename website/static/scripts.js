@@ -234,25 +234,21 @@ $(document).ready(function(){
 	/**
 	 * Вывод случайного текстового фрагмента.
 	 */
-	$('#ntfctn').after('<div id="clip"><span></span><span class="c">+</span></div>');
-	$('#clip .c').click(show_random_clip);
-	show_random_clip();
-});
-
-/**
- * @todo Загружать сразу все, выводить списком, отображать только один элемент,
- * переключать видимость при нажатии в [+].
- */
-function show_random_clip()
-{
 	$.ajax({
 		type: 'GET',
-		url: '/clips/random.json',
-		dataType: 'json',
-		success: function (clip) {
-			$('#clip span:first').html(clip.text);
+		url: '/clips/recent.xml',
+		dataType: 'html',
+		success: function (clips) {
+			$('#ntfctn').after('<div id="clip"><span class="c">+</span>' + clips + '</div>');
+			$('#clip .ext').attr('target', '_blank');
+			$('#clip li:first').show();
+			$('#clip .c').click(function(){
+				var n = $('#clip li:visible').next();
+				if (!n.length)
+					n = $('#clip li:first');
+				$('#clip li').hide();
+				n.show();
+			});
 		}
 	});
-}
-
-// vim: set ts=4 sts=4 sw=4 noet:
+});

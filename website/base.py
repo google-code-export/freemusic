@@ -154,8 +154,11 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.out.write(content)
 
 	def sendJSON(self, content):
+		type = 'application/json'
+		if self.is_admin():
+			type = 'text/plain'
 		json = simplejson.dumps(content)
-		self.sendAny('application/json', json)
+		self.sendAny(type, json)
 
 	def sendAny(self, type, content):
 		self.response.headers['Content-Type'] = type + '; charset=utf-8'
