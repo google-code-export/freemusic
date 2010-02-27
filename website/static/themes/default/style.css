@@ -758,6 +758,10 @@ li.album .cover {
 	cursor: pointer;
 	background-color: #ddd;
 	float: right;
+	color: #eee;
+}
+#clip .c:hover {
+	color: #888;
 }
 
 /* vim: set ts=4 sts=4 sw=4 noet ft=css nocindent noautoindent: */
