@@ -51,6 +51,9 @@
 										<a href="/chart">Рейтинг</a>
 									</li>
 									-->
+									<li>
+										<a href="/radio">Радио</a>
+									</li>
 								</ul>
 							</li>
 							<li>
@@ -58,12 +61,6 @@
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
 								<a href="/events">Афиша</a>
-							</li>
-							<li>
-								<xsl:if test="/page/@class='ShowRadio'">
-									<xsl:attribute name="class">active</xsl:attribute>
-								</xsl:if>
-								<a href="/radio">Радио</a>
 							</li>
 							<li>
 								<xsl:if test="/page/@class='ShowChart'">
