@@ -373,8 +373,8 @@ ul.altiles {
 }
 .altiles .smallstars {
 	position: absolute;
-	top: 118px;
-	left: 88px;
+	top: 114px;
+	left: 86px;
 }
 /*
 .altiles li div a {
@@ -658,11 +658,10 @@ ul.popup {
  */
 li.album .cover {
 	display: inline-block;
-	height: 134px;
-	width: 141px;
-	background: transparent url(jewelcase_large.png) no-repeat top left;
-	padding: 4px 0 0 4px;;
 	text-decoration: none;
+}
+li.album img {
+	border: solid 1px black;
 }
 
 /**
