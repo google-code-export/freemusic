@@ -51,4 +51,4 @@ class GetRecentClips(base.BaseRequestHandler):
 			if clip.url:
 				text += u' ' + myxml.em(u'a', {'href': clip.url, 'class': 'ext'}, content=u'Подробнее…')
 			xml += myxml.em(u'li', content=text)
-		self.sendXML(myxml.em(u'ul', content=xml))
+		self.sendXML(myxml.em(u'ul', content=xml), {'nowrap': True})

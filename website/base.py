@@ -129,23 +129,25 @@ class BaseRequestHandler(webapp.RequestHandler):
 	def sendXML(self, content, attrs=None):
 		if attrs is None:
 			attrs = {}
-		if users.get_current_user():
-			attrs['logout-uri'] = users.create_logout_url(self.request.uri)
-		else:
-			attrs['login-uri'] = users.create_login_url(self.request.uri)
-		if users.is_current_user_admin():
-			attrs['is-admin'] = 'yes'
-		if users.get_current_user():
-			attrs['user'] = users.get_current_user().nickname()
-			attrs['email'] = users.get_current_user().email()
-		attrs['class'] = type(self).__name__
-		attrs['name'] = self.pageName
-		attrs['theme'] = self.request.get('theme', 'default')
+		if 'nowrap' not in attrs:
+			if users.get_current_user():
+				attrs['logout-uri'] = users.create_logout_url(self.request.uri)
+			else:
+				attrs['login-uri'] = users.create_login_url(self.request.uri)
+			if users.is_current_user_admin():
+				attrs['is-admin'] = 'yes'
+			if users.get_current_user():
+				attrs['user'] = users.get_current_user().nickname()
+				attrs['email'] = users.get_current_user().email()
+			attrs['class'] = type(self).__name__
+			attrs['name'] = self.pageName
+			attrs['theme'] = self.request.get('theme', 'default')
+			content = xml.em(u'page', attrs, content)
 
-		result = u"<?xml version=\"1.0\"?>"
-		if 'xml' not in self.request.arguments():
+		result = u'<?xml version="1.0"?>'
+		if 'xml' not in self.request.arguments() and 'nowrap' not in attrs:
 			result += u"<?xml-stylesheet type=\"text/xsl\" href=\"/static/themes/" + attrs['theme'] + '/' + self.xsltName + u"\"?>\n"
-		result += xml.em(u'page', attrs, content)
+		result += content
 		self.response.headers['Content-Type'] = 'application/xml; charset=utf-8'
 		self.response.out.write(result)
 
