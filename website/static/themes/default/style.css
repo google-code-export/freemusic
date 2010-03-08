@@ -388,22 +388,26 @@ ul.altiles {
 .altiles li {
 	display: block;
 	width: 150px;
-	height: 190px;
+	height: 200px;
 	list-style-type: none;
 	margin-bottom: 20px;
 	padding: 0;
 	text-align: center;
 	float: left;
 	position: relative;
-	margin-left: 50px;
+	margin-left: 52px;
+}
+.altiles img {
+	width: 150px;
+	height: 150px;
 }
 .altiles li.pos0 {
 	margin-left: 0;
 }
 .altiles .smallstars {
 	position: absolute;
-	top: 114px;
-	left: 86px;
+	top: 139px;
+	left: 100px;
 }
 /*
 .altiles li div a {
