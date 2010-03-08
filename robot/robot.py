@@ -144,12 +144,13 @@ class Robot:
 			self.submit_url(url)
 
 	def processQueue(self):
-		items = yaml.load(self.fetch('http://' + settings['host'] + '/api/queue.yaml'))
-		if items is None:
+		queue = yaml.load(self.fetch('http://' + settings['host'] + '/api/queue.yaml'))
+		if queue is None or 'queue' not in queue or not len(queue['queue']):
 			if settings['verbose']:
 				print "Nothing to do."
 			return
 
+		items = queue['queue']
 		skip = settings['skip']
 
 		for item in items:
