@@ -10,7 +10,7 @@ a {
 .r {
 	text-align: right;
 }
-.hidden {
+.hidden, .wbg span {
 	display: none;
 }
 img {
@@ -98,22 +98,32 @@ form.eal ol li {
 	position: relative;
 }
 
+/**
+ * Оформление заголовка страницы.
+ */
 #header {
 	margin-bottom: 20px;
 	position: relative;
-	background-color: #dcdcdc;
-	border-top: solid 4px #dcdcdc;
-	border-bottom: solid 4px #dcdcdc;
+	height: 28px;
 }
-#header h1 {
-	display: inline;
-	margin: 0 1em 0 0;
-	font-size: 18px;
-	font-weight: normal;
-	line-height: 28px;
-	font-variant: small-caps;
-	color: black;
+#header h1, #header h1 a {
+	display: block;
+	position: absolute;
+	width: 76px;
+	height: 28px;
+	margin: 0;
+	padding: 0;
 }
+#header h1 a {
+	background: transparent url(../../logo.76x28.png) no-repeat top left;
+}
+#header .menu {
+	position: absolute;
+	top: 6px;
+	left: 90px;
+	font: 14px;
+}
+
 #header small {
 	color: green;
 	font-variant: normal;
@@ -129,19 +139,38 @@ form.eal ol li {
 #header li {
 	margin-left: 1em;
 	position: relative;
+	border: solid 1px white;
 }
 #header li a {
 	padding: 2px 4px;
 }
-#header .active a {
+#header .active > a {
+	font-weight: bold;
 	text-decoration: none;
 	color: black;
-	background-color: #ccc;
 }
-#header h1 a {
-	text-decoration: none;
-	color: inherit;
+#header li.wsub:hover > a, #header li.active > a {
+	z-index: 5001;
+	position: relative; /* для того, чтобы работал z-index */
 }
+#header .submenu {
+	display: none;
+}
+#header li:hover .submenu, #header li.active .submenuX {
+	display: block;
+	position: absolute;
+	z-index: 4000;
+	background-color: white;
+	padding: 24px 10px 4px;
+	margin: -24px 0 0 -11px;
+	border: solid 1px #888;
+	white-space: nowrap;
+}
+#header .submenu li {
+	display: block;
+	margin: .5em 0;
+}
+
 #header .search {
 	position: absolute;
 	top: 0;
@@ -531,7 +560,9 @@ html.audio .noaudio {
 #ntfctn {
 	text-align: center;
 	font-weight: bold;
-	margin: 10px 0;
+	margin: 10px 0 30px;
+	font: 14px;
+	height: 14px;
 }
 #ntfctn p {
 	display: inline-block;
@@ -713,54 +744,21 @@ li.album img {
 	margin-left: 1em;
 }
 
-/**
- * Меню в заголовке.
- */
-#header .submenu {
-	display: none;
-}
-#header li:hover .submenu {
-	display: block;
-	position: absolute;
-	z-index: 5000;
-	background-color: #ccc;
-	padding: 4px 10px;
-	margin: -2px 0 0;
-	border: solid 1px #888;
-	border-left: none;
-	border-top: none;
-	white-space: nowrap;
-}
-#header .submenu li {
-	display: block;
-	margin: .5em 0;
-}
 
 
 /**
  * Оформление случайной фразы на главной странице.
  */
 #clip {
-	border: solid 1px #ddd;
-	background-color: #eee;
-	padding: 2px 2px 2px 4px;
-	margin-bottom: 10px;
-	height: 16px;
-	font: 12px/18px;
-	vertical-align: middle;
+	font-weight: normal;
+	text-align: left;
+	opacity: 0.8;
 }
 #clip .c {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	text-align: center;
 	cursor: pointer;
-	background-color: #ddd;
-	float: right;
-	color: #eee;
-}
-#clip .c:hover {
-	color: #888;
+	float: left;
+	color: gray;
+	margin-right: 1em;
 }
 #clip ul, #clip li {
 	margin: 0;
@@ -771,4 +769,4 @@ li.album img {
 	display: none;
 }
 
-/* vim: set ts=4 sts=4 sw=4 noet ft=css nocindent noautoindent: */
+/* vim: set ts=4 sts=4 sw=4 noet nocindent: */

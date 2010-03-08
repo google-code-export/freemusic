@@ -234,21 +234,23 @@ $(document).ready(function(){
 	/**
 	 * Вывод случайного текстового фрагмента.
 	 */
-	$.ajax({
-		type: 'GET',
-		url: '/clips/recent.xml',
-		dataType: 'html',
-		success: function (clips) {
-			$('#ntfctn').after('<div id="clip"><span class="c">+</span>' + clips + '</div>');
-			$('#clip .ext').attr('target', '_blank');
-			$('#clip li:first').show();
-			$('#clip .c').click(function(){
-				var n = $('#clip li:visible').next();
-				if (!n.length)
-					n = $('#clip li:first');
-				$('#clip li').hide();
-				n.show();
-			});
-		}
-	});
+  if ($('#index').length) {
+    $.ajax({
+      type: 'GET',
+      url: '/clips/recent.xml',
+      dataType: 'html',
+      success: function (clips) {
+        $('#ntfctn').html('<div id="clip"><span title="Другое сообщение" class="c">⟳</span>' + clips + '</div>');
+        $('#clip .ext').attr('target', '_blank');
+        $('#clip li:first').show();
+        $('#clip .c').click(function(){
+          var n = $('#clip li:visible').next();
+          if (!n.length)
+            n = $('#clip li:first');
+          $('#clip li').hide();
+          n.show();
+        });
+      }
+    });
+  }
 });

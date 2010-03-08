@@ -29,15 +29,18 @@
 				<div id="header">
 					<div class="corsette">
 						<h1>
-							<a href="/">
+							<a href="/" class="wbg">
 								<span>Free Music Hub</span>
 							</a>
 						</h1>
-						<ul>
+						<ul class="menu">
 							<li>
-								<xsl:if test="/page/@class='Recent' or /page/@class='ShowReviews'">
-									<xsl:attribute name="class">active</xsl:attribute>
-								</xsl:if>
+								<xsl:attribute name="class">
+									<xsl:text>wsub</xsl:text>
+									<xsl:if test="/page/@class='Recent' or /page/@class='ShowReviews'">
+										<xsl:text> active</xsl:text>
+									</xsl:if>
+								</xsl:attribute>
 								<a href="/">Музыка</a>
 								<ul class="submenu">
 									<li>
@@ -69,11 +72,13 @@
 								<a href="/chart">Рейтинг</a>
 							</li>
 							<xsl:if test="/page/@logout-uri">
-								<li>
+								<li class="wsub">
 									<xsl:if test="/page/@class='My'">
 										<xsl:attribute name="class">active</xsl:attribute>
 									</xsl:if>
-									<a href="/my">Моё</a>
+									<a href="/my">
+										<xsl:value-of select="/page/@user"/>
+									</a>
 									<ul class="submenu">
 										<li>
 											<a href="/u/{/page/@user}">Профиль</a>
@@ -97,7 +102,6 @@
 									<a href="{/page/@login-uri}">Войти</a>
 								</li>
 							</xsl:if>
-							<li title=":)">♪♫♬</li>
 						</ul>
 						<form action="/search" method="get" class="search">
 							<input type="text" name="q" class="text clearme" value="Поиск по сайту"/>
