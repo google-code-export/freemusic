@@ -7,8 +7,20 @@
     <h2>Настройки</h2>
     <ul>
       <li>
-        <a href="/upload/settings">Amazon S3</a>
+        <a href="/settings/s3">Amazon S3</a>
       </li>
     </ul>
+
+	<form method="post" class="gen">
+		<div>
+			<label>
+				<span>Модератор альбомов:</span>
+				<input type="text" name="album_moderator" value="{@album_moderator}"/>
+			</label>
+		</div>
+		<div>
+			<input type="submit"/>
+		</div>
+	</form>
   </xsl:template>
 </xsl:stylesheet>

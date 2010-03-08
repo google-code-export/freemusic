@@ -46,7 +46,7 @@ form.gen label,
 form.gen label span {
 	display: block;
 }
-form.gen .text {
+form.gen .text, form.gen input[type=text] {
 	padding: 4px;
 	width: 400px;
 	max-width: 400px;
