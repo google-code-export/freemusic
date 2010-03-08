@@ -62,7 +62,7 @@
 						</form>
 					</xsl:if>
 					<xsl:apply-templates select="/page/review"/>
-					<xsl:if test="not(/page/review)">
+					<xsl:if test="not(/page/reviews/review)">
 						<p>
 							<xsl:text>Нет ни одного мнения.</xsl:text>
 							<xsl:if test="/page/@login-uri"> Чтобы оставить своё мнение, нужно <a href="{/page/@login-uri}">войти</a>.</xsl:if>
