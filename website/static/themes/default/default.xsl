@@ -90,6 +90,9 @@
 											<li>
 												<a href="https://appengine.google.com/dashboard?app_id=free-music" class="ext">Админка</a>
 											</li>
+											<li>
+												<a href="/settings">Настройка сайта</a>
+											</li>
 										</xsl:if>
 										<li>
 											<a href="{/page/@logout-uri}">Выйти</a>

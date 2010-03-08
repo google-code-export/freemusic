@@ -23,6 +23,7 @@ import my
 import radio
 import reviews
 import sitemap
+import settings
 import tracks
 import upload
 import users
@@ -102,6 +103,7 @@ if __name__ == '__main__':
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),
+		('/settings', settings.SettingsPage),
 		('/sitemap.xml', sitemap.SitemapHandler),
 		('/submit', SubmitHandler),
 		('/track/(\d+)$', tracks.Viewer),

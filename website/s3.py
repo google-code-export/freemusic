@@ -92,7 +92,7 @@ class S3SettingsHandler(BaseRequestHandler):
 		for k in ('s3a', 's3s', 'bucket'):
 			setattr(s, k, self.request.get(k))
 		s.put()
-		self.redirect(self.request.path)
+		self.redirect('/settings')
 
 class S3UploadHandler(BaseRequestHandler):
 	xsltName = 'upload.xsl'

@@ -89,7 +89,7 @@
 	</xsl:template>
 
 	<xsl:template match="s3-settings">
-		<h2>Amazon S3 Settings</h2>
+		<h2>Amazon S3 Settings <small><a href="/settings">more</a></small></h2>
 		<form action="{@action}" method="post" class="gen">
 			<div>
 				<label for="s3a">Access Key:</label>

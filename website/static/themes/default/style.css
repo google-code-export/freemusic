@@ -272,7 +272,7 @@ h2 small {
 	font-size: 10pt;
 	margin-left: 1em;
 }
-h2 .help {
+h2 .help, h2 small a {
 	color: green;
 }
 
