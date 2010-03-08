@@ -18,6 +18,7 @@
 				<table class="tracklist">
 					<tbody>
 						<xsl:for-each select="tracks/track">
+							<xsl:sort select="@number" data-type="number"/>
 							<tr>
 								<td class="r">
 									<xsl:value-of select="position()"/>
@@ -61,6 +62,12 @@
 						</form>
 					</xsl:if>
 					<xsl:apply-templates select="/page/review"/>
+					<xsl:if test="not(/page/review)">
+						<p>
+							<xsl:text>Нет ни одного мнения.</xsl:text>
+							<xsl:if test="/page/@login-uri"> Чтобы оставить своё мнение, нужно <a href="{/page/@login-uri}">войти</a>.</xsl:if>
+						</p>
+					</xsl:if>
 				</div>
 			</div>
 		</div>
