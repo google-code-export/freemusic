@@ -113,10 +113,10 @@
 				</div>
 				<div id="wrapper">
 					<div id="content">
-						<div id="ntfctn"></div>
 						<div id="plh">
 							<p>Вы можете использовать метки для поиска интересующей музыки:</p>
 						</div>
+						<div id="ntfctn"></div>
 						<xsl:apply-templates select="*"/>
 					</div>
 					<div id="footer">
@@ -233,7 +233,7 @@
 						<xsl:value-of select="(position() - 1) mod 4"/>
 					</xsl:attribute>
 					<a href="/album/{@id}" class="cover">
-						<img width="126" height="126">
+						<img>
 							<xsl:attribute name="src">
 								<xsl:value-of select="images/image[@type='front']/@medium"/>
 								<xsl:if test="not(images/image[@type='front'])">/static/default_album_large.png</xsl:if>
