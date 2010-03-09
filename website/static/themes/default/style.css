@@ -773,4 +773,18 @@ li.album img {
 	display: none;
 }
 
+/**
+ * Простая таблица.
+ */
+table.basic {
+	border-collapse: collapse;
+}
+table.basic th, table.basic td {
+	padding: 4px 8px;
+	text-align: left;
+	vertical-align: top;
+	border-bottom: solid 1px #eee;
+	border-right: solid 1px #eee;
+}
+
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */

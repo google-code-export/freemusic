@@ -17,7 +17,10 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports
 from base import BaseRequestHandler, run, HTTPException
 from s3 import S3File
-import model, myxml, mail
+import mail
+import model
+import myxml
+import settings
 import util
 
 class Remote(BaseRequestHandler):
@@ -42,6 +45,16 @@ class Remote(BaseRequestHandler):
 		self.sendXML(myxml.em(u's3-upload-ok', {
 			'file-id': file.id,
 		}))
+
+class Queue(BaseRequestHandler):
+	xsltName = 'upload.xsl'
+
+	def get(self):
+		s = settings.get()
+		xml = u''.join([f.to_xml() for f in S3File.all().fetch(1000)])
+		self.sendXML(myxml.em(u'queue', {
+			'moderator': s.album_moderator,
+		}, content=xml))
 
 def sign(password, string):
 	dm = hmac.new(password, string, hashlib.sha1)

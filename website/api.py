@@ -37,52 +37,17 @@ class Index(APIRequest):
 		self.force_admin()
 		self.sendAny('text/html', self.render('api.html'))
 
-class Queue(BaseRequestHandler):
-	def get(self):
-		if self.request.path == '/api/queue.yaml':
-			return self.get_yaml()
-		xml = u''
-		for file in S3File.all().fetch(1000):
-			if not file.uri:
-				file.uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
-			xml += myxml.em(u'file', {
-				'name': file.name,
-				'owner': file.owner,
-				'uri': file.uri,
-			})
-		s = settings.get()
-		self.sendXML(myxml.em(u'queue', {
-			'moderator': s.album_moderator,
-		}, content=xml))
-
-	def get_yaml(self):
-		yaml = u''
-
-		s = settings.get()
-		yaml += u'settings:\n  album_moderator: %s\n' % s.album_moderator
-		yaml += u'queue:\n'
-
-		for file in S3File.all().fetch(1000):
-			uri = file.uri
-			if not uri and file.bucket and file.path:
-				uri = 'http://' + file.bucket + '.s3.amazonaws.com/' + file.path
-			yaml += u'  - uri: %s\n' % uri
-			if file.owner:
-				yaml += u'    owner: %s\n' % file.owner
-		self.sendText(yaml)
-
-
-class Delete(APIRequest):
-	def get(self):
-		url = self.request.get('url')
-		if not url:
-			raise HTTPException(400, u'Не указан URL удаляемого файла.')
-		self.check_access(url)
-		file = S3File.gql('WHERE uri = :1', url).get()
-		if not file:
-			raise HTTPException(404, u'Такого файла в очереди нет.')
-		file.delete()
-		self.redirect('/api/queue.xml')
+#class Delete(APIRequest):
+#	def get(self):
+#		url = self.request.get('url')
+#		if not url:
+#			raise HTTPException(400, u'Не указан URL удаляемого файла.')
+#		self.check_access(url)
+#		file = S3File.gql('WHERE uri = :1', url).get()
+#		if not file:
+#			raise HTTPException(404, u'Такого файла в очереди нет.')
+#		file.delete()
+#		self.redirect('/upload/queue')
 
 class SubmitAlbum(APIRequest):
 	def get(self):

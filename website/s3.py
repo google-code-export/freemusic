@@ -31,16 +31,27 @@ class S3File(db.Model):
 	name = db.StringProperty(required=True)
 	bucket = db.StringProperty()
 	path = db.StringProperty()
-	uri = db.StringProperty()
+	uri = db.LinkProperty()
 	size = db.IntegerProperty()
 	created = db.DateTimeProperty(auto_now_add=True)
 	info = db.TextProperty()
 	owner = db.UserProperty()
+	xml = db.LinkProperty()
 
 	def put(self):
 		if not self.id:
 			self.id = S3File.getNextId()
 		return db.Model.put(self)
+
+	def to_xml(self):
+		return xml.em(u'S3File', {
+			'id': self.id,
+			'name': self.name,
+			'file-uri': self.uri,
+			'created': self.created,
+			'owner': self.owner,
+			'xml-uri': self.xml,
+		})
 
 	@classmethod
 	def getNextId(cls):

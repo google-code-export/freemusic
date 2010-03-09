@@ -56,34 +56,53 @@
 		</xsl:template>
 
 	<xsl:template match="/page/queue">
-		<h2>Очередь обработки <small><a href="/api/queue.yaml">yaml</a></small></h2>
-		<xsl:if test="file">
-			<ol>
-				<xsl:for-each select="file">
-					<xsl:sort select="@id" data-type="number"/>
-					<li>
-						<tt>
-							<a href="{@uri}">
-								<xsl:value-of select="@name"/>
-							</a>
-						</tt>
-						<xsl:if test="@owner">
-							<small>
-								<xsl:text> от </xsl:text>
-								<xsl:value-of select="@owner"/>
-							</small>
-						</xsl:if>
-						<xsl:if test="/page/@is-admin">
-							<xsl:text> </xsl:text>
-							<small>
-								<a href="/api/queue/delete?url={@uri}">×</a>
-							</small>
-						</xsl:if>
-					</li>
-				</xsl:for-each>
-			</ol>
+		<h2>Очередь обработки</h2>
+		<xsl:if test="S3File">
+			<p>Здесь выводятся <a href="/upload">загруженные</a> альбомы, которые ещё не были обработаны. Наши роботы сейчас над ними работают.</p>
+			<table class="basic">
+				<thead>
+					<tr>
+						<th/>
+						<th>№</th>
+						<th>Файл</th>
+						<th>Владелец</th>
+						<th>XML</th>
+					</tr>
+				</thead>
+				<tbody>
+					<xsl:for-each select="S3File">
+						<xsl:sort select="@created"/>
+						<tr>
+							<td>
+								<xsl:if test="@xml-uri and /page/@is-admin">
+									<input type="checkbox" name="process" value="{@id}"/>
+								</xsl:if>
+							</td>
+							<td><xsl:value-of select="@id"/>.</td>
+							<td>
+								<a href="{@file-uri}">
+									<xsl:value-of select="@name"/>
+								</a>
+							</td>
+							<td>
+								<a href="/u/{@owner}">
+									<xsl:value-of select="@owner"/>
+								</a>
+							</td>
+							<td>
+								<xsl:if test="@xml-uri">
+									<a href="{@xml-uri}">XML</a>
+								</xsl:if>
+							</td>
+						</tr>
+					</xsl:for-each>
+				</tbody>
+			</table>
+			<xsl:if test="/page/@is-admin and S3File[@xml-uri]">
+				<button>Обработать отмеченные</button>
+			</xsl:if>
 		</xsl:if>
-		<xsl:if test="not(file)">
+		<xsl:if test="not(S3File)">
 			<p>Очередь пуста, <a href="/upload">загрузи</a> что-нибудь<a href="/upload/remote">!</a></p>
 		</xsl:if>
 	</xsl:template>
@@ -158,7 +177,7 @@
 		<div class="twocol">
 			<div class="right">
 				<h2>Загрузка завершена</h2>
-				<p>Файл успешно загружен, ему присвоен <a href="/api/queue.xml#{@file-id}">номер <xsl:value-of select="@file-id"/></a>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
+				<p>Файл успешно загружен, ему присвоен <a href="/upload/queue">номер <xsl:value-of select="@file-id"/></a>.&#160; Наши роботы скоро им займутся, обо всём происходящем вам будут сообщать по электронной почте.</p>
 				<p><a href="/upload">Загрузить ещё один файл</a></p>
 			</div>
 		</div>
