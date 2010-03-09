@@ -16,6 +16,8 @@ handlers:
   static_dir: static
 - url: /doc/
   static_dir: doc
+- url: /upload/(queue|remote)
+  script: upload.py
 - url: .*
   script: main.py
 

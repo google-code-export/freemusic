@@ -107,8 +107,6 @@ if __name__ == '__main__':
 		('/track/(\d+)$', tracks.Viewer),
 		('/tracks\.rss', tracks.RSSHandler),
 		('/upload', S3UploadHandler),
-		('/upload/queue', upload.Queue),
-		('/upload/remote', upload.Remote),
 		('/u/([^/]+)$', users.ShowUser),
 		('/users', users.List),
 	])

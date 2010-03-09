@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# vim: set ts=4 sts=4 sw=4 noet:
+# vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
 import base64, hmac, hashlib
 
@@ -59,3 +58,9 @@ class Queue(BaseRequestHandler):
 def sign(password, string):
 	dm = hmac.new(password, string, hashlib.sha1)
 	return base64.b64encode(dm.digest())
+
+if __name__ == '__main__':
+	run([
+		('/upload/queue', Queue),
+		('/upload/remote', Remote),
+	])
