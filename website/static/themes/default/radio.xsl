@@ -6,7 +6,7 @@
 	<xsl:template match="radio">
 		<div id="radio" class="onecol">
 			<h2>Free Music Radio</h2>
-			<p>Наше радио вещает в формате MP3, круглые сутки в случайном порядке проигрывая всю музыку, представленную на нашем сайте.&#160; Чтобы подключиться, добавьте эту ссылку в свой любимый проигрыватель:</p>
+			<p>Наше радио вещает в формате MP3, круглые сутки в случайном порядке проигрывая всю музыку, представленную на нашем сайте.</p>
 			<object type="application/x-shockwave-flash" width="299" height="111" data="/static/player.swf?file=http%3A%2F%2Fradio.deadchannel.ru%3A8000%2Fstream.mp3&amp;width=299&amp;height=111&amp;controlbar=none&amp;link=http://radio.deadchannel.ru/&amp;image=/static/logo.radio.png&amp;type=sound&amp;duration=-1">
 			  <param name="movie" value="http://radio.deadchannel.ru:8000/stream.mp3" />
 			  <param name="wmode" value="transparent" />

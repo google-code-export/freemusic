@@ -9,6 +9,9 @@ handlers:
 - url: /favicon.ico
   static_files: static/favicon.2.ico
   upload: static/favicon.2.ico
+- url: /crossdomain.xml
+  static_files: static/crossdomain.xml
+  upload: static/crossdomain.xml
 - url: /google4c14bfd1bdbab0dd.html
   static_files: static/google4c14bfd1bdbab0dd.html
   upload: static/google4c14bfd1bdbab0dd.html
