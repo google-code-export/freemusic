@@ -12,10 +12,13 @@
 	</xsl:template>
 
 	<xsl:template match="review">
-		<div>
-			<p class="meta">
+		<div class="review">
+			<div class="meta">
 				<xsl:apply-templates select="@average"/>
-				<xsl:text> &#160; «</xsl:text>
+				<a href="/u/{@author-nickname}" class="u">
+					<xsl:value-of select="@author-nickname"/>
+				</a>
+				<xsl:text> на &#160; «</xsl:text>
 				<a href="/album/{@album-id}">
 					<xsl:value-of select="@album-name"/>
 				</a>
@@ -26,8 +29,10 @@
 				<xsl:text> (</xsl:text>
 				<xsl:apply-templates select="@pubDate"/>
 				<xsl:text>)</xsl:text>
+			</div>
+			<p>
+				<xsl:value-of select="@comment"/>
 			</p>
-			<xsl:apply-templates select="@comment" mode="my"/>
 		</div>
 	</xsl:template>
 </xsl:stylesheet>
