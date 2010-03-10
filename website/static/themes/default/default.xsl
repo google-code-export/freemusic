@@ -81,6 +81,9 @@
 									</a>
 									<ul class="submenu">
 										<li>
+											<a href="/reviews?author={/page/@user}">Мои рецензии</a>
+										</li>
+										<li>
 											<a href="/upload">Загрузить альбом</a>
 										</li>
 										<xsl:if test="/page/@is-admin">
