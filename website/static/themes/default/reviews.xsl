@@ -4,21 +4,33 @@
 	<xsl:import href="default.xsl"/>
 
 	<xsl:template match="reviews">
-		<h2>Последние рецензии <small><a class="help ext" href="http://code.google.com/p/freemusic/wiki/Reviews">что это?</a></small></h2>
+		<h2>
+			<xsl:choose>
+				<xsl:when test="@author">Рецензии пользователя <a href="/u/{@author}"><xsl:value-of select="@author"/></a></xsl:when>
+				<xsl:otherwise>Последние рецензии</xsl:otherwise>
+			</xsl:choose>
+			<xsl:text> </xsl:text>
+			<small><a class="help ext" href="http://code.google.com/p/freemusic/wiki/Reviews">что это?</a></small>
+		</h2>
 		<xsl:apply-templates select="review">
 			<xsl:sort select="@pubDate" order="descending"/>
+			<xsl:with-param name="author" select="@author"/>
 			<xsl:with-param name="title">yes</xsl:with-param>
 		</xsl:apply-templates>
 	</xsl:template>
 
 	<xsl:template match="review">
+		<xsl:param name="author"/>
 		<div class="review">
 			<div class="meta">
 				<xsl:apply-templates select="@average"/>
-				<a href="/u/{@author-nickname}" class="u">
-					<xsl:value-of select="@author-nickname"/>
-				</a>
-				<xsl:text> на &#160; «</xsl:text>
+				<xsl:if test="not($author)">
+					<a href="/u/{@author-nickname}" class="u">
+						<xsl:value-of select="@author-nickname"/>
+					</a>
+					<xsl:text>: &#160; </xsl:text>
+				</xsl:if>
+				<xsl:text>«</xsl:text>
 				<a href="/album/{@album-id}">
 					<xsl:value-of select="@album-name"/>
 				</a>

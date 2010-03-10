@@ -1,8 +1,10 @@
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
+from google.appengine.api import users
+
 from rss import RSSHandler
 from base import BaseRequestHandler, HTTPException
-from model import SiteAlbum, SiteAlbumReview
+from model import SiteAlbum, SiteAlbumReview, SiteUser
 import myxml
 
 class AlbumRSS(RSSHandler):
@@ -22,11 +24,19 @@ class AllRSS(RSSHandler):
 	"""
 	def get(self):
 		entries = [r.to_rss() for r in SiteAlbumReview.all().order('-published').fetch(10)]
-		self.sendRSS(entries, title=u'Все Рецензии')
+		self.sendRSS(entries, title=u'Все рецензии')
 
 class ShowReviews(BaseRequestHandler):
 	xsltName = 'reviews.xsl'
+	tabName = 'music'
 
 	def get(self):
-		xml = u''.join([r.xml for r in SiteAlbumReview.all().order('-published').fetch(10)])
-		self.sendXML(myxml.em(u'reviews', content=xml))
+		attrs = {}
+		if self.request.get('author'):
+			attrs['author'] = self.request.get('author')
+			author = SiteUser.gql('WHERE nickname = :1', attrs['author']).get()
+			reviews = SiteAlbumReview.gql('WHERE author = :1 ORDER BY published DESC', author)
+		else:
+			reviews = SiteAlbumReview.all().order('-published')
+		xml = u''.join([r.xml for r in reviews.fetch(10)])
+		self.sendXML(myxml.em(u'reviews', attrs, xml))

@@ -13,3 +13,8 @@ indexes:
   properties:
   - name: album
   - name: number
+- kind: SiteAlbumReview
+  properties:
+  - name: author
+  - name: published
+    direction: desc
