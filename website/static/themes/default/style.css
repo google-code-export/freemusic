@@ -787,4 +787,16 @@ table.basic th, table.basic td {
 	border-right: solid 1px #eee;
 }
 
+/**
+ * Профиль пользователя.
+ */
+#profile img {
+	float: left;
+}
+#profile ul {
+	margin: 0 0 0 90px;
+	padding: 0;
+	list-style-type: none;
+}
+
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */

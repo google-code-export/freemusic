@@ -4,14 +4,14 @@
 	<xsl:import href="default.xsl"/>
 
 	<xsl:template match="user">
-		<h2>Пользователь <xsl:value-of select="@nickname"/></h2>
-		<p>Присоединился <xsl:apply-templates select="@pubDate"/>.</p>
-		<img src="http://www.gravatar.com/avatar.php?gravatar_id={@hash}&amp;size=80" width="80" height="80"/>
-		<xsl:if test="/page/@is-admin and not(@invited)">
-			<form action="/users" method="post">
-				<input type="hidden" name="email" value="{@email}"/>
-				<input type="submit" value="Выслать приглашение"/>
-			</form>
-		</xsl:if>
+		<h2>Профиль пользователя <xsl:value-of select="@nickname"/></h2>
+		<div id="profile">
+			<img src="http://www.gravatar.com/avatar.php?gravatar_id={@hash}&amp;size=80" width="80" height="80"/>
+			<ul>
+				<li><a href="/reviews?author={@nickname}">Рецензии</a></li>
+				<li><a href="/player?user={@nickname}">Коллекция</a></li>
+				<li>На сайте с <xsl:apply-templates select="@pubDate"/></li>
+			</ul>
+		</div>
 	</xsl:template>
 </xsl:stylesheet>
