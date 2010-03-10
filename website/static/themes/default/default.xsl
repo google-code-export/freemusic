@@ -37,7 +37,7 @@
 							<li>
 								<xsl:attribute name="class">
 									<xsl:text>wsub</xsl:text>
-									<xsl:if test="/page/@class='Recent' or /page/@class='ShowReviews'">
+									<xsl:if test="/page/@tab='music'">
 										<xsl:text> active</xsl:text>
 									</xsl:if>
 								</xsl:attribute>
@@ -60,20 +60,20 @@
 								</ul>
 							</li>
 							<li>
-								<xsl:if test="/page/@class='All'">
+								<xsl:if test="/page/@tab='events'">
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
 								<a href="/events">Афиша</a>
 							</li>
 							<li>
-								<xsl:if test="/page/@class='ShowChart'">
+								<xsl:if test="/page/@tab='chart'">
 									<xsl:attribute name="class">active</xsl:attribute>
 								</xsl:if>
 								<a href="/chart">Рейтинг</a>
 							</li>
 							<xsl:if test="/page/@logout-uri">
 								<li class="wsub">
-									<xsl:if test="/page/@class='My'">
+									<xsl:if test="/page/@tab='personal'">
 										<xsl:attribute name="class">active</xsl:attribute>
 									</xsl:if>
 									<a href="/u/{/page/@user}">

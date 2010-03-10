@@ -32,6 +32,7 @@ class FixHandler(BaseRequestHandler):
 
 class ViewHandler(BaseRequestHandler):
 	xsltName = 'artists.xsl'
+	tabName = 'music'
 
 	def get(self, id):
 		self.check_access()
@@ -50,6 +51,7 @@ class RSSHandler(BaseRequestHandler):
 
 class List(BaseRequestHandler):
 	xsltName = 'artists.xsl'
+	tabName = 'music'
 
 	def get(self):
 		self.check_access()

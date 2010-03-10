@@ -37,6 +37,7 @@ class List(BaseRequestHandler):
 
 class ShowUser(BaseRequestHandler):
 	xsltName = 'user.xsl'
+	tabName = 'personal'
 
 	def get(self, username):
 		user = SiteUser.gql('WHERE user = :1', users.User(username + '@gmail.com')).get()

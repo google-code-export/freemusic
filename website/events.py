@@ -45,6 +45,7 @@ class Update(base.BaseRequestHandler):
 
 class All(base.BaseRequestHandler):
 	xsltName = 'events.xsl'
+	tabName = 'events'
 
 	def get(self):
 		xml = u''.join([e.xml for e in model.SiteEvent.all().fetch(1000)])

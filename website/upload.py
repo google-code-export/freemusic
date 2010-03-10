@@ -15,7 +15,7 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports
 from base import BaseRequestHandler, run, HTTPException
-from s3 import S3File
+from s3 import S3File, sign
 import mail
 import model
 import myxml
@@ -24,6 +24,7 @@ import util
 
 class Remote(BaseRequestHandler):
 	xsltName = 'upload.xsl'
+	tabName = 'personal'
 
 	def get(self):
 		self.force_user()
@@ -55,9 +56,16 @@ class Queue(BaseRequestHandler):
 			'moderator': s.album_moderator,
 		}, content=xml))
 
-def sign(password, string):
-	dm = hmac.new(password, string, hashlib.sha1)
-	return base64.b64encode(dm.digest())
+	def post(self):
+		id = int(self.request.get('id'))
+		url = str(self.request.get('url'))
+		if self.request.get('signature') != sign(url):
+			raise Exception('Bad Signature')
+		file = S3File.gql('WHERE id = :1', id).get()
+		if file is None:
+			raise Exception('Queue item not found.')
+		file.xml = url
+		file.put()
 
 if __name__ == '__main__':
 	run([

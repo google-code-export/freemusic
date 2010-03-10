@@ -4,6 +4,7 @@ import base
 
 class ShowRadio(base.BaseRequestHandler):
 	xsltName = 'radio.xsl'
+	tabName = 'music'
 
 	def get(self):
 		self.sendXML(u'<radio/>')

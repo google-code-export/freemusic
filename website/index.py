@@ -12,6 +12,7 @@ class ServiceUnavailable(HTTPException):
 
 class Recent(BaseRequestHandler):
 	xsltName = 'index.xsl'
+	tabName = 'music'
 
 	def get(self):
 		self.check_access()

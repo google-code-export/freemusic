@@ -44,6 +44,7 @@ class ClosedException(HTTPException):
 class BaseRequestHandler(webapp.RequestHandler):
 	pageName = 'base'
 	xsltName = 'default.xsl'
+	tabName = 'other'
 
 	def is_open(self):
 		"""
@@ -142,6 +143,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['class'] = type(self).__name__
 			attrs['name'] = self.pageName
 			attrs['theme'] = self.request.get('theme', 'default')
+			attrs['tab'] = self.tabName
 			content = xml.em(u'page', attrs, content)
 
 		result = u'<?xml version="1.0"?>'

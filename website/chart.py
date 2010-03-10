@@ -11,6 +11,7 @@ import myxml
 
 class ShowChart(base.BaseRequestHandler):
 	xsltName = 'chart.xsl'
+	tabName = 'chart'
 
 	def get(self):
 		data = self.get_xml()

@@ -107,6 +107,7 @@ class S3SettingsHandler(BaseRequestHandler):
 
 class S3UploadHandler(BaseRequestHandler):
 	xsltName = 'upload.xsl'
+	tabName = 'personal'
 
 	"""
 	Обслуживание формы загрузки файла в хранилище Amazon S3.
