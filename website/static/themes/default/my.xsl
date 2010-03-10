@@ -38,8 +38,8 @@
 				<xsl:sort select="@pubDate" order="descending"/>
 				<div>
 					<p class="meta">
-						<xsl:apply-templates select="@pubDate"/>
-						<xsl:text>, на «</xsl:text>
+						<xsl:apply-templates select="@average"/>
+						<xsl:text> &#160; «</xsl:text>
 						<a href="/album/{@album-id}">
 							<xsl:value-of select="@album-name"/>
 						</a>
@@ -47,8 +47,9 @@
 						<a href="/artist/{@artist-id}">
 							<xsl:value-of select="@artist-name"/>
 						</a>
-						<xsl:text> &#160; </xsl:text>
-						<xsl:apply-templates select="@average"/>
+						<xsl:text> (</xsl:text>
+						<xsl:apply-templates select="@pubDate"/>
+						<xsl:text>)</xsl:text>
 					</p>
 					<xsl:apply-templates select="@comment" mode="my"/>
 				</div>
