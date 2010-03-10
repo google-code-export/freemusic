@@ -4,8 +4,42 @@
 	<xsl:import href="default.xsl"/>
 
 	<xsl:template match="player">
-		<h2>Проигрыватель</h2>
-		<table class="basic">
+		<div id="player">
+			<h2>Проигрыватель</h2>
+			<xsl:apply-templates select="artists"/>
+			<xsl:apply-templates select="tracks"/>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="artists">
+		<div class="filter">
+			<ul class="artists">
+				<xsl:for-each select="artist">
+					<xsl:sort select="@sort"/>
+					<li>
+						<label>
+							<input type="checkbox" name="artist" value="{@id}" checked="checked"/>
+							<xsl:value-of select="@name"/>
+						</label>
+					</li>
+				</xsl:for-each>
+			</ul>
+			<ul class="albums">
+				<xsl:for-each select="artist/album">
+					<xsl:sort select="@name"/>
+					<li class="artist-{../@id}">
+						<label>
+							<input type="checkbox" name="album" value="{@id}" checked="checked"/>
+							<xsl:value-of select="@name"/>
+						</label>
+					</li>
+				</xsl:for-each>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="tracks">
+		<table class="ptl basic">
 			<thead>
 				<tr>
 					<th>Композиция</th>
@@ -16,7 +50,7 @@
 			</thead>
 			<tbody>
 				<xsl:for-each select="track">
-					<tr>
+					<tr class="artist-{@artist-id} album-{@album-id}">
 						<td>
 							<a href="/track/{@id}">
 								<xsl:value-of select="@title"/>

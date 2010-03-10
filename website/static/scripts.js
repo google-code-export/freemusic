@@ -253,4 +253,18 @@ $(document).ready(function(){
       }
     });
   }
+
+  /**
+   * Проигрыватель для коллекции.
+   */
+  $('#player ul.artists input:checkbox').change(function(){
+    var v = $(this).attr('checked');
+    $('#player ul :checkbox:hidden').attr('checked', 'checked');
+    $('#player ul.albums .artist-' + $(this).val()).css('display', v ? 'block' : 'none');
+    $('#player .ptl .artist-' + $(this).val()).css('display', v ? 'table-row' : 'none');
+  });
+  $('#player ul.albums input:checkbox').change(function(){
+    var v = $(this).attr('checked') ? 'table-row' : 'none';
+    $('#player .ptl .album-' + $(this).val()).css('display', v);
+  });
 });

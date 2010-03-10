@@ -799,4 +799,23 @@ table.basic th, table.basic td {
 	list-style-type: none;
 }
 
+#player .filter {
+	height: 220px;
+}
+#player .filter ul {
+	margin: 0;
+	padding: 4px;
+	list-style-type: none;
+	border: solid 1px gray;
+	width: 360px;
+	height: 200px;
+	float: left;
+}
+#player .filter .albums {
+	float: right;
+}
+#player table {
+	width: 100%;
+}
+
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */
