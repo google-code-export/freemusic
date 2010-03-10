@@ -21,10 +21,12 @@ class SiteUser(db.Model):
 	joined = db.DateTimeProperty(auto_now_add=True)
 	weight = db.FloatProperty()
 	invited = db.BooleanProperty(required=True)
+	nickname = db.StringProperty()
 	xml = db.TextProperty()
 
 	def put(self):
 		self.xml = self.to_xml()
+		self.nickname = self.user.nickname()
 		db.Model.put(self)
 
 	def to_xml(self):
