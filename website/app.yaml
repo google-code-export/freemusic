@@ -19,6 +19,9 @@ handlers:
   static_dir: static
 - url: /doc/
   static_dir: doc
+
+- url: /player
+  script: player.py
 - url: /upload/(queue|remote)
   script: upload.py
 - url: .*

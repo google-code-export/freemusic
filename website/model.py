@@ -176,6 +176,8 @@ class SiteTrack(db.Model):
 			'number': self.number,
 			'album-id': self.album.id,
 			'album-name': self.album.name,
+			'artist-id': self.album.artist.id,
+			'artist-name': self.album.artist.name,
 			'title': self.title,
 			'duration': self.duration,
 			'mp3-link': self.mp3_link,
