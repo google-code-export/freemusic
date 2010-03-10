@@ -6,6 +6,7 @@ from xml.dom.minidom import parseString
 
 # GAE imports
 from google.appengine.api import users
+from google.appengine.api import memcache
 from google.appengine.api.urlfetch import fetch
 from google.appengine.ext import db
 
@@ -191,8 +192,11 @@ class SubmitAlbum(APIRequest):
 		return int(value)
 
 class Update(BaseRequestHandler):
+	mck = '/api/update'
+
 	def get(self):
 		self.force_admin()
+		limit = 10
 		if self.request.get('kind') == 'artist':
 			cls = model.SiteArtist
 		elif self.request.get('kind') == 'album':
@@ -201,9 +205,25 @@ class Update(BaseRequestHandler):
 			cls = model.SiteAlbumReview
 		elif self.request.get('kind') == 'user':
 			cls = model.SiteUser
+			limit = 30
+		elif self.request.get('kind') == 'track':
+			cls = model.SiteTrack
+			limit = 30
 		else:
 			cls = None
 		if cls is not None:
-			for obj in cls.all().fetch(1000):
+			count = 0
+			all = cls.all()
+			c = memcache.get(self.mck)
+			if c:
+				all = all.with_cursor(c)
+			for obj in all.fetch(limit):
 				obj.put()
+				count += 1
+			if count:
+				self.redirect('/api/update?kind=' +  self.request.get('kind'))
+				memcache.set(self.mck, all.cursor())
+				return
+
+		memcache.delete(self.mck)
 		self.redirect('/api')
