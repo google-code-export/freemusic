@@ -17,9 +17,7 @@ class Recent(BaseRequestHandler):
 		self.check_access()
 		offset = self.get_offset()
 		xml = u"<index skip=\"%u\"><albums>" % offset
-		for album in self.get_albums(offset):
-			if album.xml:
-				xml += album.xml
+		xml += u''.join([a.shortxml for a in self.get_albums(offset)])
 		xml += u'</albums>'
 		xml += labels.load()
 		xml += u'</index>'

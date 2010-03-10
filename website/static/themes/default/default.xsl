@@ -240,8 +240,8 @@
 					<a href="/album/{@id}" class="cover">
 						<img>
 							<xsl:attribute name="src">
-								<xsl:value-of select="images/image[@type='front']/@medium"/>
-								<xsl:if test="not(images/image[@type='front'])">/static/default_album_large.png</xsl:if>
+								<xsl:value-of select="@image"/>
+								<xsl:if test="not(@image)">/static/default_album_large.png</xsl:if>
 							</xsl:attribute>
 						</img>
 						<span class="jewelcase"/>

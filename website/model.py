@@ -72,6 +72,7 @@ class SiteAlbum(db.Model):
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
 	xml = db.TextProperty() # updated on save
+	shortxml = db.TextProperty() # не содержит треков и файлов
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
 	rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
 
@@ -82,6 +83,7 @@ class SiteAlbum(db.Model):
 		if not quick:
 			self.rate = self.get_avg_rate()
 			self.xml = self.to_xml()
+			self.update_shortxml()
 			logging.info('album/%u: xml updated' % self.id)
 		return db.Model.put(self)
 
@@ -89,6 +91,22 @@ class SiteAlbum(db.Model):
 		rates = [r.rate_average for r in SiteAlbumReview.gql('WHERE album = :1', self).fetch(1000) if r.rate_average is not None]
 		if len(rates):
 			return sum(rates) / len(rates)
+
+	def update_shortxml(self):
+		image = None
+		for img in SiteImage.gql('WHERE album = :1', self).fetch(10):
+			if img.type == 'front':
+				image = img.medium
+				break
+		self.shortxml = xml.em(u'album', {
+			'id': self.id,
+			'name': self.name,
+			'artist-id': self.artist.id,
+			'artist-name': self.artist.name,
+			'pubDate': self.release_date.isoformat(),
+			'rate': self.rate,
+			'image': image,
+		})
 
 	def to_xml(self):
 		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
