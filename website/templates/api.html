@@ -14,5 +14,16 @@
 <input type="submit"/>
 </form>
 
+<h2>Массовое обновление</h2>
+<form method="get" action="/api/update">
+  <select name="kind">
+    <option value="artist">Исполнители</option>
+    <option value="album">Альбомы</option>
+    <option value="review">Рецензии</option>
+    <option value="user">Пользователи</option>
+  </select>
+  <button>Обновить</button>
+</form>
+
 <p><a href="/upload/remote">Добавление ZIP-архива по ссылке</a></p>
 {% endblock %}

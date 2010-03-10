@@ -202,6 +202,8 @@ class Update(BaseRequestHandler):
 		elif self.request.get('kind') == 'user':
 			cls = model.SiteUser
 		else:
-			return
-		for obj in cls.all().fetch(1000):
-			obj.put()
+			cls = None
+		if cls is not None:
+			for obj in cls.all().fetch(1000):
+				obj.put()
+		self.redirect('/api')
