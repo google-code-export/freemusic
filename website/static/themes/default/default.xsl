@@ -76,19 +76,24 @@
 									<xsl:if test="/page/@class='My'">
 										<xsl:attribute name="class">active</xsl:attribute>
 									</xsl:if>
-									<a href="/my">
+									<a href="/u/{/page/@user}">
 										<xsl:value-of select="/page/@user"/>
 									</a>
 									<ul class="submenu">
-										<li>
-											<a href="/u/{/page/@user}">Профиль</a>
-										</li>
 										<li>
 											<a href="/upload">Загрузить альбом</a>
 										</li>
 										<xsl:if test="/page/@is-admin">
 											<li>
-												<a href="https://appengine.google.com/dashboard?app_id=free-music" class="ext">Админка</a>
+												<a class="ext">
+													<xsl:attribute name="href">
+														<xsl:choose>
+															<xsl:when test="contains(/page/@logout-uri,'dev.freemusichub.net')">/_ah/admin</xsl:when>
+															<xsl:otherwise>https://appengine.google.com/dashboard?app_id=free-music</xsl:otherwise>
+														</xsl:choose>
+													</xsl:attribute>
+													<xsl:text>Админка</xsl:text>
+												</a>
 											</li>
 											<li>
 												<a href="/settings">Настройка сайта</a>
