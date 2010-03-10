@@ -5,8 +5,33 @@
 import logger
 import os
 import sys
+import tarfile
 import urllib
 import zipfile
+
+import util
+
+def unpack(filename, tmpdir='/tmp'):
+	fn = filename.lower()
+	if fn.endswith('.zip'):
+		return unzip(filename, tmpdir)
+	elif fn.endswith('.rar'):
+		return unrar(filename, tmpdir)
+	elif tarfile.is_tarfile(filename):
+		return untar(filename, tmpdir)
+	raise Exception('Unsupported archive type: %s' % ext)
+
+def unrar(filename, tmpdir):
+	"Распаковывает архив с помощью unrar."
+	olddir = os.path.abspath(os.path.curdir)
+	if not os.path.isabs(filename):
+		filename = os.path.abspath(filename)
+	try:
+		os.chdir(tmpdir)
+		cmd = util.pipe([['unrar', 'e', '-p-', '-o+', '-inul', '-y', filename]])
+		return [os.path.join(tmpdir, f) for f in os.listdir(tmpdir)]
+	finally:
+		os.chdir(olddir)
 
 def unzip(zipname, tmpdir):
 	"""
@@ -37,6 +62,11 @@ def unzip(zipname, tmpdir):
 				out.close()
 				logger.info(u"< " + name)
 	return result
+
+def untar(filename, tmpdir):
+	f = tarfile.open(filename, 'r')
+	f.extractall(tmpdir)
+	return [os.path.join(tmpdir, x) for x in f.getnames()]
 
 def zip(filename, files):
 	logger.info(u'creating ' + filename)
