@@ -829,5 +829,8 @@ table.basic th, table.basic td {
 	left: 350px;
 	top: 35px;
 }
+#radio .info {
+	opacity: 0.7;
+}
 
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */
