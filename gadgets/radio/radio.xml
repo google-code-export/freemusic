@@ -3,6 +3,7 @@
 	<ModulePrefs
 		title="Free Music Hub Radio"
     title_url="http://www.freemusichub.net/radio"
+    description="Plays free music 24/7, mostly EBM and electro-industrial music from Russia."
 		screenshot="http://home.umonkey.net/public/g/radio/screenshot.png"
 		thumbnail="http://home.umonkey.net/public/g/radio/thumbnail.png"
 		author="Justin Forest"
