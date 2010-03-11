@@ -164,10 +164,12 @@ class SiteTrack(db.Model):
 	ogg_link = db.LinkProperty()
 	ogg_length = db.IntegerProperty() # нужно для RSS с подкастом
 	duration = db.StringProperty()
+	xml = db.TextProperty()
 
 	def put(self):
 		if not self.id:
 			self.id = nextId(SiteTrack)
+		self.xml = self.to_xml()
 		return db.Model.put(self)
 
 	def to_xml(self):

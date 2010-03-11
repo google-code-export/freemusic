@@ -22,6 +22,8 @@ handlers:
 
 - url: /player
   script: player.py
+- url: /radio(/.*)?
+  script: radio.py
 - url: /upload/(queue|remote)
   script: upload.py
 - url: .*

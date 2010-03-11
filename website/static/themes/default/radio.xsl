@@ -18,6 +18,7 @@
 			</object>
 			-->
 			<div class="other">
+				<div class="current"></div>
 				<p>Если Вы предпочитаете настольный проигрыватель (<a href="http://ru.winamp.com/">Winamp</a>, <a href="http://www.foobar2000.org/">foobar2000</a> итд), просто добавьте в него эту ссылку:</p>
 				<pre><a href="http://radio.deadchannel.ru:8000/stream.mp3">http://radio.deadchannel.ru:8000/stream.mp3</a></pre>
 			</div>

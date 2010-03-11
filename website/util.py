@@ -26,6 +26,9 @@ def mksortname(name):
 			name = name[len(prefix)+1:] + u', ' + prefix
 	return name
 
+def fetch(url):
+	return urlfetch.fetch(url).content
+
 def fetchxml(url, args=None):
 	if type(args) == type({}):
 		url += '?' + urllib.urlencode(args)

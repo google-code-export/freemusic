@@ -267,4 +267,29 @@ $(document).ready(function(){
     var v = $(this).attr('checked') ? 'table-row' : 'none';
     $('#player .ptl .album-' + $(this).val()).css('display', v);
   });
+
+  /**
+   * Вывод играющей на радио дорожки.
+   */
+  if ($('#radio').length) {
+    radio_np();
+    setInterval(radio_np, 10000);
+  }
 });
+
+function radio_np()
+{
+  try {
+    $.ajax({
+      type: 'GET',
+      url: '/radio/current.json',
+      dataType: 'json',
+      success: function (data) {
+        var h = '<p>Сейчас проигрывается: ' + data.html + '.</p>';
+        $('#radio .current').html(h);
+      }, error: function (a, b) {
+				alert('Error ' + a.status + ': ' + a.statusText);
+      }
+    });
+  } catch (e) { }
+}

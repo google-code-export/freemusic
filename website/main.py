@@ -19,7 +19,6 @@ import events
 import index
 import labels
 import model
-import radio
 import reviews
 import sitemap
 import settings
@@ -94,7 +93,6 @@ if __name__ == '__main__':
 		('/events/update', events.Update),
 		('/labels', labels.List),
 		# ('/my/collection', album.Collection),
-		('/radio', radio.ShowRadio),
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),

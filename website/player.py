@@ -1,5 +1,7 @@
 # vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
+from google.appengine.api import memcache
+
 # Site imports.
 import base
 import model
@@ -10,10 +12,13 @@ class Player(base.BaseRequestHandler):
 	tabName = 'music'
 
 	def get(self):
-		tracks = model.SiteTrack.all()
-		xml = self.get_stats()
-		xml += myxml.em(u'tracks', content=u''.join([t.to_xml() for t in tracks.fetch(1000)]))
-		self.sendXML(myxml.em(u'player', content=xml))
+		cached = memcache.get(self.request.path)
+		if cached is None:
+			tracks = model.SiteTrack.all()
+			xml = self.get_stats()
+			xml += myxml.em(u'tracks', content=u''.join([t.xml for t in tracks.fetch(1000)]))
+			cached = myxml.em(u'player', content=xml)
+		self.sendXML(cached)
 
 	def get_stats(self):
 		xml = u''
