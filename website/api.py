@@ -3,6 +3,7 @@
 # Python imports
 import datetime, logging
 from xml.dom.minidom import parseString
+import random
 
 # GAE imports
 from google.appengine.api import users
@@ -213,16 +214,21 @@ class Update(BaseRequestHandler):
 			cls = None
 		if cls is not None:
 			count = 0
-			all = cls.all()
-			c = memcache.get(self.mck)
-			if c:
-				all = all.with_cursor(c)
-			for obj in all.fetch(limit):
+			try:
+				c = memcache.get(self.mck)
+				if c is None:
+					raise Exception()
+				qry = cls.all().with_cursor(c)
+				all = qry.fetch(limit)
+			except:
+				qry = cls.all()
+				all = qry.fetch(limit)
+			for obj in all:
 				obj.put()
 				count += 1
 			if count:
-				self.redirect('/api/update?kind=' +  self.request.get('kind'))
-				memcache.set(self.mck, all.cursor())
+				self.redirect('/api/update?kind=%s&r=%u' % (self.request.get('kind'), random.randint(11111, 99999)))
+				memcache.set(self.mck, qry.cursor())
 				return
 
 		memcache.delete(self.mck)
