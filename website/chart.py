@@ -23,5 +23,4 @@ class ShowChart(base.CachingRequestHandler):
 					'playcount': tmp.find('artist/stats/playcount').text,
 					'listeners': tmp.find('artist/stats/listeners').text,
 					})
-		xml = u'<chart>' + xml + u'</chart>'
-		return xml
+		self.sendXML(u'<chart>' + xml + u'</chart>')
