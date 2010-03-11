@@ -818,4 +818,16 @@ table.basic th, table.basic td {
 	width: 100%;
 }
 
+/**
+ * Оформление страницы радио.
+ */
+#radio {
+	position: relative;
+}
+#radio .other {
+	position: absolute;
+	left: 350px;
+	top: 35px;
+}
+
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */
