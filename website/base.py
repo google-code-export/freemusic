@@ -2,13 +2,17 @@
 # vim: set ts=4 sts=4 sw=4 noet:
 
 # Python imports
-import logging, os, urllib
+import logging
+import os
+import time
+import urllib
 import urlparse # используется в getBaseURL()
 from xml.sax.saxutils import escape
 
 # GAE imports
 import wsgiref.handlers
 from google.appengine.api import users
+from google.appengine.api import memcache
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from django.utils import simplejson
@@ -185,6 +189,34 @@ class BaseRequestHandler(webapp.RequestHandler):
 
 	def unquote(self, text):
 		return urllib.unquote(text).decode('utf8')
+
+class CachingRequestHandler(BaseRequestHandler):
+	"""
+	Кэширующий обработчик запросов. Реализует метод get(), занимающийся
+	кэшированием; реальный обработчик должен находиться в методе get_cached().
+	Кэш привязывается к адресу страницы. По умолчанию время кэша не
+	ограничивается; срок жизни в секундах можно указать в свойстве
+	cacheTTL класса.
+	"""
+
+	cacheTTL = None
+
+	def get(self):
+		cached = memcache.get(self.request.path)
+		if cached is None or int(time.time()) > cached['expires']:
+			self.get_cached()
+			cached = {
+				'body': self.response.out.getvalue(),
+				'type': self.response.headers.get_all('Content-Type')[0],
+				'expires': None,
+			}
+			if self.cacheTTL:
+				cached['expires'] = int(time.time()) + self.cacheTTL
+			memcache.set(self.request.path, cached)
+			self.response.clear()
+		else:
+			logging.debug('Sending a cached copy of ' + self.request.path)
+		self.sendAny(cached['type'], cached['body'])
 
 def run(rules):
 	_DEBUG = ('Development/' in os.environ.get('SERVER_SOFTWARE'))

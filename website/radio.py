@@ -2,8 +2,6 @@
 
 import re
 
-from google.appengine.api import memcache
-
 import base
 import model
 import myxml
@@ -27,25 +25,24 @@ class ShowRadio(base.BaseRequestHandler):
 	def get(self):
 		self.sendXML(u'<radio/>')
 
-class NowPlaying(base.BaseRequestHandler):
-	def get(self):
-		cached = memcache.get(self.request.path)
-		if cached is None:
-			cached = { 'html': None }
-			cached['artist'], cached['title'] = get_current_info()
+class NowPlaying(base.CachingRequestHandler):
+	cacheTTL = 5
 
-			artist = model.SiteArtist.gql('WHERE name = :1', cached['artist']).get()
-			if artist is not None:
-				cached['html'] = u'%s (<a href="/artist/%u" target="_blank">%s</a>)' % (cached['title'], artist.id, artist.name)
-			elif cached['artist']:
-				cached['html'] = u'%s (%s)' % (cached['title'], cached['artist'])
-			elif cached['title']:
-				cached['html'] = cached['title']
-			else:
-				cached['html'] = u'???'
+	def get_cached(self):
+		data = { 'html': None }
+		data['artist'], data['title'] = get_current_info()
 
-			memcache.set(self.request.path, cached, 60)
-		self.sendJSON(cached)
+		artist = model.SiteArtist.gql('WHERE name = :1', data['artist']).get()
+		if artist is not None:
+			data['html'] = u'%s (<a href="/artist/%u" target="_blank">%s</a>)' % (data['title'], artist.id, artist.name)
+		elif data['artist']:
+			data['html'] = u'%s (%s)' % (data['title'], data['artist'])
+		elif data['title']:
+			data['html'] = data['title']
+		else:
+			data['html'] = u'???'
+
+		self.sendJSON(data)
 
 if __name__ == '__main__':
 	base.run([
