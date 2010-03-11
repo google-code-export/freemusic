@@ -26,7 +26,7 @@ class ShowRadio(base.BaseRequestHandler):
 		self.sendXML(u'<radio/>')
 
 class NowPlaying(base.CachingRequestHandler):
-	cacheTTL = 5
+	cacheTTL = 10
 
 	def get_cached(self):
 		data = { 'html': None }
@@ -41,6 +41,7 @@ class NowPlaying(base.CachingRequestHandler):
 			data['html'] = data['title']
 		else:
 			data['html'] = u'???'
+		data['ttl'] = self.cacheTTL
 
 		self.sendJSON(data)
 

@@ -271,11 +271,12 @@ $(document).ready(function(){
   /**
    * Вывод играющей на радио дорожки.
    */
-  if ($('#radio').length) {
+  if ($('#radio').length)
     radio_np();
-    setInterval(radio_np, 10000);
-  }
 });
+
+// Идентфикатор интервала, чтобы установить только один раз.
+var radio_np_iid = null;
 
 function radio_np()
 {
@@ -285,8 +286,9 @@ function radio_np()
       url: '/radio/current.json',
       dataType: 'json',
       success: function (data) {
-        var h = '<p>Сейчас проигрывается: ' + data.html + '.</p>';
-        $('#radio .current').html(h);
+        $('#radio .current').html('<p>Сейчас проигрывается: ' + data.html + '.</p>');
+        if (!radio_np_iid)
+          radio_np_iid = setInterval(radio_np, data.ttl * 1000);
       }, error: function (a, b) {
 				alert('Error ' + a.status + ': ' + a.statusText);
       }
