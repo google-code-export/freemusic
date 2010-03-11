@@ -203,7 +203,7 @@ class CachingRequestHandler(BaseRequestHandler):
 
 	def get(self):
 		cached = memcache.get(self.request.path)
-		if cached is None or int(time.time()) > cached['expires']:
+		if cached is None or 'expires' not in cached or int(time.time()) > cached['expires']:
 			self.get_cached()
 			cached = {
 				'body': self.response.out.getvalue(),

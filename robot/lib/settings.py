@@ -21,7 +21,15 @@ class settings:
 	def load(self):
 		filename = os.path.expandvars('$HOME/.config/freemusic.yaml')
 		if os.path.exists(filename):
-			self.data = yaml.load(open(filename, 'r').read().decode('utf-8'))
+			self.data = {
+				's3path': 's3://files.freemusichub.net/',
+				's3base': 'http://files.freemusichub.net/',
+				'host': 'www.freemusichub.net',
+			}
+			self.data.update(yaml.load(open(filename, 'r').read().decode('utf-8')))
+			for k in ('s3path', 's3base', 'upload_dir'):
+				if k not in self.data or not self.data[k]:
+					raise Exception('Please set the %s config option.' % k)
 
 	def save(self):
 		pass

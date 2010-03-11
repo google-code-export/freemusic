@@ -7,6 +7,7 @@ import mimetypes
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import urllib
 from xml.sax.saxutils import quoteattr as escape
@@ -160,16 +161,18 @@ class Transcoder:
 	def transcode(self, zipname, realname):
 		"""
 		Обрабатывает указанный архив, возвращает имена сгенерированных файлов.
+		Возвращает локальный путь вида md5/album.xml.
 		"""
 		self.zipname = zipname
 		self.realname = realname
 		self.pubdir = os.path.join(settings['upload_dir'], filemd5(self.zipname))
 		if os.path.exists(self.pubdir):
-			logger.warning('Target directory %s already exists.' % self.pubdir)
-			return None
+			print 'Removing previously existing directory %s.' % self.pubdir
+			shutil.rmtree(self.pubdir)
 
-		self.files = [File(f) for f in zip.unzip(zipname, self.tmpdir)]
+		self.files = [File(f) for f in zip.unpack(zipname, self.tmpdir)]
 		if not self.files:
+			print >>sys.stderr, '%s had no files.' % zipname
 			return None
 		self.albumart = albumart.find([file.name for file in self.files], os.path.join(self.tmpdir, '__folder.jpg'))
 
@@ -194,7 +197,7 @@ class Transcoder:
 					if verbose:
 						print " > " + file
 					shutil.move(file, self.pubdir)
-			return os.path.join(os.path.basename(self.pubdir), 'album.xml')
+			return self.pubdir
 
 	def process_audio(self):
 		for f in self.files:
