@@ -823,6 +823,7 @@ table.basic th, table.basic td {
  */
 #radio {
 	position: relative;
+	height: 200px;
 }
 #radio .other {
 	position: absolute;
