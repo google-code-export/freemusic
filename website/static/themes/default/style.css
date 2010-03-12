@@ -789,7 +789,7 @@ table.basic th, table.basic td {
 }
 
 #player .filter {
-	height: 220px;
+	height: 130px;
 }
 #player .filter ul {
 	margin: 0;
@@ -797,8 +797,12 @@ table.basic th, table.basic td {
 	list-style-type: none;
 	border: solid 1px gray;
 	width: 360px;
-	height: 200px;
+	height: 100px;
 	float: left;
+	overflow: auto;
+}
+#player .filter li {
+	margin: 0;
 }
 #player .filter .albums {
 	float: right;
@@ -810,7 +814,7 @@ table.basic th, table.basic td {
 	width: 20px;
 	text-align: right;
 }
-#player .tracklist tr:hover {
+#player .tracklist tbody tr:hover {
 	background-color: #eee;
 }
 #player table {
