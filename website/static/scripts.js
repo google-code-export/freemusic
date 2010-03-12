@@ -28,7 +28,7 @@ $(document).ready(function(){
 			'status': $(this).hasClass('on')
 		}, function (data) {
 			if (data.notify)
-				$('#ntfctn').html('<p>Альбом добавлен в <a href="/my/collection">коллекцию</a>.&nbsp; <a href="http://code.google.com/p/freemusic/wiki/Collection" target="_blank">Подробнее</a></p>');
+        ntfctn('Альбом добавлен в <a href="/my/collection">коллекцию</a>.&nbsp; <a href="http://code.google.com/p/freemusic/wiki/Collection" target="_blank">Подробнее</a>');
 			else
 				$('#ntfctn').html('');
 		}, 'json');
@@ -209,5 +209,5 @@ function ntfctn(text)
   if (fotimer);
     clearTimeout(fotimer);
     $('#ntfctn').html('<p>' + text + '</p>');
-    fotimer = setTimeout(function(){ $('#ntfctn p').fadeOut(10000); }, 1000);
+    fotimer = setTimeout(function(){ $('#ntfctn p').fadeOut(5000); }, 10000);
 }

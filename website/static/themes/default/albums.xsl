@@ -266,7 +266,7 @@
 				</ul>
 			</div>
 			<h2>
-				<xsl:if test="/page/@user-logout">
+				<xsl:if test="/page/@logout-uri">
 					<span title="Добавить в коллекцию">
 						<xsl:attribute name="class">
 							<xsl:text>star</xsl:text>
