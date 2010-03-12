@@ -19,23 +19,23 @@
 					<tbody>
 						<xsl:for-each select="tracks/track">
 							<xsl:sort select="@number" data-type="number"/>
-							<tr>
+							<tr class="track" id="track-{@id}">
 								<td class="r">
 									<xsl:value-of select="position()"/>
 									<xsl:text>.</xsl:text>
 								</td>
-								<td class="u"></td>
+								<td class="controls"/>
 								<td class="track">
 									<a href="/track/{@id}">
 										<xsl:value-of select="@title"/>
 									</a>
 								</td>
 								<td class="dl">
-									<a href="{@ogg-link}">ogg</a>
+									<a class="ogg" href="{@ogg-link}">ogg</a>
 									<xsl:text>&#160;</xsl:text>
-									<a href="{@mp3-link}">mp3</a>
+									<a class="mp3" href="{@mp3-link}">mp3</a>
 								</td>
-								<td class="dur">
+								<td class="dur pb">
 									<xsl:value-of select="@duration"/>
 								</td>
 							</tr>

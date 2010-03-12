@@ -18,9 +18,11 @@
 			<head>
 				<title>Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/static/themes/{@theme}/style.css"/>
+				<link rel="stylesheet" type="text/css" href="/static/player.css"/>
 				<link rel="shortcut icon" href="/static/favicon.2.ico"/>
 				<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 				<script type="text/javascript" src="/static/modernizr-1.1.min.js"></script>
+				<script type="text/javascript" src="/static/player.js"></script>
 				<script type="text/javascript" src="/static/scripts.js"></script>
 				<link rel="alternate" type="application/rss+xml" title="RSS" href="/albums.rss"/> 
 				<meta name="google-site-verification" content="1YzbBazX2CGFQgRb0kDx_Y8rqw4oOfS_g3rVC6faZP8"/>

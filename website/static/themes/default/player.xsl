@@ -39,9 +39,10 @@
 	</xsl:template>
 
 	<xsl:template match="tracks">
-		<table class="ptl basic">
+		<table class="ptl basic tracklist">
 			<thead>
 				<tr>
+					<th/>
 					<th>Композиция</th>
 					<th>Альбом</th>
 					<th>Исполнитель</th>
@@ -50,11 +51,16 @@
 			</thead>
 			<tbody>
 				<xsl:for-each select="track">
-					<tr class="artist-{@artist-id} album-{@album-id}">
+					<tr id="track-{@id}" class="track artist-{@artist-id} album-{@album-id}">
+						<td class="controls">
+							<span/>
+						</td>
 						<td>
 							<a href="/track/{@id}">
 								<xsl:value-of select="@title"/>
 							</a>
+							<a class="ogg" href="{@ogg-link}">ogg</a>
+							<a class="mp3" href="{@mp3-link}">mp3</a>
 						</td>
 						<td>
 							<a href="/album/{@album-id}">
@@ -66,7 +72,7 @@
 								<xsl:value-of select="@artist-name"/>
 							</a>
 						</td>
-						<td>
+						<td class="pb">
 							<xsl:value-of select="@duration"/>
 						</td>
 					</tr>

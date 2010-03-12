@@ -1,0 +1,25 @@
+html.audio .tracklist .track .controls span {
+	display: inline-block;
+	width: 16px;
+	height: 17px;
+	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMnSAPczkO92Ra9OLcQ9OYewIHaSGJml5neGJ5hnFleRGMRIex83xMJADs=);
+	vertical-align: bottom;
+	cursor: pointer;
+  opacity: 0.5;
+}
+html.audio .tracklist .track.playing .controls span {
+	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMtSAPczkO92Ra9OIPAGQ/X53WUuJGTaabk+qjo28YODGo4bumSFhGCoHA4JCQAADs=);
+  opacity: 1;
+}
+html.audio .tracklist .controls:hover span {
+  opacity: 1;
+}
+html.audio .tracklist .controls {
+  width: 16px;
+}
+
+html.audio .tracklist .track.playing .pb {
+  background-image: url(/static/player-progress.png);
+  background-repeat: no-repeat;
+  background-position: -700px 0;
+}

@@ -498,18 +498,6 @@ html.audio .noaudio {
 .tracklist td {
 	line-height: 17px; /* подстраиваемся под высоту таблицы с кнопкой проигрывания */
 }
-.tracklist .u u {
-	display: inline-block;
-	width: 16px;
-	height: 17px;
-	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMnSAPczkO92Ra9OLcQ9OYewIHaSGJml5neGJ5hnFleRGMRIex83xMJADs=);
-	vertical-align: bottom;
-	cursor: pointer;
-}
-
-.tracklist .playing u {
-	background: transparent no-repeat top left url(data:image/gif;base64,R0lGODlhEAARAKIEAF99nf///+7u7pqxxgAAAAAAAAAAAAAAACH5BAEAAAQALAAAAAAQABEAAAMtSAPczkO92Ra9OIPAGQ/X53WUuJGTaabk+qjo28YODGo4bumSFhGCoHA4JCQAADs=);
-}
 .tracklist .dur {
 	color: gray;
 	padding-left: 10px;
@@ -569,10 +557,11 @@ html.audio .noaudio {
 	height: 14px;
 }
 #ntfctn p {
-	display: inline-block;
-	background-color: #80ff80; /* google: #FFF1A8 */
+	display: inline;
+	background-color: #fff1a8; /* #80ff80; /* google: #FFF1A8 */
 	padding: 2px 10px;
 	margin: 0;
+	border-radius: 4px;
 }
 
 
@@ -813,6 +802,16 @@ table.basic th, table.basic td {
 }
 #player .filter .albums {
 	float: right;
+}
+#player .track .ogg, #player .track .mp3 {
+	display: none;
+}
+#player .pb {
+	width: 20px;
+	text-align: right;
+}
+#player .tracklist tr:hover {
+	background-color: #eee;
 }
 #player table {
 	width: 100%;
