@@ -148,6 +148,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 			attrs['name'] = self.pageName
 			attrs['theme'] = self.request.get('theme', 'default')
 			attrs['tab'] = self.tabName
+			attrs['host'] = self.request.host
 			content = xml.em(u'page', attrs, content)
 
 		result = u'<?xml version="1.0"?>'

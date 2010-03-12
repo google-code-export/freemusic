@@ -74,14 +74,6 @@ class FileViewer(Viewer):
 	def get(self, album_id):
 		self.sendXML(self.get_album(int(album_id)).xml)
 
-class JSON(Viewer):
-	def get(self):
-		self.sendJSON([{
-			'id': int(track.id),
-			'ogg': str(track.ogg_link),
-			'mp3': str(track.mp3_link),
-		} for track in self.get_album(self.request.get('id')).tracks()])
-
 class Editor(Viewer):
 	xsltName = 'albums.xsl'
 

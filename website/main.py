@@ -78,7 +78,6 @@ if __name__ == '__main__':
 		('/albums\.rss', album.RSSHandler),
 		('/api', api.Index),
 		('/api/album/star\.json', album.Stars),
-		('/api/album/tracks\.json', album.JSON),
 		('/api/submit/album', api.SubmitAlbum),
 		('/api/update', api.Update),
 		('/artist/fix', artist.FixHandler),
