@@ -13,6 +13,13 @@ import base
 import model
 import myxml
 
+def load():
+	stats = LabelStats.all().get()
+	if stats is not None:
+		return stats.xml
+	else:
+		return u'<labels/>'
+
 class LabelStats(db.Model):
 	xml = db.TextProperty()
 
@@ -20,11 +27,7 @@ class List(base.BaseRequestHandler):
 	xsltName = 'labels.xsl'
 
 	def get(self):
-		stats = LabelStats.all().get()
-		if stats is not None:
-			self.sendXML(stats.xml)
-		else:
-			self.sendXML(u'<labels/>')
+		self.sendXML(load())
 
 class Cache(base.BaseRequestHandler):
 	def post(self):
