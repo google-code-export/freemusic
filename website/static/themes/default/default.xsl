@@ -89,6 +89,9 @@
 											<a href="/reviews?author={/page/@user}">Мои рецензии</a>
 										</li>
 										<li>
+											<a href="/player?user={/page/@user}">Коллекция</a>
+										</li>
+										<li>
 											<a href="/upload">Загрузить альбом</a>
 										</li>
 										<xsl:if test="/page/@is-admin">
