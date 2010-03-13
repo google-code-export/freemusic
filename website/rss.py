@@ -35,6 +35,8 @@ class RSSHandler(BaseRequestHandler):
 				item['description'] = item['title']
 			entry += xml.em(u'description', content=xml.cdata(item['description']))
 			entry += xml.em(u'guid', {'isPermaLink': 'true'}, content=base + item['link'])
+			if 'author' in item:
+				entry += xml.em(u'author', content=item['author'])
 			if '_' in item.keys():
 				entry += item['_']
 			content += xml.em(u'item', content=entry)

@@ -259,9 +259,10 @@ class SiteAlbumReview(db.Model):
 		if self.rate_average:
 			description += u'<p>Общая оценка: ' + unicode(self.rate_average) + u'/5.</p>'
 		return {
-			'title': u'Рецензия на «%s» от %s' % (self.album.name, self.author.user.nickname()),
-			'link': 'album/' + str(self.album.id),
+			'title': u'Рецензия на «%s» от %s' % (self.album.name, self.album.artist.name),
+			'link': 'album/' + str(self.album.id) + '#review:' + self.author.user.nickname(),
 			'description': description,
+			'author': self.author.user.email(),
 		}
 
 class SiteEvent(db.Model):
