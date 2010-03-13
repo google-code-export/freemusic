@@ -1,0 +1,23 @@
+#user-profile {
+  height: 100px;
+}
+
+#profile .block {
+  width: 370px;
+  margin-right: 10px;
+  float: left;
+}
+
+#profile .list .artist, #profile .list td:last-child {
+  font-size: 80%;
+  opacity: 0.75;
+}
+#profile .list td {
+  padding: 2px 0px 2px 8px;
+} 
+#profile .list td:first-child {
+  padding-left: 0;
+}
+#user-reviews td {
+  vertical-align: baseline;
+}

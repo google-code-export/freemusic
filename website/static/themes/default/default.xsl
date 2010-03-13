@@ -86,9 +86,6 @@
 									</a>
 									<ul class="submenu">
 										<li>
-											<a href="/reviews?author={/page/@user}">Мои рецензии</a>
-										</li>
-										<li>
 											<a href="/player?user={/page/@user}">Коллекция</a>
 										</li>
 										<li>
@@ -334,7 +331,7 @@
 	<xsl:template match="review[@comment]">
 		<xsl:param name="title"/>
 		<div class="review">
-			<div class="meta">
+			<div class="meta" id="review:{@author-nickname}">
 				<span>
 					<xsl:apply-templates select="@pubDate"/>
 				</span>

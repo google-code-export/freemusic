@@ -40,6 +40,9 @@ class List(base.BaseRequestHandler):
 		self.redirect('/users')
 
 class ShowUser(base.BaseRequestHandler):
+	"""
+	Вывод профиля пользователя.
+	"""
 	xsltName = 'user.xsl'
 	tabName = 'personal'
 
@@ -47,7 +50,34 @@ class ShowUser(base.BaseRequestHandler):
 		user = model.SiteUser.gql('WHERE user = :1', users.User(username + '@gmail.com')).get()
 		if user is None:
 			raise HTTPException(404, u'Нет такого пользователя.')
-		self.sendXML(user.xml)
+		xml = self.get_stars_xml(user)
+		xml += self.get_reviews_xml(user)
+		self.sendXML(user.to_xml(xml))
+
+	def get_stars_xml(self, user):
+		xml = u''
+		for star in model.SiteAlbumStar.gql('WHERE user = :1', user.user).fetch(100):
+			xml += myxml.em(u'star', {
+				'album-id': star.album.id,
+				'album-name': star.album.name,
+				'artist-id': star.album.artist.id,
+				'artist-name': star.album.artist.name,
+				'pubDate': star.added.isoformat(),
+			})
+		return myxml.em(u'stars', content=xml)
+
+	def get_reviews_xml(self, user):
+		xml = u''
+		for review in model.SiteAlbumReview.gql('WHERE author = :1', user).fetch(100):
+			xml += myxml.em(u'review', {
+				'album-id': review.album.id,
+				'album-name': review.album.name,
+				'artist-id': review.album.artist.id,
+				'artist-name': review.album.artist.name,
+				'pubDate': review.published,
+				'average': review.rate_average,
+			})
+		return myxml.em(u'reviews', content=xml)
 
 if __name__ == '__main__':
 	base.run([

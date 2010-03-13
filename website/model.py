@@ -29,7 +29,7 @@ class SiteUser(db.Model):
 		self.nickname = self.user.nickname()
 		db.Model.put(self)
 
-	def to_xml(self):
+	def to_xml(self, content=None):
 		return xml.em(u'user', {
 			'nickname': self.user.nickname(),
 			'email': self.user.email(),
@@ -37,7 +37,7 @@ class SiteUser(db.Model):
 			'invited': self.invited,
 			'hash': hashlib.md5(self.user.email()).hexdigest(),
 			'pubDate': self.joined.isoformat(),
-		})
+		}, content)
 
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
@@ -138,6 +138,7 @@ class SiteAlbumStar(db.Model):
 	"Хранит информацию о любимых альбомах пользователей."
 	album = db.ReferenceProperty(SiteAlbum)
 	user = db.UserProperty()
+	added = db.DateTimeProperty(auto_now_add=True)
 
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
