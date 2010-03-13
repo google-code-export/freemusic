@@ -1,0 +1,40 @@
+#artist .list td {
+  vertical-align: baseline;
+  padding: 2px 6px 2px 0;
+}
+#artist .list td:last-child {
+  opacity: 0.75;
+  padding-left: 4px;
+}
+#artist .list .username {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.tile1 {
+  position: relative;
+  overflow: hidden;
+  border: solid 1px black;
+  width: 150px;
+  height: 150px;
+}
+.tile1 img {
+  width: 150px;
+  height: 150px;
+}
+.tile1 .title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: black;
+  color: white;
+  padding: 2px;
+  text-decoration: none;
+  font-size: 8pt;
+}
+.tile1 .smallstars {
+  position: absolute;
+  top: 136px;
+  left: 98px;
+}

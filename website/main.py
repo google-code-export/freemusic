@@ -12,7 +12,6 @@ from base import BaseRequestHandler, run
 from s3 import S3SettingsHandler, S3UploadHandler
 import album
 import api
-import artist
 import chart
 import clips
 import events
@@ -79,10 +78,6 @@ if __name__ == '__main__':
 		('/api/album/star\.json', album.Stars),
 		('/api/submit/album', api.SubmitAlbum),
 		('/api/update', api.Update),
-		('/artist/fix', artist.FixHandler),
-		('/artist/(\d+)$', artist.ViewHandler),
-		('/artists', artist.List),
-		('/artists\.rss', artist.RSSHandler),
 		('/chart', chart.ShowChart),
 		('/clips', clips.ShowClips),
 		('/clips/random\.json', clips.GetRandomClip),

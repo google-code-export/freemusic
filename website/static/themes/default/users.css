@@ -2,7 +2,7 @@
   height: 100px;
 }
 
-#profile .block {
+.blocks .block {
   width: 370px;
   margin-right: 10px;
   float: left;

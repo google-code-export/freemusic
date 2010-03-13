@@ -390,4 +390,8 @@
 	<xsl:template match="@pubDate">
 		<xsl:value-of select="concat(substring(.,9,2),'.',substring(.,6,2),'.',substring(.,1,4))"/>
 	</xsl:template>
+
+	<xsl:template match="event/@date">
+		<xsl:value-of select="concat(substring(.,9,2),'.',substring(.,6,2),'.',substring(.,3,2))"/>
+	</xsl:template>
 </xsl:stylesheet>

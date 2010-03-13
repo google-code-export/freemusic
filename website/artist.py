@@ -7,16 +7,16 @@ from logging import debug as log
 
 from google.appengine.ext import db
 
-from base import HTTPException
-from rss import RSSHandler as BaseRequestHandler
-from model import SiteArtist
-import myxml as xml
+import base
+import rss
+import model
+import myxml
 
-class FixHandler(BaseRequestHandler):
+class FixHandler(rss.RSSHandler):
 	def get(self):
 		maxid = 0
 
-		lst = SiteArtist.all().fetch(1000)
+		lst = model.SiteArtist.all().fetch(1000)
 		for artist in lst:
 			if artist.id:
 				maxid = max(maxid, artist.id)
@@ -30,26 +30,67 @@ class FixHandler(BaseRequestHandler):
 
 		self.redirect('/')
 
-class ViewHandler(BaseRequestHandler):
+class ShowArtist(base.BaseRequestHandler):
+	"""
+	Вывод информации об исполнителе.
+	"""
+
 	xsltName = 'artists.xsl'
 	tabName = 'music'
 
 	def get(self, id):
 		self.check_access()
-		artist = SiteArtist.gql('WHERE id = :1', long(id)).get()
+		artist = model.SiteArtist.gql('WHERE id = :1', long(id)).get()
 		if not artist or not artist.xml:
 			raise HTTPException(404, u'Нет такого исполнителя.')
-		self.sendXML(artist.xml)
 
-class RSSHandler(BaseRequestHandler):
+		reviews = []
+		xml = self.get_albums_xml(artist, reviews)
+		if len(reviews):
+			xml += myxml.em(u'reviews', content=u''.join(reviews))
+		xml += self.get_events_xml(artist)
+
+		self.sendXML(myxml.em(u'artist', {
+			'id': artist.id,
+			'name': artist.name,
+		}, content=xml))
+
+	def get_albums_xml(self, artist, reviews):
+		xml = u''
+		for a in model.SiteAlbum.gql('WHERE artist = :1', artist).fetch(100):
+			xml += a.shortxml
+			self.get_reviews_xml(a, reviews)
+		if len(xml):
+			xml = myxml.em(u'albums', content=xml)
+		return xml
+
+	def get_reviews_xml(self, album, reviews):
+		for r in model.SiteAlbumReview.gql('WHERE album = :1', album).fetch(100):
+			reviews.append(myxml.em(u'review', {
+				'album-id': album.id,
+				'album-name': album.name,
+				'average': r.rate_average,
+				'pubDate': r.published,
+				'author': r.author.nickname,
+			}))
+
+	def get_events_xml(self, artist):
+		xml = u''
+		for e in model.SiteEvent.gql('WHERE artist = :1', artist).fetch(100):
+			xml += e.xml
+		if len(xml):
+			xml =myxml.em(u'events', content=xml)
+		return xml
+
+class RSSHandler(base.BaseRequestHandler):
 	def get(self):
 		items = [{
 			'title': u'Новый исполнитель: ' + artist.name,
 			'link': 'artist/' + str(artist.id),
-		} for artist in SiteArtist.all().order('-id').fetch(20)]
+		} for artist in model.SiteArtist.all().order('-id').fetch(20)]
 		self.sendRSS(items, title=u'Новые исполнители')
 
-class List(BaseRequestHandler):
+class List(base.BaseRequestHandler):
 	xsltName = 'artists.xsl'
 	tabName = 'music'
 
@@ -59,4 +100,12 @@ class List(BaseRequestHandler):
 			'id': artist.id,
 			'name': artist.name,
 			'sortname': artist.sortname,
-		}) for artist in SiteArtist.all().fetch(1000)])))
+		}) for artist in model.SiteArtist.all().fetch(1000)])))
+
+if __name__ == '__main__':
+	base.run([
+		('/artist/fix', FixHandler),
+		('/artist/(\d+)$', ShowArtist),
+		('/artists', List),
+		('/artists\.rss', RSSHandler),
+	])

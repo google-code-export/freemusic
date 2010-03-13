@@ -5,7 +5,7 @@
 
 	<xsl:template match="user">
 		<h2>Профиль пользователя <xsl:value-of select="@nickname"/></h2>
-		<div id="profile">
+		<div id="profile" class="blocks">
 			<div id="user-profile">
 				<img src="http://www.gravatar.com/avatar.php?gravatar_id={@hash}&amp;size=80" width="80" height="80"/>
 				<ul>
