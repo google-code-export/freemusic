@@ -57,6 +57,9 @@
 									</li>
 									-->
 									<li>
+										<a href="/player">Проигрыватель</a>
+									</li>
+									<li>
 										<a href="/radio">Радио</a>
 									</li>
 								</ul>
