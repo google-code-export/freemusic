@@ -9,8 +9,10 @@
 			<div id="user-profile">
 				<img src="http://www.gravatar.com/avatar.php?gravatar_id={@hash}&amp;size=80" width="80" height="80"/>
 				<ul>
+					<!--
 					<li><a href="/reviews?author={@nickname}">Рецензии</a></li>
 					<li><a href="/player?user={@nickname}">Коллекция</a></li>
+					-->
 					<li>На сайте с <xsl:apply-templates select="@pubDate"/></li>
 				</ul>
 			</div>
