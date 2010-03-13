@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
-# vim: set ts=4 sts=4 sw=4 noet:
+# vim: set ts=4 sts=4 sw=4 noet fileencoding=utf-8:
 
 from logging import debug as log
 import datetime
 
+from google.appengine.api import memcache
 from google.appengine.api import users
 from google.appengine.ext import db
 
@@ -170,6 +170,7 @@ class Stars(BaseRequestHandler):
 		})
 
 	def post(self):
+		memcache.delete('/player?user=' + users.get_current_user().nickname())
 		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
 		if album is not None:
 			user = self.force_user()
@@ -182,8 +183,10 @@ class Stars(BaseRequestHandler):
 				star.delete()
 
 			if status:
-				return self.sendJSON({'notify':1})
-		self.sendJSON({'notify':0})
+				return self.sendJSON({
+					'notify': 'Альбом добавлен в <a href="/player?user=%s">коллекцию</a>.&nbsp; <a href="http://code.google.com/p/freemusic/wiki/Collection" target="_blank">Подробнее</a>' % users.get_current_user().nickname(),
+				})
+		self.sendJSON({'notify':''})
 
 class Review(BaseRequestHandler):
 	def get(self):
