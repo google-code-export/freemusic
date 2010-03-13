@@ -16,29 +16,55 @@
   margin: 0 10px 10px 0;
 }
 
-.tile1 {
+.tile1, .tile2 {
   position: relative;
   overflow: hidden;
+  width: 152px;
+  height: 152px;
+  display: inline-block;
+  vertical-align: top;
+  text-align: center;
+}
+.tile1, .tile2 img {
   border: solid 1px black;
   width: 150px;
   height: 150px;
 }
-.tile1 img {
-  width: 150px;
-  height: 150px;
+.tile1 .title, .tile1 .artist {
+  position: absolute;
+  display: inline;
+  white-space: nowrap;
+  text-decoration: none;
+  font: normal 10px/10px sans-serif;
+  background-color: black;
+  color: white;
+  left: 0;
 }
 .tile1 .title {
-  position: absolute;
   top: 0;
-  left: 0;
-  background: black;
-  color: white;
-  padding: 2px;
-  text-decoration: none;
-  font-size: 8pt;
 }
-.tile1 .smallstars {
+.tile1 .artist {
+  top: 1em;
+}
+.tile1 .smallstars, .tile2 .smallstars {
   position: absolute;
-  top: 136px;
+  top: 138px;
   left: 98px;
+}
+
+.tile2 {
+  height: 200px;
+}
+.tile2 .title, .tile2 .artist {
+  white-space: nowrap;
+  display: block;
+  text-align: center;
+}
+.tile2 .title {
+  margin-top: 4px;
+  font-size: 12px;
+}
+.tile2 .artist {
+  font-size: 10px;
+  opacity: 0.5;
 }

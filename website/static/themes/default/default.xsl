@@ -242,6 +242,30 @@
 
 	<!-- additional stuff -->
 
+	<xsl:template match="album" mode="tile">
+		<xsl:param name="artists"/>
+		<xsl:param name="type">tile1</xsl:param>
+		<div class="album tile {$type} pos-{(position() - 1) mod 4}" id="album-{@id}">
+			<a href="/album/{@id}">
+				<img alt="cover">
+					<xsl:attribute name="src">
+						<xsl:value-of select="@image"/>
+					</xsl:attribute>
+				</img>
+			</a>
+			<a href="/album/{@id}" class="title">
+				<xsl:value-of select="@name"/>
+				<xsl:value-of select="concat(' (',substring(@pubDate,1,4),')')"/>
+			</a>
+			<xsl:if test="$artists">
+				<a href="/artist/{@artist-id}" class="artist">
+					<xsl:value-of select="@artist-name"/>
+				</a>
+			</xsl:if>
+			<xsl:apply-templates select="@rate"/>
+		</div>
+	</xsl:template>
+
 	<xsl:template match="albums" mode="tiles">
 		<ul class="altiles">
 			<xsl:for-each select="album">

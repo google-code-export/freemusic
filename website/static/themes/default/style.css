@@ -442,6 +442,12 @@ ul.altiles {
 	margin: 0 2em 0 0;
 	padding: 0;
 }
+#index .tile {
+	margin: 0 45px 10px 0;
+}
+#index .pos-3 {
+	margin-right: 0;
+}
 
 
 #closed {

@@ -7,7 +7,12 @@
 		<div id="index" class="onecol">
 			<xsl:call-template name="lnav"/>
 			<div class="right">
-				<xsl:apply-templates select="albums" mode="tiles"/>
+				<div class="albums">
+					<xsl:apply-templates select="albums/album" mode="tile">
+						<xsl:with-param name="artists">yes</xsl:with-param>
+						<xsl:with-param name="type">tile2</xsl:with-param>
+					</xsl:apply-templates>
+				</div>
 				<ul class="pager">
 					<xsl:if test="@skip &gt; 15">
 						<li>

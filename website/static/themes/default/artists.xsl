@@ -20,47 +20,9 @@
 		<xsl:template match="albums">
 			<div id="artist-albums" class="list">
 				<h3>Альбомы</h3>
-				<xsl:apply-templates select="album"/>
-				<!--
-				<table>
-					<tbody>
-						<xsl:for-each select="album">
-							<tr>
-								<td>
-									<xsl:apply-templates select="@rate"/>
-								</td>
-								<td>
-									<a href="/album/{@id}">
-										<xsl:value-of select="@name"/>
-									</a>
-								</td>
-								<td>
-									<xsl:apply-templates select="@pubDate"/>
-								</td>
-							</tr>
-						</xsl:for-each>
-					</tbody>
-				</table>
-				-->
+				<xsl:apply-templates select="album" mode="tile"/>
 			</div>
 		</xsl:template>
-
-			<xsl:template match="album">
-				<div class="album tile1" id="album-{@id}">
-					<a href="/album/{@id}">
-						<img alt="cover">
-							<xsl:attribute name="src">
-								<xsl:value-of select="@image"/>
-							</xsl:attribute>
-						</img>
-					</a>
-					<a href="/album/{@id}" class="title">
-						<xsl:value-of select="@name"/>
-						<xsl:value-of select="concat(' (',substring(@pubDate,1,4),')')"/>
-					</a>
-					<xsl:apply-templates select="@rate"/>
-				</div>
-			</xsl:template>
 
 		<xsl:template match="reviews">
 			<div id="artist-reviews" class="block list">
