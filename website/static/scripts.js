@@ -56,13 +56,13 @@ $(document).ready(function(){
 			dataType: 'json',
 			success: function (data) {
 				if (data.message)
-					alert(data.message);
+          ntfctn(data.message);
 				else
 					window.location.reload()
 			},
 			error: function (a, b) {
 				$('.reviews input[type="submit"]').attr('disabled', '');
-				alert('Error ' + a.status + ': ' + a.statusText);
+        ntfctn('Error ' + a.status + ': ' + a.statusText);
 			}
 		});
 		return false;
@@ -194,7 +194,7 @@ function radio_np()
         if (!radio_np_iid)
           radio_np_iid = setInterval(radio_np, data.ttl * 1000);
       }, error: function (a, b) {
-				alert('Error ' + a.status + ': ' + a.statusText);
+        ntfctn('Error ' + a.status + ': ' + a.statusText);
       }
     });
   } catch (e) { }
