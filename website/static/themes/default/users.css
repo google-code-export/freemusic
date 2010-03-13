@@ -12,12 +12,17 @@
   font-size: 80%;
   opacity: 0.75;
 }
-#profile .list td {
-  padding: 2px 0px 2px 8px;
-} 
-#profile .list td:first-child {
-  padding-left: 0;
-}
 #user-reviews td {
   vertical-align: baseline;
+}
+
+#profile .list td {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+#profile .list td:last-child {
+  padding-left: 8px;
+} 
+#user-reviews td:first-child {
+  padding-right: 8px;
 }
