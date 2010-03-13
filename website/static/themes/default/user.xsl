@@ -22,7 +22,7 @@
 	</xsl:template>
 
 		<xsl:template match="user/stars">
-			<div id="user-stars" class="block list">
+			<div id="user-stars" class="album-stars block list">
 				<h3>Коллекция <small><a href="http://code.google.com/p/freemusic/wiki/Collection" class="ext">что это такое?</a></small></h3>
 				<table>
 					<tbody>
@@ -30,7 +30,9 @@
 							<xsl:sort select="@pubDate" order="descending"/>
 							<tr>
 								<td>
-									<span class="star on"/>
+									<span class="star on">
+										<a href="{@album-id}"/>
+									</span>
 								</td>
 								<td>
 									<a href="/album/{@album-id}">

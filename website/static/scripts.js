@@ -21,14 +21,16 @@ $(document).ready(function(){
 	/**
 	 * Добавление альбома в закладки.
 	 */
-	$('#album h2 .star').click(function(){
+	$('.album-stars .star').click(function(){
+    var id = $(this).find('a').attr('href') || window.location.pathname.split('/')[2];
+    var success = $(this).parents('.album-stars:first').hasClass('notify')
+      ? function (data) { ntfctn(data.notify); }
+      : null;
 		$(this).toggleClass('on');
 		$.post('/api/album/star.json', {
-			'id': window.location.pathname.split('/')[2],
+			'id': id,
 			'status': $(this).hasClass('on')
-		}, function (data) {
-      ntfctn(data.notify);
-		}, 'json');
+		}, success, 'json');
 	});
 
 	/**

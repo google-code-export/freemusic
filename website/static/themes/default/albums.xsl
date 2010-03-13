@@ -265,7 +265,7 @@
 					</li>
 				</ul>
 			</div>
-			<h2>
+			<h2 class="album-stars notify">
 				<xsl:if test="/page/@logout-uri">
 					<span title="Добавить в коллекцию">
 						<xsl:attribute name="class">
