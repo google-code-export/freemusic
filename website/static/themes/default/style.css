@@ -323,6 +323,8 @@ h2 .help, h2 small a, h3 small a {
 	width: 200px;
 	height: 100px;
 	max-width: 200px;
+	border: solid 1px gray;
+	margin-bottom: .5em;
 }
 
 /**
