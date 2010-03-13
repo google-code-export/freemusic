@@ -79,7 +79,7 @@ class ShowArtist(base.BaseRequestHandler):
 		for e in model.SiteEvent.gql('WHERE artist = :1', artist).fetch(100):
 			xml += e.xml
 		if len(xml):
-			xml =myxml.em(u'events', content=xml)
+			xml = myxml.em(u'events', content=xml)
 		return xml
 
 class RSSHandler(base.BaseRequestHandler):
@@ -96,7 +96,7 @@ class List(base.BaseRequestHandler):
 
 	def get(self):
 		self.check_access()
-		self.sendXML(xml.em(u'artists', content=u''.join([xml.em(u'artist', {
+		self.sendXML(myxml.em(u'artists', content=u''.join([myxml.em(u'artist', {
 			'id': artist.id,
 			'name': artist.name,
 			'sortname': artist.sortname,
