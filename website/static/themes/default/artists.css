@@ -25,7 +25,7 @@
   vertical-align: top;
   text-align: center;
 }
-.tile1, .tile2 img {
+.tile1 img, .tile2 img {
   border: solid 1px black;
   width: 150px;
   height: 150px;
