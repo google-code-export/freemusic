@@ -293,6 +293,8 @@ class AlbumLabelUpdater(base.BaseRequestHandler):
 				album.labels = labels
 				album.put()
 
+				taskqueue.Task(url='/labels/cache').add()
+
 if __name__ == '__main__':
 	base.run([
 		('/album/(\d+)$', Viewer),

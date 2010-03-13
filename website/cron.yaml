@@ -1,9 +1,6 @@
 # http://code.google.com/intl/ru-RU/appengine/docs/python/config/cron.html
 
 cron:
-  - description: Update labels cache.
-    url: /labels
-    schedule: every 1 hours
   - description: Update event schedule from last.fm.
     url: /events/update
     schedule: every 4 hours

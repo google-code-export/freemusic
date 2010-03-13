@@ -24,6 +24,8 @@ handlers:
   script: album.py
 - url: /(artist/fix|artist/\d+|artists(\.rss)?)
   script: artist.py
+- url: /labels(/cache)?
+  script: labels.py
 - url: /player
   script: player.py
 - url: /radio(/.*)?

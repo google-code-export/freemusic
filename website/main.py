@@ -15,7 +15,6 @@ import chart
 import clips
 import events
 import index
-import labels
 import model
 import reviews
 import sitemap
@@ -59,7 +58,6 @@ class AddFileHandler(BaseRequestHandler):
 			'album': self.request.get('album'),
 		})
 
-
 if __name__ == '__main__':
 	run([
 		('/', index.Recent),
@@ -74,7 +72,6 @@ if __name__ == '__main__':
 		('/clips/recent.xml', clips.GetRecentClips),
 		('/events', events.All),
 		('/events/update', events.Update),
-		('/labels', labels.List),
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),
