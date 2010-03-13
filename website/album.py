@@ -129,7 +129,7 @@ class Delete(Viewer):
 
 	def post(self, id):
 		album = self.get_album(id)
-		for cls in (SiteImage, SiteTrack, SiteFile):
+		for cls in (SiteImage, SiteTrack, SiteFile, SiteAlbumReview):
 			items = cls.gql('WHERE album = :1', album).fetch(1000)
 			if items:
 				for item in items:
