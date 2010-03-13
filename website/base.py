@@ -202,13 +202,14 @@ class CachingRequestHandler(BaseRequestHandler):
 
 	cacheTTL = None
 
-	def get(self):
+	def get(self, *args, **kwargs):
 		key = self.request.path
 		if self.request.query_string:
 			key += '?' + self.request.query_string
 		cached = memcache.get(key)
 		if cached is None or 'expires' not in cached or (cached['expires'] and int(time.time()) > cached['expires']):
-			self.get_cached()
+			logging.debug('Cache MISS for ' + key)
+			self.get_cached(*args, **kwargs)
 			cached = {
 				'body': self.response.out.getvalue(),
 				'type': self.response.headers.get_all('Content-Type')[0],
@@ -219,7 +220,7 @@ class CachingRequestHandler(BaseRequestHandler):
 			memcache.set(key, cached)
 			self.response.clear()
 		else:
-			logging.debug('Sending a cached copy of ' + key)
+			logging.debug('Cache HIT for ' + key)
 		self.sendAny(cached['type'], cached['body'])
 
 def run(rules):
