@@ -84,6 +84,7 @@
 			<p>
 				<xsl:text>Метки: </xsl:text>
 				<xsl:for-each select="label">
+					<xsl:sort select="text()"/>
 					<xsl:if test="position() &gt; 1">
 						<xsl:text>, </xsl:text>
 					</xsl:if>
