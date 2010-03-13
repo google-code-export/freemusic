@@ -7,7 +7,7 @@
 		<div id="player">
 			<h2>Проигрыватель</h2>
 			<xsl:apply-templates select="artists"/>
-			<xsl:apply-templates select="tracks"/>
+			<xsl:apply-templates select="." mode="tracks"/>
 		</div>
 	</xsl:template>
 
@@ -38,7 +38,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="tracks">
+	<xsl:template match="player" mode="tracks">
 		<table class="ptl basic tracklist">
 			<thead>
 				<tr>
@@ -50,7 +50,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<xsl:for-each select="track">
+				<xsl:for-each select="artists/artist/album/track">
 					<tr id="track-{@id}" class="track artist-{@artist-id} album-{@album-id}">
 						<td class="controls">
 							<span/>
