@@ -266,7 +266,7 @@ class AlbumLabels(base.BaseRequestHandler):
 			model.SiteAlbumLabel(user=user, album=album, label=kw.strip().lower()).put()
 
 		self.sendJSON({
-			'html': u'<p>Метки: ' + u', '.join([u'<a href="/?label=%s">%s</a>' % (l, l) for l in self.get_labels(album)]) + u'.',
+			'html': u'<p>Метки: ' + u', '.join([u'<a href="/?label=%s">%s</a>' % (l, l) for l in sorted(self.get_labels(album))]) + u'.',
 			'notification': u'Ваши метки будут применены через какое-то время.',
 		})
 
