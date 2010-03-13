@@ -26,6 +26,8 @@ handlers:
   script: radio.py
 - url: /upload/(queue|remote)
   script: upload.py
+- url: /(users|u/[^/]+)
+  script: users.py
 - url: .*
   script: main.py
 

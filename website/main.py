@@ -24,7 +24,6 @@ import sitemap
 import settings
 import tracks
 import upload
-import users
 
 class SubmitHandler(BaseRequestHandler):
 	def get(self):
@@ -102,6 +101,4 @@ if __name__ == '__main__':
 		('/track/(\d+)$', tracks.Viewer),
 		('/tracks\.rss', tracks.RSSHandler),
 		('/upload', S3UploadHandler),
-		('/u/([^/]+)$', users.ShowUser),
-		('/users', users.List),
 	])
