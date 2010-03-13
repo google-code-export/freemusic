@@ -27,10 +27,7 @@ $(document).ready(function(){
 			'id': window.location.pathname.split('/')[2],
 			'status': $(this).hasClass('on')
 		}, function (data) {
-			if (data.notify)
-        ntfctn('Альбом добавлен в <a href="/my/collection">коллекцию</a>.&nbsp; <a href="http://code.google.com/p/freemusic/wiki/Collection" target="_blank">Подробнее</a>');
-			else
-				$('#ntfctn').html('');
+      ntfctn(data.notify);
 		}, 'json');
 	});
 
@@ -208,6 +205,10 @@ function ntfctn(text)
 {
   if (fotimer);
     clearTimeout(fotimer);
-    $('#ntfctn').html('<p>' + text + '</p>');
-    fotimer = setTimeout(function(){ $('#ntfctn p').fadeOut(5000); }, 10000);
+    if (text == '')
+      $('#ntfctn').html('');
+    else {
+      $('#ntfctn').html('<p>' + text + '</p>');
+      fotimer = setTimeout(function(){ $('#ntfctn p').fadeOut(5000); }, 10000);
+    }
 }
