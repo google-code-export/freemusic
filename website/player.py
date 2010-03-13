@@ -36,10 +36,13 @@ class Player(base.CachingRequestHandler):
 		return myxml.em(u'artists', content=xml)
 
 	def get_album_ids(self):
-		if not self.request.get('user'):
-			return None
-		user = model.SiteUser.gql('WHERE nickname = :1', self.request.get('user')).get()
-		return [a.album.id for a in model.SiteAlbumStar.gql('WHERE user = :1', user.user).fetch(1000)]
+		try:
+			if self.request.get('user'):
+				user = model.SiteUser.gql('WHERE nickname = :1', self.request.get('user')).get()
+				return [a.album.id for a in model.SiteAlbumStar.gql('WHERE user = :1', user.user).fetch(1000)]
+		except:
+			pass
+		return None
 
 if __name__ == '__main__':
 	base.run([
