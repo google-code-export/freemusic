@@ -10,7 +10,6 @@ from google.appengine.ext.webapp.util import login_required
 # Site imports.
 from base import BaseRequestHandler, run
 from s3 import S3SettingsHandler, S3UploadHandler
-import album
 import api
 import chart
 import clips
@@ -65,17 +64,8 @@ if __name__ == '__main__':
 	run([
 		('/', index.Recent),
 		('/add/file', AddFileHandler),
-		('/album/(\d+)$', album.Viewer),
-		('/album/(\d+)\.(mp3|ogg)\.pls$', album.Playlist),
-		('/album/(\d+)/delete$', album.Delete),
-		('/album/(\d+)/edit$', album.Editor),
-		('/album/(\d+)/files$', album.FileViewer),
 		('/album/(\d+)/reviews\.rss$', reviews.AlbumRSS),
-		('/album/review', album.Review),
-		('/album/update-xml', album.XmlUpdater),
-		('/albums\.rss', album.RSSHandler),
 		('/api', api.Index),
-		('/api/album/star\.json', album.Stars),
 		('/api/submit/album', api.SubmitAlbum),
 		('/api/update', api.Update),
 		('/chart', chart.ShowChart),
@@ -85,7 +75,6 @@ if __name__ == '__main__':
 		('/events', events.All),
 		('/events/update', events.Update),
 		('/labels', labels.List),
-		# ('/my/collection', album.Collection),
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
 		('/robots.txt', sitemap.RobotsHandler),

@@ -16,6 +16,12 @@ def get_current_user():
 	user = SiteUser.gql('WHERE user = :1', users.get_current_user()).get()
 	return user
 
+def nextId(cls):
+	last = cls.gql('ORDER BY id DESC').get()
+	if last:
+		return last.id + 1
+	return 1
+
 class SiteUser(db.Model):
 	user = db.UserProperty(required=True)
 	joined = db.DateTimeProperty(auto_now_add=True)
@@ -270,8 +276,20 @@ class SiteEvent(db.Model):
 	id = db.IntegerProperty()
 	xml = db.TextProperty()
 
-def nextId(cls):
-	last = cls.gql('ORDER BY id DESC').get()
-	if last:
-		return last.id + 1
-	return 1
+class SiteAlbumLabel(db.Model):
+	"""
+	Метка для альбома. Используется для хранения сырых данных,
+	которые в сыром виде не используются: они периодически
+	агрегируются, результаты сохраняются в SiteAlbum.
+
+	Метки есть только у альбомов. Метки исполнителя формируются
+	на основании меток его альбомов.
+	"""
+	# Метка.
+	label = db.StringProperty()
+	# Пользователь, добавивший метку.
+	user = db.UserProperty(required=True)
+	# Альбом, к которому относится метка.
+	album = db.ReferenceProperty(SiteAlbum)
+	# Дата установки, на всякий случай.
+	published = db.DateTimeProperty(auto_now_add=True)

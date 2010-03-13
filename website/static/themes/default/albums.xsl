@@ -9,10 +9,17 @@
 			<xsl:apply-templates select="." mode="h2"/>
 			<div class="left">
 				<xsl:apply-templates select="images/image[@type='front']" mode="album-cover"/>
-				<xsl:apply-templates select="labels" mode="linked">
-					<xsl:with-param name="text">Метки:</xsl:with-param>
-					<xsl:with-param name="uri">/?label=</xsl:with-param>
-				</xsl:apply-templates>
+				<div id="album-labels">
+					<div>
+						<xsl:if test="/page/@user">
+							<xsl:attribute name="class">editable edit-labels</xsl:attribute>
+						</xsl:if>
+						<xsl:apply-templates select="labels"/>
+						<xsl:if test="not(labels)">
+							<p class="empty">Нажми сюда, чтобы определить жанры этого альбома.</p>
+						</xsl:if>
+					</div>
+				</div>
 			</div>
 			<div class="right">
 				<table class="tracklist">
@@ -72,6 +79,21 @@
 			</div>
 		</div>
 	</xsl:template>
+
+		<xsl:template match="labels">
+			<p>
+				<xsl:text>Метки: </xsl:text>
+				<xsl:for-each select="label">
+					<xsl:if test="position() &gt; 1">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+					<a href="/?label={@uri}">
+						<xsl:value-of select="text()"/>
+					</a>
+				</xsl:for-each>
+				<xsl:text>.</xsl:text>
+			</p>
+		</xsl:template>
 
 		<xsl:template match="events" mode="inside">
 			<div class="events">

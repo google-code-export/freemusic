@@ -7,6 +7,17 @@ body {
 	font: normal 10pt/12pt arial, sans-serif;
 }
 
+.jsonly {
+	display: none;
+}
+.editable:hover {
+	background-color: rgb(255,255,211); /* thanks to flickr.com */
+}
+.editable .empty {
+	font-style: italic;
+	color: gray;
+}
+
 a {
 	color: #008;
 }
@@ -35,11 +46,9 @@ pre {
 }
 
 .fakelink {
-	color: blue;
+	color: #008;
 	cursor: pointer;
-	/*
 	text-decoration: underline;
-	*/
 }
 .fakelink span {
 	border-bottom: dashed 1px blue;
@@ -306,6 +315,14 @@ h2 .help, h2 small a, h3 small a {
 
 #album td {
 	padding: 2px 4px;
+}
+#album .edit-labels {
+	margin: 1em 0;
+}
+#album .edit-labels textarea {
+	width: 200px;
+	height: 100px;
+	max-width: 200px;
 }
 
 /**
@@ -846,9 +863,5 @@ table.basic th, table.basic td {
 #radio .info {
 	opacity: 0.7;
 }
-
-/**
- * Профиль пользователя.
- */
 
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */

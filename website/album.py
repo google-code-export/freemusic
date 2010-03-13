@@ -5,34 +5,35 @@ import datetime
 
 from google.appengine.api import memcache
 from google.appengine.api import users
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 
-from base import BaseRequestHandler, HTTPException, ForbiddenException
-from model import SiteAlbum, SiteImage, SiteTrack, SiteFile, SiteAlbumReview, SiteUser, SiteEvent, SiteAlbumStar
-from index import Recent
-import rss, myxml
+import base
+import model
+import myxml
+import rss
 
-class XmlUpdater(BaseRequestHandler):
+class XmlUpdater(base.BaseRequestHandler):
 	def get(self):
 		self.check_access()
-		for album in SiteAlbum.all().fetch(1000):
+		for album in model.SiteAlbum.all().fetch(1000):
 			album.put()
 		self.redirect('/')
 
-class Viewer(BaseRequestHandler):
+class Viewer(base.BaseRequestHandler):
 	xsltName = 'albums.xsl'
 
 	def get(self, id):
 		album = self.get_album(id)
 		user = users.get_current_user()
 		if user:
-			star = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get() is not None
+			star = model.SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get() is not None
 		else:
 			star = False
 		self.check_access()
 
 		xml = album.xml
-		xml += u'<reviews>' + u''.join([r.xml for r in SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)]) + u'</reviews>'
+		xml += u'<reviews>' + u''.join([r.xml for r in model.SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)]) + u'</reviews>'
 		xml += self.get_events(album)
 
 		self.sendXML(xml, {
@@ -41,22 +42,22 @@ class Viewer(BaseRequestHandler):
 
 	def get_events(self, album):
 		xml = u''
-		events = [e.xml for e in SiteEvent.gql('WHERE artist = :1', album.artist).fetch(1000)]
+		events = [e.xml for e in model.SiteEvent.gql('WHERE artist = :1', album.artist).fetch(1000)]
 		if len(events):
 			xml = myxml.em(u'events', content=u''.join(events))
 		return xml
 
 	def get_album(self, id):
 		if id:
-			album = SiteAlbum.gql('WHERE id = :1', int(id)).get()
+			album = model.SiteAlbum.gql('WHERE id = :1', int(id)).get()
 			if album:
 				return album
-		raise HTTPException(404, u'Нет такого альбома.')
+		raise base.HTTPException(404, u'Нет такого альбома.')
 
 class Playlist(Viewer):
 	def get(self, id, format):
 		album = self.get_album(id)
-		tracks = SiteTrack.gql('WHERE album = :1 ORDER BY number', album).fetch(1000)
+		tracks = model.SiteTrack.gql('WHERE album = :1 ORDER BY number', album).fetch(1000)
 		output = u'[playlist]\nNumberOfEntries=%u\n' % len(tracks)
 		index = 1
 		for track in tracks:
@@ -109,7 +110,7 @@ class Editor(Viewer):
 			if arg.startswith('track.') and self.request.get(arg):
 				data[int(arg.split('.', 1)[1])] = self.request.get(arg)
 		if data:
-			for track in SiteTrack.gql('WHERE album = :1', album).fetch(1000):
+			for track in model.SiteTrack.gql('WHERE album = :1', album).fetch(1000):
 				if track.id in data:
 					track.title = data[track.id]
 					track.put()
@@ -129,7 +130,7 @@ class Delete(Viewer):
 
 	def post(self, id):
 		album = self.get_album(id)
-		for cls in (SiteImage, SiteTrack, SiteFile, SiteAlbumReview):
+		for cls in (model.SiteImage, model.SiteTrack, model.SiteFile, model.SiteAlbumReview):
 			items = cls.gql('WHERE album = :1', album).fetch(1000)
 			if items:
 				for item in items:
@@ -145,7 +146,7 @@ class Delete(Viewer):
 		album = Viewer.get_album(self, id)
 		user = self.force_user()
 		if album.owner != user and not self.is_admin():
-			raise ForbiddenException
+			raise base.ForbiddenException
 		return album
 
 class RSSHandler(rss.RSSHandler):
@@ -153,14 +154,14 @@ class RSSHandler(rss.RSSHandler):
 		items = [{
 			'title': album.name,
 			'link': 'album/' + str(album.id),
-		} for album in SiteAlbum.all().order('-release_date').fetch(20)]
+		} for album in model.SiteAlbum.all().order('-release_date').fetch(20)]
 		self.sendRSS(items, title=u'Новые альбомы')
 
-class Stars(BaseRequestHandler):
+class Stars(base.BaseRequestHandler):
 	def get(self):
 		if self.request.get('id'):
-			album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
-			a = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', self.force_user(), album).get()
+			album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+			a = model.SiteAlbumStar.gql('WHERE user = :1 AND album = :2', self.force_user(), album).get()
 			if a is not None:
 				return self.sendJSON({
 					'star': 1,
@@ -173,14 +174,14 @@ class Stars(BaseRequestHandler):
 		user = users.get_current_user()
 		memcache.delete('/player?user=' + user.nickname())
 		memcache.delete('/u/' + user.nickname())
-		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+		album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
 		if album is not None:
 			user = self.force_user()
-			star = SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get()
+			star = model.SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get()
 
 			status = self.request.get('status') == 'true'
 			if status and not star:
-				SiteAlbumStar(user=user, album=album).put()
+				model.SiteAlbumStar(user=user, album=album).put()
 			elif not status and star:
 				star.delete()
 
@@ -190,14 +191,14 @@ class Stars(BaseRequestHandler):
 				})
 		self.sendJSON({'notify':''})
 
-class Review(BaseRequestHandler):
+class Review(base.BaseRequestHandler):
 	def get(self):
 		"""
 		Вывод рецензий.
 		"""
 		if self.request.get('album'):
-			album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
-			xml = u''.join([one.xml for one in SiteAlbumReview.gql('WHERE album = :1', album)])
+			album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
+			xml = u''.join([one.xml for one in model.SiteAlbumReview.gql('WHERE album = :1', album)])
 			self.sendXML(myxml.em(u'reviews', None, xml))
 
 	def post(self):
@@ -209,16 +210,16 @@ class Review(BaseRequestHandler):
 		message будет содержать сообщение.
 		"""
 		user = self.get_current_user()
-		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+		album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
 		response = { 'status': 'ok', 'message': '' }
 
-		review = SiteAlbumReview.gql('WHERE album = :1 AND author = :2', album, user).get()
+		review = model.SiteAlbumReview.gql('WHERE album = :1 AND author = :2', album, user).get()
 		if review is not None:
 			response['status'] = 'duplicate'
 			response['message'] = 'Вы уже писали рецензию на этот альбом.'
 		else:
 			status = 'ok'
-			review = SiteAlbumReview(user=user, album=SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get())
+			review = model.SiteAlbumReview(user=user, album=model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get())
 			for k in ('sound', 'arrangement', 'vocals', 'lyrics', 'prof'):
 				rate = self.request.get(k)
 				if rate and int(rate) <= 5:
@@ -230,3 +231,78 @@ class Review(BaseRequestHandler):
 			memcache.delete('/u/' + user.nickname())
 
 		self.sendJSON(response)
+
+class AlbumLabels(base.BaseRequestHandler):
+	"""
+	Управление метками альбома.
+	"""
+	def get(self):
+		"""
+		Получение списка меток. Если есть пользовательские метки,
+		возвращаются они, в противном случае — общие метки альбома.
+		"""
+		album = self.get_album()
+		labels = sorted(self.get_labels(album))
+		text = u', '.join(labels)
+		self.sendJSON({
+			'id': album.id,
+			'list': labels,
+			'text': text,
+			'form': u'<form method="post" action="/album/labels?id=%u"><textarea name="labels">%s</textarea><button>Сохранить</button></form>' % (album.id, text),
+		})
+
+	def get_labels(self, album):
+		user = users.get_current_user()
+		if user is None:
+			return album.labels
+		return [l.label for l in model.SiteAlbumLabel.gql('WHERE album = :1 AND user = :2', album, user).fetch(1000)]
+
+	def post(self):
+		user = self.force_user()
+		album = self.get_album()
+		for l in model.SiteAlbumLabel.gql('WHERE album = :1 AND user = :2', album, user).fetch(1000):
+			l.delete()
+		for kw in self.request.get('labels').split(','):
+			model.SiteAlbumLabel(user=user, album=album, label=kw.strip().lower()).put()
+
+		self.sendJSON({
+			'html': u'<p>Метки: ' + u', '.join([u'<a href="/?label=%s">%s</a>' % (l, l) for l in self.get_labels(album)]) + u'.',
+			'notification': u'Ваши метки будут применены через какое-то время.',
+		})
+
+		taskqueue.Task(url='/album/labels/update', params={'id': album.id}).add()
+
+	def get_album(self, id=None):
+		if id is None:
+			id = int(self.request.get('id'))
+		album = model.SiteAlbum.gql('WHERE id = :1', id).get()
+		if album is None:
+			raise HTTPException(404, u'Нет такого альбома.')
+		return album
+
+class AlbumLabelUpdater(base.BaseRequestHandler):
+	def post(self):
+		if 'X-AppEngine-QueueName' in self.request.headers:
+			album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+			if album is not None:
+				labels = []
+				for l in model.SiteAlbumLabel.gql('WHERE album = :1', album).fetch(1000):
+					l = l.label.lower()
+					if l not in labels:
+						labels.append(l)
+				album.labels = labels
+				album.put()
+
+if __name__ == '__main__':
+	base.run([
+		('/album/(\d+)$', Viewer),
+		('/album/(\d+)\.(mp3|ogg)\.pls$', Playlist),
+		('/album/(\d+)/delete$', Delete),
+		('/album/(\d+)/edit$', Editor),
+		('/album/(\d+)/files$', FileViewer),
+		('/album/labels', AlbumLabels),
+		('/album/labels/update', AlbumLabelUpdater),
+		('/album/review', Review),
+		('/album/update-xml', XmlUpdater),
+		('/albums\.rss', RSSHandler),
+	])

@@ -6,6 +6,7 @@
 // @url http://code.google.com/p/freemusic/
 
 $(document).ready(function(){
+  $('.jsonly').show();
 	$('input.toggle').click(function(){
 		$('.toggleMe').toggleClass('hidden');
 	});
@@ -179,6 +180,35 @@ $(document).ready(function(){
    */
   if ($('#radio').length)
     radio_np();
+
+  /**
+   * Редактирование меток альбома.
+   */
+  $('.edit-labels p').live('click', function(){
+      var id = window.location.pathname.split('/')[2];
+      $.ajax({
+        type: 'GET',
+        url: '/album/labels?id=' + id,
+        dataType: 'json',
+        success: function (data) {
+          $('.edit-labels').html(data.form);
+        }
+      });
+  });
+  $('.edit-labels form').live('submit', function(){
+    $.ajax({
+      type: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      dataType: 'json',
+      success: function (data) {
+        $('.edit-labels').html(data.html);
+        if (data.notification)
+          ntfctn(data.notification);
+      }
+    });
+    return false;
+  });
 });
 
 // Идентфикатор интервала, чтобы установить только один раз.
