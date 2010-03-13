@@ -2,21 +2,21 @@
 <Module>
 	<ModulePrefs
 		title="Free Music Hub Radio"
-    title_url="http://www.freemusichub.net/radio"
-    description="Plays free music 24/7, mostly EBM and electro-industrial music from Russia."
-		screenshot="http://home.umonkey.net/public/g/radio/screenshot.png"
-		thumbnail="http://home.umonkey.net/public/g/radio/thumbnail.png"
+		title_url="http://www.freemusichub.net/radio"
+		description="Plays free music 24/7, mostly EBM and electro-industrial music from Russia."
+		screenshot="http://home.umonkey.net/public/g/radio/logo.radio.280x104.png"
+		thumbnail="http://home.umonkey.net/public/g/radio/logo.radio.120x60..png"
 		author="Justin Forest"
 		author_location="St. Petersburg, Russia"
 		author_email="justin.forest@gmail.com"
 		width="280"
 		height="104">
 		<Require feature="flash"/>
-		<Icon>http://home.umonkey.net/public/g/radio/icon.16x16.png</Icon>
+		<Icon>http://home.umonkey.net/public/g/radio/logo.radio.16x16.png</Icon>
 	</ModulePrefs>
 	<Content type="html">
 	<![CDATA[
-		<object type="application/x-shockwave-flash" width="280" height="104" data="http://dev.freemusichub.net/static/player.swf?file=http%3A%2F%2Fradio.deadchannel.ru%3A8000%2Fstream.mp3&amp;width=280&amp;height=104&amp;controlbar=none&amp;link=http://radio.deadchannel.ru/&amp;image=http%3A%2F%2Fhome.umonkey.net%2Fpublic%2Fg%2Fradio%2Flogo.280x104.png&amp;type=sound&amp;duration=-1">
+		<object type="application/x-shockwave-flash" width="280" height="104" data="http://dev.freemusichub.net/static/player.swf?file=http%3A%2F%2Fradio.deadchannel.ru%3A8000%2Fstream.mp3&amp;width=280&amp;height=104&amp;controlbar=none&amp;link=http://radio.deadchannel.ru/&amp;image=http%3A%2F%2Fhome.umonkey.net%2Fpublic%2Fg%2Fradio%2Flogo.radio.280x104.png&amp;type=sound&amp;duration=-1">
 		  <param name="movie" value="http://radio.deadchannel.ru:8000/stream.mp3" />
 		  <param name="wmode" value="transparent" />
 		</object>
