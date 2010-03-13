@@ -12,6 +12,10 @@
   font-weight: bold;
 }
 
+#artist .tile1 {
+  margin: 0 10px 10px 0;
+}
+
 .tile1 {
   position: relative;
   overflow: hidden;
