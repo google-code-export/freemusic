@@ -192,6 +192,7 @@ $(document).ready(function(){
         dataType: 'json',
         success: function (data) {
           $('.edit-labels').html(data.form);
+          $('.edit-labels textarea').focus();
         }
       });
   });
