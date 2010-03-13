@@ -255,7 +255,9 @@
 			</a>
 			<a href="/album/{@id}" class="title">
 				<xsl:value-of select="@name"/>
+				<!--
 				<xsl:value-of select="concat(' (',substring(@pubDate,1,4),')')"/>
+				-->
 			</a>
 			<xsl:if test="$artists">
 				<a href="/artist/{@artist-id}" class="artist">
