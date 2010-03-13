@@ -39,14 +39,15 @@ class List(base.BaseRequestHandler):
 					}))
 		self.redirect('/users')
 
-class ShowUser(base.BaseRequestHandler):
+class ShowUser(base.CachingRequestHandler):
 	"""
 	Вывод профиля пользователя.
 	"""
 	xsltName = 'user.xsl'
 	tabName = 'personal'
+	cacheTTL = 60
 
-	def get(self, username):
+	def get_cached(self, username):
 		user = model.SiteUser.gql('WHERE user = :1', users.User(username + '@gmail.com')).get()
 		if user is None:
 			raise HTTPException(404, u'Нет такого пользователя.')

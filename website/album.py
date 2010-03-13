@@ -170,7 +170,9 @@ class Stars(BaseRequestHandler):
 		})
 
 	def post(self):
-		memcache.delete('/player?user=' + users.get_current_user().nickname())
+		user = users.get_current_user()
+		memcache.delete('/player?user=' + user.nickname())
+		memcache.delete('/u/' + user.nickname())
 		album = SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
 		if album is not None:
 			user = self.force_user()
@@ -224,5 +226,7 @@ class Review(BaseRequestHandler):
 			review.comment = self.request.get('comment')
 			review.put()
 			album.put() # сохраняем альбом для обновления средней оценки
+
+			memcache.delete('/u/' + user.nickname())
 
 		self.sendJSON(response)
