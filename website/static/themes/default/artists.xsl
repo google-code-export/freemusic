@@ -9,6 +9,7 @@
 			<div class="right blocks">
 				<h2>
 					<xsl:value-of select="@name"/>
+					<small><a href="http://www.lastfm.ru/music/{@name}" class="ext">Last.fm</a></small>
 				</h2>
 				<xsl:apply-templates select="albums"/>
 				<xsl:apply-templates select="reviews"/>
