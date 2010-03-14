@@ -219,6 +219,21 @@ $(document).ready(function(){
     $('#user-stars .' + $(this).attr('class')).show();
     return false;
   });
+
+  /**
+   * Сохраняем информацию о скачивании, если пользователь
+   * зарегистрирован, чтобы предложить написать рецензию.
+   */
+  $('html.auth .dlb a.file').click(function(){
+    $.ajax({
+      type: 'GET',
+      url: '/album/download',
+      data: {
+        album: window.location.pathname.split('/')[2],
+        file: $(this).attr('href'),
+      },
+    });
+  });
 });
 
 // Идентфикатор интервала, чтобы установить только один раз.

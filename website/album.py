@@ -13,6 +13,12 @@ import model
 import myxml
 import rss
 
+class SiteDownload(db.Model):
+	user = db.UserProperty(required=True)
+	file = db.LinkProperty(required=True)
+	album = db.ReferenceProperty(model.SiteAlbum)
+	published = db.DateTimeProperty(auto_now_add=True)
+
 class XmlUpdater(base.BaseRequestHandler):
 	def get(self):
 		self.check_access()
@@ -295,6 +301,24 @@ class AlbumLabelUpdater(base.BaseRequestHandler):
 
 				taskqueue.Task(url='/labels/cache').add()
 
+class DownloadTracker(base.BaseRequestHandler):
+	def get(self):
+		user = users.get_current_user()
+		if user is not None:
+			album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
+			if album is not None:
+				dl = SiteDownload(user=user, album=album, file=self.request.get('file'))
+				dl.put()
+
+class ReviewBegger(base.BaseRequestHandler):
+	"""
+	Отправляет пользователям, скачивавшим альбомы, просьбы написать
+	рецензию. Запускается по крону.
+	"""
+	def get(self):
+		for dl in SiteDownload.all().order('-published').fetch(10):
+			log('Should ask %s to review %s.' % (dl.user.email(), dl.album.name))
+
 if __name__ == '__main__':
 	base.run([
 		('/album/(\d+)$', Viewer),
@@ -302,9 +326,11 @@ if __name__ == '__main__':
 		('/album/(\d+)/delete$', Delete),
 		('/album/(\d+)/edit$', Editor),
 		('/album/(\d+)/files$', FileViewer),
+		('/album/download', DownloadTracker),
 		('/album/labels', AlbumLabels),
 		('/album/labels/update', AlbumLabelUpdater),
 		('/album/review', Review),
+		('/album/review/beg', ReviewBegger),
 		('/album/update-xml', XmlUpdater),
 		('/albums\.rss', RSSHandler),
 	])

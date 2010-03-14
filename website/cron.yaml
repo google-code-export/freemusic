@@ -7,5 +7,8 @@ cron:
   - description: Update charts.
     url: /chart
     schedule: every 24 hours
+  - description: Ask users to review albums.
+    url: /album/review/beg
+    schedule: every 24 hours
 
 # vim: set ts=2 sts=2 sw=2 et:

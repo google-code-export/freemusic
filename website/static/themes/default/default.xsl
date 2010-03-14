@@ -15,6 +15,12 @@
 
 	<xsl:template match="/page">
 		<html lang="{@lang}">
+			<xsl:attribute name="class">
+				<xsl:choose>
+					<xsl:when test="@logout-uri">auth</xsl:when>
+					<xsl:otherwise>anon</xsl:otherwise>
+				</xsl:choose>
+			</xsl:attribute>
 			<head>
 				<title>Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/static/themes/{@theme}/style.css"/>

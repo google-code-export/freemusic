@@ -278,7 +278,7 @@
 				<ul class="more popup">
 					<xsl:for-each select="files/file">
 						<li>
-							<a href="{@uri}">
+							<a href="{@uri}" class="file">
 								<xsl:value-of select="@name"/>
 							</a>
 						</li>
