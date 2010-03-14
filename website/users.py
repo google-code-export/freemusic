@@ -72,7 +72,10 @@ class ShowUser(base.CachingRequestHandler):
 	def get_labels_xml(self, star, user, labels):
 		xml = u''
 		for l in model.SiteAlbumLabel.gql('WHERE album = :1 AND user = :2', star.album, user.user).fetch(1000):
-			tmp = myxml.em(u'label', content=myxml.cdata(l.label))
+			tmp = myxml.em(u'label', {
+				'uri': myxml.uri(l.label),
+				'class': l.label.replace(' ', '-'),
+			}, content=myxml.cdata(l.label))
 			if tmp not in labels:
 				labels.append(tmp)
 			xml += tmp

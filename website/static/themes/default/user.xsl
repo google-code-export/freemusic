@@ -31,7 +31,7 @@
 							<tr>
 								<xsl:attribute name="class">
 									<xsl:for-each select="label">
-										<xsl:value-of select="concat(' label-',text())"/>
+										<xsl:value-of select="concat(' label-',@class)"/>
 									</xsl:for-each>
 								</xsl:attribute>
 								<td>
@@ -67,7 +67,7 @@
 					<span class="hidden">
 						<xsl:for-each select="label">
 							<xsl:sort select="text()"/>
-							<a href="/?label={text()}" class="label-{text()}">
+							<a href="/?label={@uri}" class="label-{@class}">
 								<xsl:value-of select="text()"/>
 							</a>
 						</xsl:for-each>

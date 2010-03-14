@@ -29,4 +29,7 @@
 
 #user-stars .labels a {
   text-decoration: underline;
+  white-space: nowrap;
+  margin-right: 1em;
+  display: inline-block;
 }
