@@ -277,6 +277,7 @@ class AlbumLabels(base.BaseRequestHandler):
 			'notification': u'Ваши метки будут применены через какое-то время.',
 		})
 
+		memcache.delete('/u/' + user.nickname())
 		taskqueue.Task(url='/album/labels/update', params={'id': album.id}).add()
 
 	def get_album(self, id=None):
