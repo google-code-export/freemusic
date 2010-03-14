@@ -36,6 +36,9 @@ def fetchxml(url, args=None):
 	if result.status_code == 200:
 		return ElementTree(fromstring(result.content))
 
+def head(url):
+	return urlfetch.fetch(url=url, method=urlfetch.HEAD)
+
 def to_xml(et):
 	return tostring(et)
 

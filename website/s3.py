@@ -51,6 +51,7 @@ class S3File(db.Model):
 			'created': self.created,
 			'owner': self.owner,
 			'xml-uri': self.xml,
+			'size': self.size,
 		})
 
 	@classmethod
@@ -137,7 +138,7 @@ class S3UploadHandler(BaseRequestHandler):
 		}
 		policy = encode_policy(policy_src)
 
-		logging.debug(policy_src)
+		# logging.debug(policy_src)
 
 		return self.sendXML(xml.em('s3-upload-form', {
 			'bucket': settings.bucket,
@@ -159,6 +160,9 @@ class S3UploadHandler(BaseRequestHandler):
 			path=self.request.get('key'),
 			uri='http://' + self.request.get('bucket') + '.s3.amazonaws.com/' + self.request.get('key'),
 			owner=users.get_current_user())
+		r = util.head(File.uri)
+		if r.status_code == 200 and 'Content-Length' in r.headers:
+			File.size = int(r.headers['Content-Length'])
 		File.put()
 
 		self.redirect(self.request.path + '?ok=' + str(File.id))

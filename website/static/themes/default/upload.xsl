@@ -59,12 +59,13 @@
 		<h2>Очередь обработки</h2>
 		<xsl:if test="S3File">
 			<p>Здесь выводятся <a href="/upload">загруженные</a> альбомы, которые ещё не были обработаны. Наши роботы сейчас над ними работают.</p>
-			<table class="basic">
+			<table class="basic queue">
 				<thead>
 					<tr>
 						<th/>
 						<th>№</th>
 						<th>Файл</th>
+						<th>Размер</th>
 						<th>Владелец</th>
 						<th>XML</th>
 					</tr>
@@ -83,6 +84,9 @@
 								<a href="{@file-uri}">
 									<xsl:value-of select="@name"/>
 								</a>
+							</td>
+							<td class="size">
+								<xsl:value-of select="@size"/>
 							</td>
 							<td>
 								<a href="/u/{@owner}">

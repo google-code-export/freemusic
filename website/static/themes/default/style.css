@@ -868,4 +868,11 @@ table.basic th, table.basic td {
 	opacity: 0.7;
 }
 
+/**
+ * Очередь файлов.
+ */
+.queue .size {
+	text-align: right;
+}
+
 /* vim: set ts=4 sts=4 sw=4 noet nocindent: */
