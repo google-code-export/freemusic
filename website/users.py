@@ -57,6 +57,7 @@ class ShowUser(base.CachingRequestHandler):
 
 	def get_stars_xml(self, user):
 		xml = u''
+		labels = []
 		for star in model.SiteAlbumStar.gql('WHERE user = :1', user.user).fetch(100):
 			xml += myxml.em(u'star', {
 				'album-id': star.album.id,
@@ -64,8 +65,20 @@ class ShowUser(base.CachingRequestHandler):
 				'artist-id': star.album.artist.id,
 				'artist-name': star.album.artist.name,
 				'pubDate': star.added.isoformat(),
-			})
+			}, content=self.get_labels_xml(star, user, labels))
+		xml += myxml.em('labels', content=u''.join(labels))
 		return myxml.em(u'stars', content=xml)
+
+	def get_labels_xml(self, star, user, labels):
+		xml = u''
+		for l in model.SiteAlbumLabel.gql('WHERE album = :1 AND user = :2', star.album, user.user).fetch(1000):
+			tmp = myxml.em(u'label', content=myxml.cdata(l.label))
+			if tmp not in labels:
+				labels.append(tmp)
+			xml += tmp
+		if xml:
+			return xml
+		return u''
 
 	def get_reviews_xml(self, user):
 		xml = u''

@@ -210,6 +210,15 @@ $(document).ready(function(){
     });
     return false;
   });
+
+  $('#user-stars .labels .fakelink').click(function(){
+    $('#user-stars .labels > span').toggleClass('hidden');
+  });
+  $('#user-stars .labels a').click(function(){
+    $('#user-stars tr').hide();
+    $('#user-stars .' + $(this).attr('class')).show();
+    return false;
+  });
 });
 
 // Идентфикатор интервала, чтобы установить только один раз.

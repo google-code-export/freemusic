@@ -48,10 +48,12 @@ pre {
 .fakelink {
 	color: #008;
 	cursor: pointer;
-	text-decoration: underline;
+}
+span.fakelink {
+	border-bottom: dashed 1px #008;
 }
 .fakelink span {
-	border-bottom: dashed 1px blue;
+	border-bottom: dashed 1px #008;
 }
 
 form.gen label,

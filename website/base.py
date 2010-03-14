@@ -207,6 +207,8 @@ class CachingRequestHandler(BaseRequestHandler):
 		if self.request.query_string:
 			key += '?' + self.request.query_string
 		cached = memcache.get(key)
+		if self.request.host == 'dev.freemusichub.net':
+			cached = None
 		if cached is None or 'expires' not in cached or (cached['expires'] and int(time.time()) > cached['expires']):
 			logging.debug('Cache MISS for ' + key)
 			self.get_cached(*args, **kwargs)

@@ -26,3 +26,7 @@
 #user-reviews td:first-child {
   padding-right: 8px;
 }
+
+#user-stars .labels a {
+  text-decoration: underline;
+}

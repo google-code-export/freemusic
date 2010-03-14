@@ -29,6 +29,11 @@
 						<xsl:for-each select="star">
 							<xsl:sort select="@pubDate" order="descending"/>
 							<tr>
+								<xsl:attribute name="class">
+									<xsl:for-each select="label">
+										<xsl:value-of select="concat(' label-',text())"/>
+									</xsl:for-each>
+								</xsl:attribute>
 								<td>
 									<span class="star on">
 										<a href="{@album-id}"/>
@@ -52,8 +57,23 @@
 						</xsl:for-each>
 					</tbody>
 				</table>
+				<xsl:apply-templates select="labels"/>
 			</div>
 		</xsl:template>
+
+			<xsl:template match="labels">
+				<p class="labels">
+					<span class="fakelink">Показать метки</span>
+					<span class="hidden">
+						<xsl:for-each select="label">
+							<xsl:sort select="text()"/>
+							<a href="/?label={text()}" class="label-{text()}">
+								<xsl:value-of select="text()"/>
+							</a>
+						</xsl:for-each>
+					</span>
+				</p>
+			</xsl:template>
 
 		<xsl:template match="user/reviews">
 			<div id="user-reviews" class="block list">
