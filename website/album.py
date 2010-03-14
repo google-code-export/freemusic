@@ -9,6 +9,7 @@ from google.appengine.api.labs import taskqueue
 from google.appengine.ext import db
 
 import base
+import mail
 import model
 import myxml
 import rss
@@ -317,7 +318,12 @@ class ReviewBegger(base.BaseRequestHandler):
 	"""
 	def get(self):
 		for dl in SiteDownload.all().order('-published').fetch(10):
-			log('Should ask %s to review %s.' % (dl.user.email(), dl.album.name))
+			mail.send2(dl.user.email(), 'ask-for-a-review', {
+				'dl': dl,
+				'host': self.request.host,
+				'base': self.getBaseURL(),
+			})
+			dl.delete()
 
 if __name__ == '__main__':
 	base.run([
