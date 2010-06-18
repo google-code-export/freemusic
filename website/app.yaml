@@ -6,6 +6,10 @@ api_version: 1
 # Good example: http://code.google.com/p/rietveld/source/browse/trunk/app.yaml
 
 handlers:
+- url: /remote_api
+  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+  login: admin
+
 - url: /favicon.ico
   static_files: static/favicon.2.ico
   upload: static/favicon.2.ico
