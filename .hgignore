@@ -4,4 +4,7 @@ tmp
 website/static/import.xml
 website/static/data.xml
 website/config.py
+website/*.sql3
+website/*-log-*
+website/dump
 robot/import/*.xml
