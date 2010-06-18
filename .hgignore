@@ -3,4 +3,5 @@ syntax: glob
 tmp
 website/static/import.xml
 website/static/data.xml
+website/config.py
 robot/import/*.xml
