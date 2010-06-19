@@ -18,6 +18,7 @@ from google.appengine.ext.webapp import template
 from django.utils import simplejson
 
 # Local imports
+import config
 from model import SiteUser
 import myxml as xml
 import invite
@@ -89,9 +90,21 @@ class BaseRequestHandler(webapp.RequestHandler):
 		"""
 		vars['base'] = self.getBaseURL()
 		vars['host'] = self.getHost()
+		vars['styles'] = self.get_styles(vars['host'])
 		directory = os.path.dirname(__file__)
 		path = os.path.join(directory, 'templates', template_name)
 		return template.render(path, vars)
+
+	def get_styles(self, hostname):
+		"""
+		Возвращает имена файлов со стилями. При работе в SDK возвращает
+		отдельные стили из /static/styles/, в нормальном режиме — один
+		готовый файл.
+		"""
+		if hostname.endswith(':8080'):
+			return ['/static/styles/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'styles')).next()[2]]
+		else:
+			return ['/static/styles.css']
 
 	def is_admin(self):
 		return users.is_current_user_admin()
@@ -173,6 +186,9 @@ class BaseRequestHandler(webapp.RequestHandler):
 		self.response.headers['Content-Type'] = type + '; charset=utf-8'
 		self.response.out.write(content)
 
+	def send_html(self, template_name, vars=None):
+		self.sendAny('text/html', self.render(template_name, vars))
+
 	def handle_exception(self, e, debug_mode):
 		"""
 		Заворачивает сообщения об ошибках в <message>.
@@ -226,8 +242,4 @@ class CachingRequestHandler(BaseRequestHandler):
 		self.sendAny(cached['type'], cached['body'])
 
 def run(rules):
-	_DEBUG = ('Development/' in os.environ.get('SERVER_SOFTWARE'))
-	if _DEBUG:
-		logging.getLogger().setLevel(logging.DEBUG)
-	application = webapp.WSGIApplication(rules, debug=_DEBUG)
-	wsgiref.handlers.CGIHandler().run(application)
+	wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication(rules, debug=config.DEBUG))

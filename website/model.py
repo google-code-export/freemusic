@@ -79,8 +79,6 @@ class SiteAlbum(db.Model):
 	cover_large = db.LinkProperty() # image URL
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
-	xml = db.TextProperty() # updated on save
-	shortxml = db.TextProperty() # не содержит треков и файлов
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
 	rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
 

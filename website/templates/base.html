@@ -1,8 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-<title>Free Music</title>
-</head>
-{% block content %}{% endblock %}
-{% block footer %}{% endblock %}
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+        <title>Free Music</title>
+        {% for file in styles %}
+            <link rel="stylesheet" type="text/css" href="{{ file }}"/>
+        {% endfor %}
+    </head>
+    <body>
+        <div id="header">
+            <div class="corsette">
+                <h1>
+                    <a href="/" class="wbg">
+                        <span>Free Music Hub</span>
+                    </a>
+                </h1>
+                <ul class="menu">
+                    <li class="wsub">
+                        <a href="/">Музыка</a>
+                        <ul class="submenu">
+                            <li><a href="/artists">Исполнители</a></li>
+                            <li><a href="/reviews">Рецензии</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="/events">Афиша</a>
+                    <li>
+                        <a href="/chart">Рейтинг</a>
+                    </li>
+                    <li class="wsub">
+                        <a href="/my">Моё</a>
+                        <ul class="submenu">
+                            <li><a href="/player/my">Коллекция</a></li>
+                            <li><a href="/upload">Загрузить альбом</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form action="/search" method="get" class="search">
+                    <input type="text" name="q" class="text clearme" placeholder="Поиск по сайту"/>
+                    <button type="submit">
+                        <span>Найти</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div id="wrapper">
+            <div id="content">{% block content %}{% endblock %}</div>
+            <div id="footer">{% block footer %}{% endblock %}</div>
+        </div>
+    </body>
 </html>

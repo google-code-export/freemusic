@@ -1,0 +1,44 @@
+/**
+ * Оформление списка альбомов на главной странице.
+ */
+
+#albumlist .tile {
+	margin: 0 0 10px 45px;
+	width: 152px;
+	height: 200px;
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+}
+
+/**
+ * У всех элементов группы есть левый отступ, только первому элементу
+ * отступ не нужен, он должен быть выровнен по левому краю страницы.
+ */
+#albumlist .tile:first-child {
+	margin-left: 0;
+}
+
+#albumlist .tile img {
+	border: solid 1px black;
+	width: 150px;
+	height: 150px;
+}
+
+#albumlist .title, #albumlist .artist {
+	text-align: center;
+	overflow: hidden;
+	white-space: nowrap;
+	font-size: 80%;
+	display: block;
+}
+
+/**
+ * Название исполнителя бледное, чтобы не отвлекать внимание
+ * от названия альбома, которое более важно.
+ */
+#albumlist .artist {
+	opacity: 0.5;
+}

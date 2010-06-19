@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="albumlist">
+  {% for group in groups %}
+    <div class="group">
+        {% for album in group %}
+            <div class="album tile" id="album-{{ album.id }}">
+              <a href="/album/{{ album.id }}">
+                {% if album.cover_large %}
+                  <img alt="cover" src="{{ album.cover_large }}"/>
+                {% else %}
+                  <img alt="cover" src="/static/default_album_large.png"/>
+                {% endif %}
+              </a>
+              <a class="title" href="/album/{{ album.id }}">{{ album.name }}</a>
+              <a class="artist" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>
+            </div>
+        {% endfor %}
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}
