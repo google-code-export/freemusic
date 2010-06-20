@@ -4,9 +4,8 @@
 Функции для взаимодействия с Last.fm.
 """
 
+import config
 import util
-
-LASTFM_KEY = 'e1cedb5b6c9aa0c38a69f752c6f510d2' # http://www.lastfm.ru/api/account
 
 def get_events(artist_name):
 	"""
@@ -16,12 +15,12 @@ def get_events(artist_name):
 	return util.fetchxml('http://ws.audioscrobbler.com/2.0/', {
 		'method': 'artist.getevents',
 		'artist': artist_name.encode('utf-8'),
-		'api_key': LASTFM_KEY,
+		'api_key': config.LASTFM_KEY,
 	})
 
 def get_artist(artist_name):
 	return util.fetchxml('http://ws.audioscrobbler.com/2.0/', {
 		'method': 'artist.getInfo',
 		'artist': artist_name.encode('utf-8'),
-		'api_key': LASTFM_KEY,
+		'api_key': config.LASTFM_KEY,
 	})
