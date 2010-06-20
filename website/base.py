@@ -91,6 +91,8 @@ class BaseRequestHandler(webapp.RequestHandler):
 		vars['base'] = self.getBaseURL()
 		vars['host'] = self.getHost()
 		vars['styles'] = self.get_styles(vars['host'])
+		vars['logout_uri'] = users.create_logout_url(self.request.uri)
+		vars['login_uri'] = users.create_login_url(self.request.uri)
 		directory = os.path.dirname(__file__)
 		path = os.path.join(directory, 'templates', template_name)
 		return template.render(path, vars)
