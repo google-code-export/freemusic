@@ -7,7 +7,7 @@
             <link rel="stylesheet" type="text/css" href="{{ file }}"/>
         {% endfor %}
     </head>
-    <body>
+    <body class="anon">
         <div id="header">
             <div class="corsette">
                 <h1>
@@ -28,12 +28,16 @@
                     <li>
                         <a href="/chart">Рейтинг</a>
                     </li>
-                    <li class="wsub">
+                    <li class="wsub auth">
                         <a href="/my">Моё</a>
                         <ul class="submenu">
                             <li><a href="/player/my">Коллекция</a></li>
                             <li><a href="/upload">Загрузить альбом</a></li>
+                            <li><a href="{{ logout_uri }}">Выйти</a></li>
                         </ul>
+                    </li>
+                    <li class="anon">
+                        <a href="{{ login_uri }}">Войти</a>
                     </li>
                 </ul>
                 <form action="/search" method="get" class="search">
