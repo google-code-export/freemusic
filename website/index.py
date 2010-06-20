@@ -18,42 +18,49 @@ class Recent(base.BaseRequestHandler):
 	tabName = 'music'
 
 	def get(self):
-		# Загружаем интересующие альбомы.
-		albums = model.SiteAlbum.all().order('-release_date').fetch(16)
-		# Разбиваем на группы по 4.
-		groups = [albums[x*4:x*4+4] for x in range(math.ceil(len(albums) / 4))]
-		# Возвращаем.
+		# Информация о расположении текущей страницы.
+		pager = self.get_pager()
+		# Загружаем интересующие альбомы и разбиваем на группы по 4.
+		albums = self.get_albums(pager['start'] - 1)
+		print >>sys.stderr, pager
+		groups = [albums[x*4:x*4+4] for x in range(int(math.ceil(len(albums)) / 4))]
+		# Выводим страницу.
 		return self.send_html('index.html', {
 			'groups': groups,
-		})
-
-		self.check_access()
-		offset = self.get_offset()
-		xml = u"<index skip=\"%u\"><albums>" % offset
-		xml += u''.join([a.shortxml for a in self.get_albums(offset)])
-		xml += u'</albums>'
-		xml += labels.load()
-		xml += u'</index>'
-		self.sendXML(xml, {
+			'pager': pager,
 			'label': self.request.get('label'),
 		})
 
+	def get_album_count(self):
+		return self.get_query().count()
+
 	def get_albums(self, offset):
-		label = self.request.get('label')
-		if label:
-			list = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
-		else:
-			list = model.SiteAlbum.all().order('-release_date')
-		result = list.fetch(16, offset)
+		result = self.get_query().fetch(16, offset)
 		if not result and not offset:
 			raise ServiceUnavailable()
 		return result
 
-	def get_offset(self):
-		if self.request.get('skip'):
-			return int(self.request.get('skip'))
+	def get_query(self):
+		label = self.request.get('label')
+		if label:
+			return model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', label)
 		else:
-			return 0
+			return model.SiteAlbum.all().order('-release_date')
+
+	def get_pager(self):
+		page = max(int(self.request.get('page') or 1), 1)
+		offset = ((page - 1) * 16)
+		total = self.get_album_count()
+		pages = int(math.ceil(float(total) / 16))
+
+		return {
+			'page': page,
+			'pages': pages,
+			'start': offset + 1,
+			'end': min(offset + 15, total),
+			'total': total,
+			'pagenumbers': range(max(1, page - 5), min(page + 5, pages + 1)),
+		}
 
 if __name__ == '__main__':
 	base.run([

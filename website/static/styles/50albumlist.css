@@ -42,3 +42,18 @@
 #albumlist .artist {
 	opacity: 0.5;
 }
+#albumlist .pager span {
+	margin-right: 1em;
+}
+
+/**
+ * Попасть по ссылке из одного символа может быть непросто, увеличиваем площадь.
+ */
+#albumlist .pages a {
+	padding: 0 2px;
+}
+#albumlist .pages a.active {
+	font-weight: bold;
+	color: black;
+	text-decoration: none;
+}

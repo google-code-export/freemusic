@@ -1,22 +1,26 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="albumlist">
-  {% for group in groups %}
-    <div class="group">
-        {% for album in group %}
-            <div class="album tile" id="album-{{ album.id }}">
-              <a href="/album/{{ album.id }}">
-                {% if album.cover_large %}
-                  <img alt="cover" src="{{ album.cover_large }}"/>
-                {% else %}
-                  <img alt="cover" src="/static/default_album_large.png"/>
-                {% endif %}
-              </a>
-              <a class="title" href="/album/{{ album.id }}">{{ album.name }}</a>
-              <a class="artist" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>
-            </div>
-        {% endfor %}
-    </div>
-  {% endfor %}
+	<!-- todo: использовать cycle, http://stackoverflow.com/questions/1438486/how-to-use-math-remainder-in-django-template  -->
+	{% for group in groups %}
+	<div class="group">
+		{% for album in group %}
+			<div class="album tile" id="album-{{ album.id }}">
+				<a href="/album/{{ album.id }}">
+				{% if album.cover_large %}
+					<img alt="cover" src="{{ album.cover_large }}"/>
+				{% else %}
+					<img alt="cover" src="/static/default_album_large.png"/>
+				{% endif %}
+				</a>
+				<a class="title" href="/album/{{ album.id }}">{{ album.name }}</a>
+				<a class="artist" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>
+			</div>
+		{% endfor %}
+	</div>
+	{% endfor %}
+	<div class="pager">
+		<span class="info">Показаны альбомы {{ pager.start }}—{{ pager.end }} из {{ pager.total }}</span> <span class="pages">Страницы:{% for page in pager.pagenumbers %} <a href="/?page={{ page }}"{% ifequal page pager.page %} class="active"{% endifequal%}>{{ page }}</a>{% endfor %}</span>
+	</div>
 </div>
 {% endblock %}
