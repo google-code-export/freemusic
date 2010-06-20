@@ -4,6 +4,15 @@
 		<div class="header">
 			<h2>{{ artist.name }}</h2>
 		</div>
+		<div class="links">
+			<h3>Ссылки на этого исполнителя</h3>
+			<ul>
+				<li><a target="_blank" href="http://www.lastfm.ru/music/{{ artist.name }}">Last.fm</a></li>
+				{% if artist.twitter %}
+					<li><a target="_blank" href="http://twitter.com/{{ artist.twitter }}">Twitter</a></li>
+				{% endif %}
+			</ul>
+		</div>
 		<div class="albums">
 			<h3>Альбомы</h3>
 			{% if albums %}

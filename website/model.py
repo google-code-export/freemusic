@@ -58,6 +58,7 @@ class SiteArtist(CustomModel):
 	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
 	sortname = db.StringProperty(required=False)
+	twitter = db.StringProperty()
 
 class SiteAlbum(CustomModel):
 	id = db.IntegerProperty()
