@@ -10,6 +10,7 @@ $(function(){
 			if (link) {
 				var player = $('#album audio')[0];
 				player.src = link;
+				player.load();
 				player.play();
 				row.parents('table:first').find('tr').removeClass('np');
 				row.addClass('np');
