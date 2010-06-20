@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="track">
+		<div class="header">
+			<h2>{{ track.title }}</h2>
+			<p>Из альбома «<a href="/album/{{ track.album.id }}">{{ track.album.name }}</a>» группы <a href="/artist/{{ track.album.artist.id }}">{{ track.album.artist.name }}</a>.</p>
+		</div>
+		<div class="main">
+			<audio controls="controls">
+				<source src="{{ track.mp3_link }}" type="audio/mp3"/>
+				<source src="{{ track.ogg_link }}" type="audio/ogg; codecs=vorbis"/>
+			</audio>
+			<div class="download">
+				<h3>Скачать эту композицию</h3>
+				<ul>
+					<li><a href="{{ track.ogg_link }}">В формате OGG/Vorbis</a></li>
+					<li><a href="{{ track.mp3_link }}">В формате MP3</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+{% endblock %}

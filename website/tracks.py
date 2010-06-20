@@ -23,11 +23,7 @@ class RSSHandler(RssBase):
 		} for track in SiteTrack.all().order('-id').fetch(50)], title=u'Новая музыка')
 
 class Viewer(BaseRequestHandler):
-	xsltName = 'tracks.xsl'
-
 	def get(self, id):
-		self.check_access()
-		track = SiteTrack.gql('WHERE id = :1', int(id)).get()
-		if not track:
-			raise HTTPException(404, u'Нет такой дорожки.')
-		self.sendXML(track.to_xml())
+		self.send_html('track.html', {
+			'track': SiteTrack.gql('WHERE id = :1', int(id)).get(),
+		})
