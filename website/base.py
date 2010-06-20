@@ -89,6 +89,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		Вызывает указанный шаблон, возвращает результат.
 		"""
 		vars['base'] = self.getBaseURL()
+		vars['self'] = self.request.uri
 		vars['host'] = self.getHost()
 		vars['styles'] = self.get_styles(vars['host'])
 		vars['scripts'] = self.get_scripts(vars['host'])

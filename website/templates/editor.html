@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="editor">
+		<div class="header">
+			<h2>Редактирование объекта {{ object.kind }}</h2>
+		</div>
+		<form method="post" action="/edit">
+			<input type="hidden" name="_key" value="{{ object.key }}" />
+			<input type="hidden" name="_next" value="{{ next }}" />
+			{% for field in fields %}
+				<div>
+					<label for="input-{{ field.name }}">{{ field.name }}:</label>
+					<input type="text" name="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}"/>
+				</div>
+			{% endfor %}
+			<input type="submit"/>
+		</form>
+	</div>
+{% endblock %}

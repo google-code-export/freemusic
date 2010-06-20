@@ -40,6 +40,8 @@ handlers:
   script: upload.py
 - url: /(users|u/[^/]+)
   script: users.py
+- url: /edit
+  script: edit.py
 
 - url: .*
   script: main.py

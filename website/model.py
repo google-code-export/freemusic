@@ -47,6 +47,21 @@ class CustomModel(db.Model):
 			result[k] = val
 		return result
 
+	def from_json(self, json):
+		converters = {
+			'IntegerProperty': int,
+		}
+
+		for k in json:
+			if k in self.fields():
+				if not json[k]:
+					setattr(self, k, None)
+				else:
+					cls = self.fields()[k].__class__.__name__
+					val = cls in converters and converters[cls](json[k]) or json[k]
+					setattr(self, k, val)
+		return self
+
 class SiteUser(CustomModel):
 	user = db.UserProperty(required=True)
 	joined = db.DateTimeProperty(auto_now_add=True)

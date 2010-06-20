@@ -10,6 +10,7 @@
 						<td><a href="/artist/{{ artist.id }}.rss">RSS</a></td>
 						<td>{% if artist.lastfm_name %}<a target="_blank" href="http://www.lastfm.ru/music/{{ artist.lastfm_name }}">Last.fm</a>{% endif %}</td>
 						<td>{% if artist.twitter %}<a target="_blank" href="http://twitter.com/{{ artist.twitter }}">Twitter</a>{% endif %}</td>
+						<td><a href="/edit?key={{ artist.key }}&amp;next={{ self }}">Edit</a></td>
 					</tr>
 				{% endfor %}
 			</tbody>
