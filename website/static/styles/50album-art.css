@@ -1,0 +1,27 @@
+#coverart {
+	float: right;
+	height: 206px;
+	overflow: hidden;
+}
+
+#coverart h3 {
+	display: none;
+}
+
+#coverart ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#coverart li {
+	border: solid 1px #dcdcdc;
+	padding: 2px;
+	width: 200px;
+	line-height: 0;
+	margin-bottom: 2px;
+}
+#coverart img {
+	border: none;
+	width: 200px;
+	height: 200px;
+}

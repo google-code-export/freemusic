@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="album">
+	<div class="header">
+		<h2>{{ album.name }}</h2>
+		<p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
+	</div>
+	<div class="block">
+		<table id="tracklist">
+			<tbody>
+				{% for track in tracks %}
+					<tr>
+						<td class="n">{{ forloop.counter }}.</td>
+						<td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
+						<td class="dl"><a href="{{ track.ogg_link }}">ogg</a></td>
+						<td class="dl"><a href="{{ track.mp3_link }}">mp3</a></td>
+						<td class="dur">{{ track.duration }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+
+		<div id="coverart">
+			<h3>Иллюстрации</h3>
+			<ul>
+				{% for image in images %}
+					<li>
+						<a href="{{ image.original }}" target="_blank">
+							<img src="{{ image.medium }}" alt="image"/>
+						</a>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
+{% endblock %}

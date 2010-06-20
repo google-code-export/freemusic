@@ -1,0 +1,44 @@
+#album .block {
+	position: relative;
+}
+
+#album .header {
+	background-color: #dcdcdc;
+	padding: 4px 8px;
+	margin-bottom: 10px;
+}
+#album h2 {
+	font-weight: normal;
+	margin: 0;
+}
+#album .info {
+	margin: .35em 0;
+}
+
+#tracklist {
+	width: 530px;
+	float: left;
+}
+#tracklist table, #tracklist td.l {
+	width: 100%;
+}
+#tracklist td {
+	padding: 2px 4px;
+}
+#tracklist .n {
+	text-align: right;
+}
+#tracklist .dur {
+	opacity: 0.5;
+}
+
+#tracklist .dl {
+	opacity: 0.2;
+}
+#tracklist tr:hover .dl {
+	opacity: 1;
+}
+#tracklist .dl a {
+	color: green;
+	padding-left: 0;
+}

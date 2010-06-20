@@ -20,31 +20,14 @@ class SiteDownload(db.Model):
 	album = db.ReferenceProperty(model.SiteAlbum)
 	published = db.DateTimeProperty(auto_now_add=True)
 
-class XmlUpdater(base.BaseRequestHandler):
-	def get(self):
-		self.check_access()
-		for album in model.SiteAlbum.all().fetch(1000):
-			album.put()
-		self.redirect('/')
-
 class Viewer(base.BaseRequestHandler):
-	xsltName = 'albums.xsl'
-
 	def get(self, id):
 		album = self.get_album(id)
-		user = users.get_current_user()
-		if user:
-			star = model.SiteAlbumStar.gql('WHERE user = :1 AND album = :2', user, album).get() is not None
-		else:
-			star = False
-		self.check_access()
 
-		xml = album.xml
-		xml += u'<reviews>' + u''.join([r.xml for r in model.SiteAlbumReview.gql('WHERE album = :1', album).fetch(1000)]) + u'</reviews>'
-		xml += self.get_events(album)
-
-		self.sendXML(xml, {
-			'star': star,
+		self.send_html('album.html', {
+			'album': album,
+			'tracks': model.SiteTrack.gql('WHERE album = :1 ORDER BY number', album).fetch(100),
+			'images': model.SiteImage.gql('WHERE album = :1', album).fetch(100),
 		})
 
 	def get_events(self, album):
@@ -338,6 +321,5 @@ if __name__ == '__main__':
 		('/album/labels/update', AlbumLabelUpdater),
 		('/album/review', Review),
 		('/album/review/beg', ReviewBegger),
-		('/album/update-xml', XmlUpdater),
 		('/albums\.rss', RSSHandler),
 	])
