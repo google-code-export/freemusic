@@ -56,7 +56,14 @@ class ShowArtist(base.BaseRequestHandler):
 			xml = myxml.em(u'events', content=xml)
 		return xml
 
+class List(base.BaseRequestHandler):
+	def get(self):
+		self.send_html('artist-list.html', {
+			'artists': model.SiteArtist.all().order('sortname').fetch(100),
+		})
+
 if __name__ == '__main__':
 	base.run([
 		('/artist/(\d+)$', ShowArtist),
+		('/artist', List),
 	])

@@ -28,7 +28,7 @@ handlers:
   script: index.py
 - url: /(albums\.rss|album/.*)
   script: album.py
-- url: /(artist/fix|artist/\d+|artists(\.rss)?)
+- url: /(artist/\d+|artist(\.rss)?)
   script: artist.py
 - url: /labels(/cache)?
   script: labels.py
