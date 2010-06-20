@@ -17,6 +17,7 @@
 #tracklist {
 	width: 530px;
 	float: left;
+	padding-bottom: 20px;
 }
 #tracklist table, #tracklist td.l {
 	width: 100%;
@@ -40,4 +41,15 @@
 #tracklist .dl a {
 	color: green;
 	padding-left: 0;
+}
+
+
+#attachments {
+	clear: left;
+}
+#attachments table {
+	border: solid 1px #dcdcdc;
+}
+#attachments .size {
+	text-align: right;
 }

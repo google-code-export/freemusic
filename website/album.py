@@ -28,6 +28,7 @@ class Viewer(base.BaseRequestHandler):
 			'album': album,
 			'tracks': model.SiteTrack.gql('WHERE album = :1 ORDER BY number', album).fetch(100),
 			'images': model.SiteImage.gql('WHERE album = :1', album).fetch(100),
+			'files': model.SiteFile.gql('WHERE album = :1', album).fetch(100),
 		})
 
 	def get_events(self, album):

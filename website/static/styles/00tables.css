@@ -1,0 +1,9 @@
+table.classic {
+	border-collapse: collapse;
+}
+table.classic td {
+	padding: 2px 4px;
+}
+table.classic tr.even {
+	background-color: #dcdcdc;
+}

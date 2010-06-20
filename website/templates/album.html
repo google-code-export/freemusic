@@ -40,6 +40,32 @@
 				{% endfor %}
 			</ul>
 		</div>
+
+		{% if files %}
+			<div id="attachments">
+				<h3>Файлы для скачивания</h3>
+				<table class="classic">
+					<tbody>
+						{% for file in files %}
+							<tr class="{% cycle odd,even as class %}">
+								<td>
+									<a href="{{ file.uri }}">{{ file.name }}</a>
+								</td>
+								<!--
+								<td>{{ file.type }}</td>
+								-->
+								<td>
+									{% ifequal file.type "application/zip" %}
+										<a href="{{ file.uri }}?torrent">.torrent</a>
+									{% endifequal %}
+								</td>
+								<td class="size">{{ file.size|filesizeformat}}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
 	</div>
 </div>
 {% endblock %}
