@@ -1,0 +1,13 @@
+#player {
+	display: none;
+}
+html.audio #player {
+	display: block;
+}
+#player audio {
+	width: 530px;
+}
+
+#tracklist .np .l a {
+	font-weight: bold;
+}

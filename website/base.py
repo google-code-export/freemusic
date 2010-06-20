@@ -91,6 +91,7 @@ class BaseRequestHandler(webapp.RequestHandler):
 		vars['base'] = self.getBaseURL()
 		vars['host'] = self.getHost()
 		vars['styles'] = self.get_styles(vars['host'])
+		vars['scripts'] = self.get_scripts(vars['host'])
 		vars['logout_uri'] = users.create_logout_url(self.request.uri)
 		vars['login_uri'] = users.create_login_url(self.request.uri)
 		directory = os.path.dirname(__file__)
@@ -104,9 +105,20 @@ class BaseRequestHandler(webapp.RequestHandler):
 		готовый файл.
 		"""
 		if hostname.endswith(':8080'):
-			return ['/static/styles/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'styles')).next()[2]]
+			return sorted(['/static/styles/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'styles')).next()[2]])
 		else:
 			return ['/static/styles.css']
+
+	def get_scripts(self, hostname):
+		"""
+		Возвращает имена файлов со скриптами. При работе в SDK возвращает
+		отдельные стили из /static/scripts/, в нормальном режиме — один
+		готовый файл.
+		"""
+		if hostname.endswith(':8080'):
+			return sorted(['/static/scripts/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'scripts')).next()[2]])
+		else:
+			return ['/static/scripts.js']
 
 	def is_admin(self):
 		return users.is_current_user_admin()

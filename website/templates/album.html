@@ -6,19 +6,27 @@
 		<p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
 	</div>
 	<div class="block">
-		<table id="tracklist">
-			<tbody>
-				{% for track in tracks %}
-					<tr>
-						<td class="n">{{ forloop.counter }}.</td>
-						<td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
-						<td class="dl"><a href="{{ track.ogg_link }}">ogg</a></td>
-						<td class="dl"><a href="{{ track.mp3_link }}">mp3</a></td>
-						<td class="dur">{{ track.duration }}</td>
-					</tr>
-				{% endfor %}
-			</tbody>
-		</table>
+		<div id="tracklist">
+			<div id="player">
+				<audio controls="controls">
+					<source src="{{ tracks.0.ogg_link }}" type="audio/ogg; codecs=vorbis"/>
+					<source src="{{ tracks.0.mp3_link }}" type="audio/mpeg"/>
+				</audio>
+			</div>
+			<table>
+				<tbody>
+					{% for track in tracks %}
+						<tr>
+							<td class="n">{{ forloop.counter }}.</td>
+							<td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
+							<td class="dl"><a class="ogg" href="{{ track.ogg_link }}">ogg</a></td>
+							<td class="dl"><a class="mp3" href="{{ track.mp3_link }}">mp3</a></td>
+							<td class="dur">{{ track.duration }}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
 
 		<div id="coverart">
 			<h3>Иллюстрации</h3>
