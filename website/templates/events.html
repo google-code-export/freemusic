@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="events">
+		<div class="header">
+			<h2>Ближайшие события</h2>
+		</div>
+		<div class="block">
+			{% if events %}
+				<table summary="Предстоящие события.">
+					<caption>{% if not events %}Нет информации о предстоящих событиях. {% endif %}Мы берём информацию из <a href="http://www.lastfm.ru/" target="_blank">Last.fm</a>; если тебе есть что добавить — <a href="http://www.lastfm.ru/events/add" target="_blank">сделай это</a>!</caption>
+					<tbody>
+						{% for event in events %}
+							<tr>
+								<td class="date">{{ event.date|date:"d.m" }}</td>
+								<td class="title">
+									<a href="{{ event.url }}" target="_blank">{{ event.title }}</a>
+								</td>
+								<td class="loc">{{ event.venue }}, {{ event.city }}</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

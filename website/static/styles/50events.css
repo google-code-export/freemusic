@@ -1,0 +1,20 @@
+#events caption {
+	text-align: left;
+	margin: .5em;
+}
+
+#events table {
+	border-collapse: collapse;
+	width: 100%;
+}
+#events td {
+	border: solid 1px #dcdcdc;
+	padding: 2px 4px;
+	vertical-align: top;
+}
+#events .title {
+	width: 100%;
+}
+#events .loc {
+	min-width: 200px;
+}

@@ -32,7 +32,7 @@ class Viewer(base.BaseRequestHandler):
 
 	def get_events(self, album):
 		xml = u''
-		events = [e.xml for e in model.SiteEvent.gql('WHERE artist = :1', album.artist).fetch(1000)]
+		events = [e.xml for e in model.Event.gql('WHERE artist = :1', album.artist).fetch(1000)]
 		if len(events):
 			xml = myxml.em(u'events', content=u''.join(events))
 		return xml

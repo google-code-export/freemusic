@@ -12,24 +12,6 @@ import rss
 import model
 import myxml
 
-class FixHandler(rss.RSSHandler):
-	def get(self):
-		maxid = 0
-
-		lst = model.SiteArtist.all().fetch(1000)
-		for artist in lst:
-			if artist.id:
-				maxid = max(maxid, artist.id)
-
-		for artist in lst:
-			if not artist.id:
-				artist.id = maxid + 1
-				maxid += 1
-				log('saving artist %u(%s)' % (artist.id, artist.name))
-			artist.put()
-
-		self.redirect('/')
-
 class ShowArtist(base.BaseRequestHandler):
 	"""
 	Вывод информации об исполнителе.
@@ -68,36 +50,13 @@ class ShowArtist(base.BaseRequestHandler):
 
 	def get_events_xml(self, artist):
 		xml = u''
-		for e in model.SiteEvent.gql('WHERE artist = :1', artist).fetch(100):
+		for e in model.Event.gql('WHERE artist = :1', artist).fetch(100):
 			xml += e.xml
 		if len(xml):
 			xml = myxml.em(u'events', content=xml)
 		return xml
 
-class RSSHandler(base.BaseRequestHandler):
-	def get(self):
-		items = [{
-			'title': u'Новый исполнитель: ' + artist.name,
-			'link': 'artist/' + str(artist.id),
-		} for artist in model.SiteArtist.all().order('-id').fetch(20)]
-		self.sendRSS(items, title=u'Новые исполнители')
-
-class List(base.BaseRequestHandler):
-	xsltName = 'artists.xsl'
-	tabName = 'music'
-
-	def get(self):
-		self.check_access()
-		self.sendXML(myxml.em(u'artists', content=u''.join([myxml.em(u'artist', {
-			'id': artist.id,
-			'name': artist.name,
-			'sortname': artist.sortname,
-		}) for artist in model.SiteArtist.all().fetch(1000)])))
-
 if __name__ == '__main__':
 	base.run([
-		('/artist/fix', FixHandler),
 		('/artist/(\d+)$', ShowArtist),
-		('/artists', List),
-		('/artists\.rss', RSSHandler),
 	])
