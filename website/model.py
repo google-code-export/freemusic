@@ -28,45 +28,25 @@ class SiteUser(db.Model):
 	weight = db.FloatProperty()
 	invited = db.BooleanProperty(required=True)
 	nickname = db.StringProperty()
-	xml = db.TextProperty()
 
-	def put(self):
-		self.xml = self.to_xml()
-		self.nickname = self.user.nickname()
-		db.Model.put(self)
-
-	def to_xml(self, content=None):
-		return xml.em(u'user', {
-			'nickname': self.user.nickname(),
+	def to_json(self):
+		return {
 			'email': self.user.email(),
+			'joined': self.joined.strftime('%Y-%m-%d %H:%M:%S'),
 			'weight': self.weight,
-			'invited': self.invited,
-			'hash': hashlib.md5(self.user.email()).hexdigest(),
-			'pubDate': self.joined.isoformat(),
-		}, content)
+			'nickname': self.nickname,
+		}
 
 class SiteArtist(db.Model):
 	id = db.IntegerProperty()
 	name = db.StringProperty(required=True)
 	sortname = db.StringProperty(required=False)
-	xml = db.TextProperty()
 
-	def put(self, quick=False):
-		if not self.id:
-			self.id = nextId(SiteArtist)
-			logging.info('New artist: %s (artist/%u)' % (self.name, self.id))
-		self.sortname = util.mksortname(self.name)
-		if not quick:
-			self.xml = self.to_xml()
-		return db.Model.put(self)
-
-	def to_xml(self):
-		albums = xml.em(u'albums', content=u''.join([album.xml for album in SiteAlbum.gql('WHERE artist = :1', self).fetch(100)]), empty=False)
-		return xml.em(u'artist', attrs={
+	def to_json(self):
+		return {
 			'id': self.id,
 			'name': self.name,
-			'sortname': self.sortname,
-		}, content=albums)
+		}
 
 class SiteAlbum(db.Model):
 	id = db.IntegerProperty()
@@ -81,6 +61,21 @@ class SiteAlbum(db.Model):
 	owner = db.UserProperty()
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
 	rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
+
+	def to_json(self):
+		return {
+			'id': self.id,
+			'name': self.name,
+			'text': self.text,
+			'artist': self.artist.id,
+			'release_date': self.release_date.strftime('%Y-%m-%d %H:%M:%S'),
+			'rating': self.rating or self.rate,
+			'cover_small': self.cover_small,
+			'cover_large': self.cover_large,
+			'labels': self.labels,
+			'owner': self.owner.email(),
+			'album_xml': self.album_xml,
+		}
 
 	def put(self, quick=False):
 		if not self.id:
@@ -114,35 +109,18 @@ class SiteAlbum(db.Model):
 			'image': image,
 		})
 
-	def to_xml(self):
-		content = self.get_children_xml(SiteTrack, u'tracks') + self.get_children_xml(SiteImage, u'images') + self.get_children_xml(SiteFile, u'files')
-		if self.labels:
-			content += xml.em(u'labels', content=u''.join([xml.em(u'label', {'uri':xml.uri(label)}, content=label) for label in self.labels]))
-		return xml.em(u'album', {
-			'id': self.id,
-			'name': self.name,
-			'artist-id': self.artist.id,
-			'artist-name': self.artist.name,
-			'pubDate': self.release_date.isoformat(),
-			'owner': self.owner,
-			'text': self.text,
-			'rate': self.rate,
-		}, content)
-
-	def get_children_xml(self, cls, em):
-		return xml.em(em, content=u''.join([c.to_xml() for c in cls.gql('WHERE album = :1', self).fetch(1000)]))
-
-	def tracks(self):
-		tr = SiteTrack.gql('WHERE album = :1', self).fetch(1000)
-		if not tr:
-			tr = []
-		return tr
-
 class SiteAlbumStar(db.Model):
 	"Хранит информацию о любимых альбомах пользователей."
 	album = db.ReferenceProperty(SiteAlbum)
 	user = db.UserProperty()
 	added = db.DateTimeProperty(auto_now_add=True)
+
+	def to_json(self):
+		return {
+			# 'album': self.album and self.album.id,
+			'user': self.user.email(),
+			'added': self.added.strftime('%Y-%m-%d %H:%M:%S'),
+		}
 
 class SiteImage(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
@@ -150,12 +128,13 @@ class SiteImage(db.Model):
 	original = db.LinkProperty()
 	type = db.StringProperty()
 
-	def to_xml(self):
-		return xml.em(u'image', {
+	def to_json(self):
+		return {
+			'album': self.album.id,
 			'medium': self.medium,
 			'original': self.original,
 			'type': self.type,
-		})
+		}
 
 class SiteTrack(db.Model):
 	id = db.IntegerProperty()
@@ -169,28 +148,21 @@ class SiteTrack(db.Model):
 	ogg_link = db.LinkProperty()
 	ogg_length = db.IntegerProperty() # нужно для RSS с подкастом
 	duration = db.StringProperty()
-	xml = db.TextProperty()
 
-	def put(self):
-		if not self.id:
-			self.id = nextId(SiteTrack)
-		self.xml = self.to_xml()
-		return db.Model.put(self)
-
-	def to_xml(self):
-		return xml.em(u'track', {
+	def to_json(self):
+		return {
 			'id': self.id,
-			'number': self.number,
-			'album-id': self.album.id,
-			'album-name': self.album.name,
-			'artist-id': self.album.artist.id,
-			'artist-name': self.album.artist.name,
+			'album': self.album and self.album.id,
 			'title': self.title,
-			'duration': self.duration,
-			'mp3-link': self.mp3_link,
-			'ogg-link': self.ogg_link,
+			'artist': self.artist and self.artist.id,
 			'lyrics': self.lyrics,
-		})
+			'number': self.number,
+			'mp3_link': self.mp3_link,
+			'mp3_length': self.mp3_length,
+			'ogg_link': self.ogg_link,
+			'ogg_length': self.ogg_length,
+			'duration': self.duration,
+		}
 
 class SiteFile(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
@@ -199,12 +171,14 @@ class SiteFile(db.Model):
 	type = db.StringProperty()
 	size = db.IntegerProperty()
 
-	def to_xml(self):
-		return xml.em(u'file', {
+	def to_json(self):
+		return {
+			'album': self.album.id,
 			'name': self.name,
 			'uri': self.uri,
 			'type': self.type,
-		})
+			'size': self.size,
+		}
 
 class SiteAlbumReview(db.Model):
 	# рецензируемый альбом
@@ -222,33 +196,26 @@ class SiteAlbumReview(db.Model):
 	rate_average = db.RatingProperty()
 	# комментарий
 	comment = db.TextProperty()
-	# кэш
-	xml = db.TextProperty()
+
+	def to_json(self):
+		return {
+			'album': self.album.id,
+			'author': self.author.user.email(),
+			'published': self.published.strftime('%Y-%m-%d %H:%M:%S'),
+			'rate_sound': self.rate_sound,
+			'rate_arrangement': self.rate_arrangement,
+			'rate_vocals': self.rate_vocals,
+			'rate_lyrics': self.rate_lyrics,
+			'rate_prof': self.rate_prof,
+			'rate_average': self.rate_average,
+			'comment': self.comment,
+		}
 
 	def put(self):
 		if self.author is None:
 			self.author = get_current_user()
 		self.rate_average = self.get_avg()
-		self.xml = self.to_xml()
 		return db.Model.put(self)
-
-	def to_xml(self):
-		return xml.em(u'review', {
-			'pubDate': self.published.isoformat(),
-			'album-id': self.album.id,
-			'album-name': self.album.name,
-			'artist-id': self.album.artist.id,
-			'artist-name': self.album.artist.name,
-			'author-nickname': self.author.user.nickname(),
-			'author-email': self.author.user.email(),
-			'sound': self.rate_sound,
-			'arrangement': self.rate_arrangement,
-			'vocals': self.rate_vocals,
-			'lyrics': self.rate_lyrics,
-			'prof': self.rate_prof,
-			'average': self.rate_average,
-			'comment': self.comment,
-		})
 
 	def get_avg(self):
 		rates = [rate for rate in [self.rate_sound, self.rate_arrangement, self.rate_vocals, self.rate_lyrics, self.rate_prof] if rate is not None]
@@ -272,7 +239,12 @@ class SiteAlbumReview(db.Model):
 class SiteEvent(db.Model):
 	artist = db.ReferenceProperty(SiteArtist)
 	id = db.IntegerProperty()
-	xml = db.TextProperty()
+
+	def to_json(self):
+		return {
+			'id': self.id,
+			'artist': self.artist.id,
+		}
 
 class SiteAlbumLabel(db.Model):
 	"""
@@ -291,3 +263,11 @@ class SiteAlbumLabel(db.Model):
 	album = db.ReferenceProperty(SiteAlbum)
 	# Дата установки, на всякий случай.
 	published = db.DateTimeProperty(auto_now_add=True)
+
+	def to_json(self):
+		return {
+			'label': self.label,
+			'user': self.user.email(),
+			'album': self.album.id,
+			'published': self.published.strftime('%Y-%m-%d %H:%M:%S'),
+		}
