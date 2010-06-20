@@ -20,13 +20,9 @@ class Recent(base.BaseRequestHandler):
 	def get(self):
 		# Информация о расположении текущей страницы.
 		pager = self.get_pager()
-		# Загружаем интересующие альбомы и разбиваем на группы по 4.
-		albums = self.get_albums(pager['start'] - 1)
-		print >>sys.stderr, pager
-		groups = [albums[x*4:x*4+4] for x in range(int(math.ceil(len(albums)) / 4))]
 		# Выводим страницу.
 		return self.send_html('index.html', {
-			'groups': groups,
+			'albums': self.get_albums(pager['start'] - 1),
 			'pager': pager,
 			'label': self.request.get('label'),
 		})
