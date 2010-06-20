@@ -66,8 +66,7 @@ class SiteAlbum(CustomModel):
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
 	rating = db.RatingProperty() # average album rate
-	cover_small = db.LinkProperty() # image URL; FIXME: не используется
-	cover_large = db.LinkProperty() # image URL
+	cover_large = db.LinkProperty() # image URL; FIXME: не используется
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей

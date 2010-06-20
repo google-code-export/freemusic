@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="artist">
+		<div class="header">
+			<h2>{{ artist.name }}</h2>
+		</div>
+		<div class="albums">
+			<h3>Альбомы</h3>
+			{% if albums %}
+				<ul>
+					{% for album in albums %}
+						<li>
+							{% if album.cover_large %}
+								<a class="img" href="/album/{{ album.id }}">
+									<img alt="cover" src="{{ album.cover_large }}"/>
+								</a>
+							{% endif %}
+							<span class="text">
+								<a class="name" href="/album/{{ album.id }}">{{ album.name }}</a>
+								<span class="date">({{ album.release_date|date:"Y" }})</span>
+							</span>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}

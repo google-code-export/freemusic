@@ -35,25 +35,17 @@ class ShowArtist(base.BaseRequestHandler):
 	Вывод информации об исполнителе.
 	"""
 
-	xsltName = 'artists.xsl'
 	tabName = 'music'
 
 	def get(self, id):
-		self.check_access()
 		artist = model.SiteArtist.gql('WHERE id = :1', long(id)).get()
-		if not artist or not artist.xml:
+		if not artist:
 			raise HTTPException(404, u'Нет такого исполнителя.')
 
-		reviews = []
-		xml = self.get_albums_xml(artist, reviews)
-		if len(reviews):
-			xml += myxml.em(u'reviews', content=u''.join(reviews))
-		xml += self.get_events_xml(artist)
-
-		self.sendXML(myxml.em(u'artist', {
-			'id': artist.id,
-			'name': artist.name,
-		}, content=xml))
+		self.send_html('artist.html', {
+			'artist': artist,
+			'albums': model.SiteAlbum.gql('WHERE artist = :1 ORDER BY release_date', artist).fetch(100),
+		})
 
 	def get_albums_xml(self, artist, reviews):
 		xml = u''
