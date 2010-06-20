@@ -18,8 +18,10 @@ class Update(base.BaseRequestHandler):
 			raise Exception('No access for you.')
 
 		for artist in model.SiteArtist.all().fetch(1000):
-			if artist.name != 'Various Artists':
-				taskqueue.Task(url='/events/update', name=re.sub('[^a-zA-Z0-9]', '-', artist.name), params={ 'artist': artist.id }).add(queue_name='events-update')
+			if artist.lastfm_name:
+				try:
+					taskqueue.Task(url='/events/update', name=re.sub('[^a-zA-Z0-9]', '-', artist.name), params={ 'artist': artist.id }).add(queue_name='events-update')
+				except: pass
 		self.sendText('Updates scheduled.')
 
 	def post(self):
@@ -37,7 +39,7 @@ class Update(base.BaseRequestHandler):
 		for old in model.Event.gql('WHERE artist = :1', artist).fetch(1000): old.delete()
 
 		count = 0
-		tree = lastfm.get_events(artist.name)
+		tree = lastfm.get_events(artist.lastfm_name)
 		for event in tree.findall('.//event'):
 			try:
 				if event.find('cancelled').text == '0':
