@@ -66,6 +66,7 @@ if __name__ == '__main__':
 		('/api', api.Index),
 		('/api/submit/album', api.SubmitAlbum),
 		('/api/update', api.Update),
+		('/api/dump', api.Dump),
 		('/chart', chart.ShowChart),
 		('/clips', clips.ShowClips),
 		('/clips/random\.json', clips.GetRandomClip),
