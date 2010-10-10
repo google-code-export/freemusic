@@ -6,7 +6,8 @@ website/static/import.xml
 website/static/data.xml
 website/static/styles.css
 website/config.py
+website/dump
+website/local-images
 website/*.sql3
 website/*-log-*
-website/dump
 robot/import/*.xml

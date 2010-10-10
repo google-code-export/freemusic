@@ -10,6 +10,7 @@ from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.api.urlfetch import fetch
 from google.appengine.ext import db
+from django.utils import simplejson
 
 # Local imports
 import myxml, model
@@ -240,4 +241,27 @@ class Dump(BaseRequestHandler):
 		# Сериализация всех типов, начинающихся с Site.
 		for cls in [getattr(model, cls) for cls in dir(model) if cls.startswith('Site')]:
 			data[cls.__name__] = [obj.to_json() for obj in cls.all().fetch(1000)]
-		self.sendJSON(data)
+		self.sendJSON(data, True)
+
+	def post(self):
+		data = simplejson.loads(self.request.get('data'))
+		if type(data) != dict:
+			raise Exception('data must be a json object')
+		for kind in data:
+			if not hasattr(model, kind):
+				logging.warning('Not importing objects of unknown kind %s' % kind)
+			else:
+				cls = getattr(model, kind)
+				# Delete existing objects.
+				for obj in cls.all().fetch(1000):
+					obj.delete()
+				logging.info('Imporing %s objects.' % kind)
+				for serialized in data[kind]:
+					obj = cls()
+					obj.from_json(serialized)
+					obj.put()
+					logging.info(obj)
+
+if __name__ == '__main__':	
+	cnt = model.SiteAlbum.all().count()
+	print 'OK', cnt

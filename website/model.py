@@ -12,6 +12,8 @@ from google.appengine.ext import db
 import myxml as xml
 import util
 
+_REQUIRED = False # normally True, False for import only (FIXME)
+
 def get_current_user():
 	user = SiteUser.gql('WHERE user = :1', users.get_current_user()).get()
 	return user
@@ -63,15 +65,15 @@ class CustomModel(db.Model):
 		return self
 
 class SiteUser(CustomModel):
-	user = db.UserProperty(required=True)
+	user = db.UserProperty(required=_REQUIRED)
 	joined = db.DateTimeProperty(auto_now_add=True)
 	weight = db.FloatProperty()
-	invited = db.BooleanProperty(required=True)
+	invited = db.BooleanProperty(required=_REQUIRED)
 	nickname = db.StringProperty()
 
 class SiteArtist(CustomModel):
 	id = db.IntegerProperty()
-	name = db.StringProperty(required=True)
+	name = db.StringProperty(required=_REQUIRED)
 	sortname = db.StringProperty(required=False)
 	twitter = db.StringProperty()
 	lastfm_name = db.StringProperty()
@@ -200,7 +202,7 @@ class SiteAlbumLabel(CustomModel):
 	# Метка.
 	label = db.StringProperty()
 	# Пользователь, добавивший метку.
-	user = db.UserProperty(required=True)
+	user = db.UserProperty(required=_REQUIRED)
 	# Альбом, к которому относится метка.
 	album = db.ReferenceProperty(SiteAlbum)
 	# Дата установки, на всякий случай.
