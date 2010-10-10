@@ -22,6 +22,22 @@ from django.utils import simplejson
 import config
 import model
 
+def get_all_labels():
+    """
+    Returns a list of all labels.  Uses memcache.
+    """
+    labels = memcache.get('all-labels')
+    if not labels or type(labels) != list:
+        labels = []
+        for album in model.SiteAlbum.all().fetch(1000):
+            for label in album.labels:
+                if label not in labels:
+                    labels.append(label)
+        labels = sorted(labels)
+        memcache.set('all-labels', labels)
+    return labels
+
+
 class BaseHandler(webapp.RequestHandler):
     def getHost(self):
         url = urlparse.urlparse(self.request.url)
@@ -186,7 +202,7 @@ class IndexHandler(BaseHandler):
         """
         self.render('index.html', {
             'albums': model.SiteAlbum.all().fetch(100),
-            'labels': model.SiteAlbumLabel.all().order('label').fetch(100),
+            'labels': get_all_labels(),
         })
 
 
