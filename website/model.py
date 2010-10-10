@@ -212,6 +212,7 @@ class File(CustomModel):
 	filename = db.StringProperty()
 	creation = db.DateTimeProperty(auto_now_add=True)
 	size = db.IntegerProperty() # file size in bytes
+	duration = db.IntegerProperty() # in seconds
 	published = db.BooleanProperty() # False to show to admins only
 	album = db.ReferenceProperty(SiteAlbum) # album to which this file belongs to
 	image_url = db.LinkProperty() # Picasa URL
