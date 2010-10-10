@@ -18,9 +18,9 @@
 			<label>Обложка:</label>
 			<select name="cover_id">
 				<option value="">удалить</option>
-				{% for file in images %}
+				{% for file in files %}{% if file.image_url %}
 					<option value="{{ file.file_key }}"{% ifequal file.file_key album.cover_id %} selected="selected"{% endifequal%}>{{ file.filename }}</option>
-				{% endfor %}
+				{% endif %}{% endfor %}
 			</select>
 		</div>
 		<div>
@@ -31,43 +31,15 @@
 			<label>Owner:</label>
 			<input type="text" name="owner" value="{{ album.owner }}" class="text"/>
 		</div>
-		{% if tracks %}<table class="editFiles" id="editTracks">
-			<caption>Tracks</caption>
+		{% if files %}<table id="editFiles">
+			<caption>Прикреплённые файлы</caption>
 			<thead>
 				<tr>
-					<th>#</th>
+					<th>№</th>
 					<th>Имя файла</th>
 					<th>Название</th>
 					<th>Исполнитель</th>
 					<th>Время</th>
-				</tr>
-			</thead>
-			<tbody>{% for track in tracks %}
-				<tr>
-					<td>
-						<input type="text" class="text" name="track.{{ track.id }}.weight" value="{{ track.weight }}"/>
-					</td>
-					<td>
-						<input type="text" class="text" name="track.{{ track.id }}.filename" value="{{ track.filename }}"/>
-					</td>
-					<td>
-						<input type="text" class="text" name="track.{{ track.id }}.song_title" value="{% if track.song_title %}{{ track.song_title }}{% else %}{{ track.filename }}{% endif %}"/>
-					</td>
-					<td>
-						<input type="text" class="text" name="track.{{ track.id }}.song_artist" value="{% if track.song_artist %}{{ track.song_artist }}{% endif %}"/>
-					</td>
-					<td>
-						<input type="text" class="text" name="track.{{ track.id }}.duration" value="{% if track.duration %}{{ track.duration }}{% endif %}"/>
-					</td>
-				</tr>
-			{% endfor %}</tbody>
-		</table>{% endif %}
-		{% if files %}<table id="editFiles">
-			<caption>Files</caption>
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>Имя файла</th>
 					<th>Виден</th>
 				</tr>
 			</thead>
@@ -78,6 +50,15 @@
 					</td>
 					<td>
 						<input type="text" class="text" name="file.{{ file.id }}.filename" value="{{ file.filename }}"/>
+					</td>
+					<td>
+						<input type="text" class="text" name="file.{{ file.id }}.song_title" value="{% if file.song_title %}{{ file.song_title }}{% else %}{{ file.filename }}{% endif %}"/>
+					</td>
+					<td>
+						<input type="text" class="text" name="file.{{ file.id }}.song_artist" value="{% if file.song_artist %}{{ file.song_artist }}{% endif %}"/>
+					</td>
+					<td>
+						<input type="text" class="text" name="file.{{ file.id }}.duration" value="{% if file.duration %}{{ file.duration }}{% endif %}"/>
 					</td>
 					<td>
 						<input type="text" class="text" name="file.{{ file.id }}.content_type" value="{{ file.content_type }}"/>

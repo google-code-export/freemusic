@@ -5,6 +5,7 @@ import logging
 import urllib
 import urlparse
 import os
+import os.path
 import wsgiref.handlers
 
 # GAE imports.
@@ -85,25 +86,49 @@ class AlbumHandler(BaseHandler):
     def get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
         upload_url = blobstore.create_upload_url('/upload/callback?album=' + album_id)
-        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
         self.render('album.html', {
             'album': album,
-            'images': [f for f in files if f.image_url],
-            'tracks': [f for f in files if f.content_type.startswith('audio/')],
-            'files': [f for f in files if not (f.image_url or f.content_type.startswith('audio/'))],
+            'files': self.__get_files(album),
             'upload_url': users.is_current_user_admin() and upload_url or None,
         })
 
+    def __get_files(self, album):
+        """
+        Returns a dictionary with all album files.  Keys: images, tracks,
+        other, all lists.  Tracks are dictionaries, other are models.
+        """
+        result = {
+            'images': [],
+            'tracks': [],
+            'other': [],
+        }
+        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
+        result['images'] = [f for f in files if f.image_url]
+        result['other'] = [f for f in files if not f.image_url and not f.content_type.startswith('audio/')]
+        for file in [f for f in files if f.content_type.startswith('audio/')]:
+            track = {
+                'id': file.id,
+                'content_type': file.content_type,
+                'song_title': file.song_title,
+                'song_artist': file.song_artist,
+                'duration': file.duration,
+                'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
+                'ogg_link': None,
+            }
+            ogg_name = os.path.splitext(file.filename)[0] + '.ogg'
+            for file in files:
+                if file.filename == ogg_name:
+                    track['ogg_link'] = '/file/serve/%s/%s' % (file.id, file.filename)
+            result['tracks'].append(track)
+        return result
 
-class AlbumEditHandler(BaseHandler):
+
+class AlbumEditHandler(AlbumHandler):
     def get(self):
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
-        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
         self.render('album-edit.html', {
             'album': album,
-            'images': [f for f in files if f.image_url],
-            'tracks': [f for f in files if f.content_type.startswith('audio/')],
-            'files': [f for f in files if not f.image_url and not f.content_type.startswith('audio/')],
+            'files': model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100),
         })
 
     def post(self):

@@ -10,7 +10,7 @@
         <div id="tracklist">
             <table>
                 <tbody>
-                    {% for track in tracks %}{% ifequal track.content_type "audio/mp3" %}
+                    {% for track in files.tracks %}{% ifequal track.content_type "audio/mp3" %}
                         <tr>
                             <td class="n">{{ forloop.counter }}.</td>
                             <td class="l"><a href="/track/{{ track.id }}">{% if track.song_title %}{{ track.song_title }}{% else %}{{ track.filename }}{% endif %}</a></td>
@@ -31,10 +31,10 @@
         </div>{% endif %}
 
         <div id="attachments">
-            {% if files %}<h3>Файлы для скачивания</h3>
+            {% if files.other %}<h3>Файлы для скачивания</h3>
             <table class="classic">
                 <tbody>
-                    {% for file in files %}
+                    {% for file in files.other %}
                         <tr class="{% cycle odd,even as class %}">
                             <td>
                                 <a href="/file/serve?id={{ file.id }}">{{ file.filename }}</a>
