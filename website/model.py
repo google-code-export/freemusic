@@ -206,5 +206,21 @@ class SiteAlbumLabel(CustomModel):
 
 class File(CustomModel):
 	id = db.IntegerProperty()
-	file_key = db.StringProperty()
-	image_url = db.LinkProperty()
+	file_key = db.StringProperty() # blobstore key
+	owner = db.UserProperty()
+	content_type = db.StringProperty()
+	filename = db.StringProperty()
+	creation = db.DateTimeProperty(auto_now_add=True)
+	size = db.IntegerProperty() # file size in bytes
+	published = db.BooleanProperty() # False to show to admins only
+	album = db.ReferenceProperty(SiteAlbum) # album to which this file belongs to
+	image_url = db.LinkProperty() # Picasa URL
+	weight = db.IntegerProperty() # used for sorting
+	song_artist = db.StringProperty()
+	song_title = db.StringProperty()
+
+	def put(self):
+		if not self.id:
+			self.id = self.weight = nextId(File)
+			logging.info('New file: %s (file/serve?id=%u)' % (self.filename, self.id))
+		return CustomModel.put(self)

@@ -2,71 +2,79 @@
 {% block ueb %}/album/edit?id={{ album.id }}{% endblock %}
 {% block content %}
 <div id="album">
-	<div class="header">
-		<h2>{{ album.name }}</h2>
-		<p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
-	</div>
-	<div class="block">
-		<div id="tracklist">
-			<div id="player">
-				<audio controls="controls">
-					<source src="{{ tracks.0.ogg_link }}" type="audio/ogg; codecs=vorbis"/>
-					<source src="{{ tracks.0.mp3_link }}" type="audio/mpeg"/>
-				</audio>
-			</div>
-			<table>
-				<tbody>
-					{% for track in tracks %}
-						<tr>
-							<td class="n">{{ forloop.counter }}.</td>
-							<td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
-							<td class="dl"><a class="ogg" href="{{ track.ogg_link }}">ogg</a></td>
-							<td class="dl"><a class="mp3" href="{{ track.mp3_link }}">mp3</a></td>
-							<td class="dur">{{ track.duration }}</td>
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
+    <div class="header">
+        <h2>{{ album.name }}</h2>
+        <p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
+    </div>
+    <div class="block">
+        <div id="tracklist">
+            <div id="player">
+                <audio controls="controls">
+                    <source src="{{ tracks.0.ogg_link }}" type="audio/ogg; codecs=vorbis"/>
+                    <source src="{{ tracks.0.mp3_link }}" type="audio/mpeg"/>
+                </audio>
+            </div>
+            <table>
+                <tbody>
+                    {% for track in tracks %}
+                        <tr>
+                            <td class="n">{{ forloop.counter }}.</td>
+                            <td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
+                            <td class="dl"><a class="ogg" href="{{ track.ogg_link }}">ogg</a></td>
+                            <td class="dl"><a class="mp3" href="{{ track.mp3_link }}">mp3</a></td>
+                            <td class="dur">{{ track.duration }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-		<div id="coverart">
-			<h3>Иллюстрации</h3>
-			<ul>
-				{% for image in images %}
-					<li>
-						<a href="{{ image.original }}" target="_blank">
-							<img src="{{ image.medium }}" alt="image"/>
-						</a>
-					</li>
-				{% endfor %}
-			</ul>
-		</div>
+        <div id="coverart">
+            <h3>Иллюстрации</h3>
+            <ul>
+                {% for image in images %}
+                    <li>
+                        <a href="{{ image.original }}" target="_blank">
+                            <img src="{{ image.medium }}" alt="image"/>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-		{% if files %}
-			<div id="attachments">
-				<h3>Файлы для скачивания</h3>
-				<table class="classic">
-					<tbody>
-						{% for file in files %}
-							<tr class="{% cycle odd,even as class %}">
-								<td>
-									<a href="{{ file.uri }}">{{ file.name }}</a>
-								</td>
-								<!--
-								<td>{{ file.type }}</td>
-								-->
-								<td>
-									{% ifequal file.type "application/zip" %}
-										<a href="{{ file.uri }}?torrent">.torrent</a>
-									{% endifequal %}
-								</td>
-								<td class="size">{{ file.size|filesizeformat}}</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-		{% endif %}
-	</div>
+        <div id="attachments">
+            <h3>Файлы для скачивания</h3>
+            <table class="classic">
+                <tbody>
+                    {% for file in files %}
+                        <tr class="{% cycle odd,even as class %}">
+                            <td>
+                                <a href="{{ file.uri }}">{{ file.name }}</a>
+                            </td>
+                            <!--
+                            <td>{{ file.type }}</td>
+                            -->
+                            <td>
+                                {% ifequal file.type "application/zip" %}
+                                    <a href="{{ file.uri }}?torrent">.torrent</a>
+                                {% endifequal %}
+                            </td>
+                            <td class="size">{{ file.size|filesizeformat}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+			{% if upload_url %}
+				<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
+					<div>
+						<input type="file" name="file"/>
+					</div>
+					<div>
+						<input type="submit" value="Добавить файл"/>
+					</div>
+				</form>
+			{% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}

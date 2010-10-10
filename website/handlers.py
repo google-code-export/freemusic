@@ -1,6 +1,7 @@
 # vim: set ts=4 sts=4 sw=4 et fileencoding=utf-8:
 
 # Python imports.
+import logging
 import urllib
 import urlparse
 import os
@@ -66,6 +67,7 @@ class BaseHandler(webapp.RequestHandler):
         vars['scripts'] = self.get_scripts(vars['host'])
         vars['logout_uri'] = users.create_logout_url(self.request.uri)
         vars['login_uri'] = users.create_login_url(self.request.uri)
+        vars['is_admin'] = users.is_current_user_admin()
         directory = os.path.dirname(__file__)
         path = os.path.join(directory, 'templates', template_name)
         result = template.render(path, vars)
@@ -77,6 +79,17 @@ class BaseHandler(webapp.RequestHandler):
     def send_text(self, text):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         self.response.out.write(text)
+
+
+class AlbumHandler(BaseHandler):
+    def get(self, album_id):
+        album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
+        upload_url = blobstore.create_upload_url('/upload/callback?album=' + album_id)
+        self.render('album.html', {
+            'album': album,
+            'files': model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100),
+            'upload_url': users.is_current_user_admin() and upload_url or None,
+        })
 
 
 class AlbumEditHandler(BaseHandler):
@@ -91,11 +104,17 @@ class AlbumEditHandler(BaseHandler):
         album.name = self.request.get('name')
         album.cover_id = self.request.get('cover_id')
         if album.cover_id:
-            album.cover_large = image.get_serving_url(album.cover_id)
+            album.cover_large = images.get_serving_url(album.cover_id)
             album.cover_small = album.cover_large + '=s200-c'
 
         album.put()
         self.redirect('/album/' + str(album.id))
+
+
+class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    def get(self):
+        blob_info = blobstore.BlobInfo.get(self.request.get('id'))
+        self.send_blob(blob_info)
 
 
 class IndexHandler(BaseHandler):
@@ -157,39 +176,9 @@ class UploadHandler(BaseHandler):
         Shows the form.
         """
         self.render('upload.html', {
-            'action': blobstore.create_upload_url('/upload/callback'),
-            'files': self.__get_existing_files(),
-            'file_key': self.request.get('key'),
-            'file_url': self.__get_file_url(),
-            'file_image_url': self.__get_image_url(),
+            'action': blobstore.create_upload_url('/upload/callback?album=' + self.request.get('album')),
+            'files': model.File.all().order('-id').fetch(100),
         })
-
-    def __get_existing_files(self):
-        return blobstore.BlobInfo.all().order('-creation').fetch(100)
-
-    def __get_file_url(self):
-        """
-        Returns the URL of the last uploaded file.
-        """
-        resource = self.request.get('key')
-        if not resource:
-            return None
-        return self.getBaseURL() + 'file/serve?id=%s' % urllib.quote(resource)
-
-    def __get_image_url(self):
-        """
-        Returns the URL of the image.  See the docs:
-        http://code.google.com/appengine/docs/python/images/functions.html#Image_get_serving_url
-        """
-        key = self.request.get('key')
-        if not key:
-            return None
-        info = blobstore.get(key)
-        if info is None:
-            return None
-        if not info.content_type.startswith('image/'):
-            return None
-        return images.get_serving_url(key)
 
 
 class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
@@ -198,19 +187,34 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
         Handles the callback.
         """
         files = self.get_uploads('file')
-        blob_info = files[0]
-        self.redirect('/upload')
+        blob = files[0]
 
+        if self.request.get('album'):
+            album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
+        else:
+            album = None
 
-class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self):
-        blob_info = blobstore.BlobInfo.get(self.request.get('id'))
-        self.send_blob(blob_info)
+        file = model.File()
+        file.file_key = str(blob.key())
+        file.owner = users.get_current_user()
+        for k in ('content_type', 'filename', 'size', 'creation'):
+            setattr(file, k, getattr(blob, k))
+        file.published = True
+        file.album = album
+        if file.content_type.startswith('image/'):
+            file.image_url = images.get_serving_url(file.file_key)
+        file.put()
+
+        if self.request.get('album'):
+            self.redirect('/album/' + self.request.get('album'))
+        else:
+            self.redirect('/upload')
 
 
 if __name__ == '__main__':
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
+        ('/album/(\d+)$', AlbumHandler),
         ('/album/edit$', AlbumEditHandler),
         ('/file/serve', FileServeHandler),
         ('/init', InitHandler),

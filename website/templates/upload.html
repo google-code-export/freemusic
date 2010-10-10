@@ -19,7 +19,7 @@
 				</thead>
 				{% for file in files %}
 					<tr>
-						<td><input type="text" value="{{ file.key }}"/></td>
+						<td>{{ file.id }}</td>
 						<td><a href="/file/serve?key={{ file.key|urlencode }}">{{ file.filename }}</a></td>
 						<td>{{ file.content_type }}</td>
 						<td>{{ file.creation|date:"d.m.y" }}</td>
