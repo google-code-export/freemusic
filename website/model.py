@@ -224,4 +224,6 @@ class File(CustomModel):
 		if not self.id:
 			self.id = self.weight = nextId(File)
 			logging.info('New file: %s (file/serve?id=%u)' % (self.filename, self.id))
+		if not self.content_type:
+			self.content_type = 'application/octet-stream'
 		return CustomModel.put(self)

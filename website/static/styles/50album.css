@@ -53,3 +53,24 @@
 #attachments .size {
 	text-align: right;
 }
+
+
+#editTracks td:nth-child(1) .text,
+#editTracks td:nth-child(5) .text {
+	width: 50px;
+	text-align: right;
+}
+#editTracks td:nth-child(2) .text,
+#editTracks td:nth-child(3) .text,
+#editTracks td:nth-child(4) .text {
+	width: 150px;
+}
+
+#editFiles td:nth-child(1) .text {
+	width: 50px;
+	text-align: right;
+}
+#editFiles td:nth-child(2) .text,
+#editFiles td:nth-child(3) .text {
+	width: 200px;
+}

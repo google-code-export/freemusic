@@ -85,9 +85,12 @@ class AlbumHandler(BaseHandler):
     def get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
         upload_url = blobstore.create_upload_url('/upload/callback?album=' + album_id)
+        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
         self.render('album.html', {
             'album': album,
-            'files': model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100),
+            'images': [f for f in files if f.image_url],
+            'tracks': [f for f in files if f.content_type.startswith('audio/')],
+            'files': [f for f in files if not (f.image_url or f.content_type.startswith('audio/'))],
             'upload_url': users.is_current_user_admin() and upload_url or None,
         })
 
@@ -95,9 +98,12 @@ class AlbumHandler(BaseHandler):
 class AlbumEditHandler(BaseHandler):
     def get(self):
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
         self.render('album-edit.html', {
             'album': album,
-            'files': model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100),
+            'images': [f for f in files if f.image_url],
+            'tracks': [f for f in files if f.content_type.startswith('audio/')],
+            'files': [f for f in files if not f.image_url and not f.content_type.startswith('audio/')],
         })
 
     def post(self):
@@ -114,9 +120,26 @@ class AlbumEditHandler(BaseHandler):
             album.cover_id = None
             album.cover_large = None
             album.cover_small = None
-
         album.put()
+
+        files = model.File.gql('WHERE album = :1', album).fetch(100)
+        self.__update_files(files, 'track', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int })
+        self.__update_files(files, 'file', { 'filename': unicode, 'content_type': str, 'published': bool, 'weight': int })
+
         self.redirect('/album/' + str(album.id))
+
+    def __update_files(self, files, prefix, converters):
+        for file in files:
+            for key in converters.keys():
+                fieldname = '%s.%s.%s' % (prefix, file.id, key)
+                value = self.request.get(fieldname, None)
+                if value is None:
+                    pass
+                elif not value:
+                    setattr(file, key, None)
+                else:
+                    setattr(file, key, converters[key](self.request.get(fieldname)))
+                file.put()
 
 
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):

@@ -8,23 +8,19 @@
     </div>
     <div class="block">
         <div id="tracklist">
-            <div id="player">
-                <audio controls="controls">
-                    <source src="{{ tracks.0.ogg_link }}" type="audio/ogg; codecs=vorbis"/>
-                    <source src="{{ tracks.0.mp3_link }}" type="audio/mpeg"/>
-                </audio>
-            </div>
             <table>
                 <tbody>
-                    {% for track in tracks %}
+                    {% for track in tracks %}{% ifequal track.content_type "audio/mp3" %}
                         <tr>
                             <td class="n">{{ forloop.counter }}.</td>
-                            <td class="l"><a href="/track/{{ track.id }}">{{ track.title }}</a></td>
+                            <td class="l"><a href="/track/{{ track.id }}">{% if track.song_title %}{{ track.song_title }}{% else %}{{ track.filename }}{% endif %}</a></td>
+							<!--
                             <td class="dl"><a class="ogg" href="{{ track.ogg_link }}">ogg</a></td>
                             <td class="dl"><a class="mp3" href="{{ track.mp3_link }}">mp3</a></td>
                             <td class="dur">{{ track.duration }}</td>
+							-->
                         </tr>
-                    {% endfor %}
+                    {% endifequal %}{% endfor %}
                 </tbody>
             </table>
         </div>
@@ -35,10 +31,10 @@
         </div>{% endif %}
 
         <div id="attachments">
-            <h3>Файлы для скачивания</h3>
+            {% if files %}<h3>Файлы для скачивания</h3>
             <table class="classic">
                 <tbody>
-                    {% for file in files %}{% if file.image_url %}{% else %}
+                    {% for file in files %}
                         <tr class="{% cycle odd,even as class %}">
                             <td>
                                 <a href="/file/serve?id={{ file.id }}">{{ file.filename }}</a>
@@ -53,9 +49,9 @@
                             </td>
                             <td class="size">{{ file.size|filesizeformat}}</td>
                         </tr>
-                    {% endif %}{% endfor %}
+                    {% endfor %}
                 </tbody>
-            </table>
+            </table>{% endif %}
 			{% if upload_url %}
 				<h3>Добавление файла</h3>
 				<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
