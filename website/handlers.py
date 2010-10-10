@@ -7,6 +7,7 @@ import os
 import wsgiref.handlers
 
 # GAE imports.
+from google.appengine.api import images
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext import blobstore
@@ -138,8 +139,14 @@ class UploadHandler(BaseHandler):
         """
         self.render('upload.html', {
             'action': blobstore.create_upload_url('/upload/callback'),
-            'url': self.__get_file_url(),
+            'files': self.__get_existing_files(),
+            'file_key': self.request.get('key'),
+            'file_url': self.__get_file_url(),
+            'file_image_url': self.__get_image_url(),
         })
+
+    def __get_existing_files(self):
+        return blobstore.BlobInfo.all().order('-creation').fetch(100)
 
     def __get_file_url(self):
         """
@@ -148,7 +155,22 @@ class UploadHandler(BaseHandler):
         resource = self.request.get('key')
         if not resource:
             return None
-        return self.getBaseURL() + 'upload/serve?id=%s' % urllib.quote(resource)
+        return self.getBaseURL() + 'file/serve?id=%s' % urllib.quote(resource)
+
+    def __get_image_url(self):
+        """
+        Returns the URL of the image.  See the docs:
+        http://code.google.com/appengine/docs/python/images/functions.html#Image_get_serving_url
+        """
+        key = self.request.get('key')
+        if not key:
+            return None
+        info = blobstore.get(key)
+        if info is None:
+            return None
+        if not info.content_type.startswith('image/'):
+            return None
+        return images.get_serving_url(key)
 
 
 class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
@@ -158,10 +180,10 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
         """
         files = self.get_uploads('file')
         blob_info = files[0]
-        self.redirect('/upload?key=%s' % blob_info.key())
+        self.redirect('/upload')
 
 
-class UploadServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
         blob_info = blobstore.BlobInfo.get(self.request.get('id'))
         self.send_blob(blob_info)
@@ -170,8 +192,8 @@ class UploadServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 if __name__ == '__main__':
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
+        ('/file/serve', FileServeHandler),
         ('/init', InitHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),
-        ('/upload/serve', UploadServeHandler),
     ], debug=config.DEBUG))

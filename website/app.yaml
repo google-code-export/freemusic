@@ -8,6 +8,8 @@ api_version: 1
 handlers:
 - url: /
   script: handlers.py
+- url: /file/serve
+  script: handlers.py
 - url: /init
   script: handlers.py
   login: admin

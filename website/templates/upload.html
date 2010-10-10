@@ -2,12 +2,54 @@
 {% block content %}
 <div id="upload">
 	{% if url %}
+		<table>
+			<tbody>
+				<tr>
+					<th>File ID:</th>
+					<td>{{ file_key }}</td>
+				</tr>
+				<tr>
+					<th>File URL:</th>
+					<td><a href="{{ file_url }}">URL</a></td>
+				</tr>
+				{% if file_image_url %}<tr>
+					<th>Image URL:</th>
+					<td><a href="{{ file_image_url }}"><img src="{{ file_image}}=s200-c" alt="image"/></a></dt>
+				</tr>{% endif %}
+			</tbody>
+		</table>
 		<p>Your file was uploaded and is available as:</p>
 		<p><a href="{{ url }}">{{ url }}</a></p>
+	{% endif %}
+	{% if image_url %}
+		<p>Image url: {{ image_url }}</p>
 	{% endif %}
 	<form action="{{ action }}" method="post" enctype="multipart/formdata">
 		<input type="file" name="file"/>
 		<input type="submit"/>
 	</form>
+	{% if files %}
+		<table id="lastfiles">
+			<caption>Last uploaded files</caption>
+			<tbody>
+				<thead>
+					<tr>
+						<th>Key</th>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				{% for file in files %}
+					<tr>
+						<td><tt>{{ file.key }}</tt></td>
+						<td><a href="/file/serve?key={{ file.key }}">{{ file.filename }}</a></td>
+						<td>{{ file.content_type }}</td>
+						<td>{{ file.creation|date:"d.m.y" }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% endif %}
 </div>
 {% endblock %}

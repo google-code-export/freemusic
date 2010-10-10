@@ -1,0 +1,13 @@
+#lastfiles {
+	border-collapse: collapse;
+	margin: 1em 0 0;
+}
+#lastfiles caption {
+	font-size: 1.5em;
+	line-height: 1.5em;
+	font-style: italic;
+}
+#lastfiles th, #lastfiles td {
+	border: solid 1px #ccc;
+	padding: 2px 4px;
+}
