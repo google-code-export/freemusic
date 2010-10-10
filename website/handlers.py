@@ -164,8 +164,7 @@ class AlbumEditHandler(AlbumHandler):
         album.put()
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
-        self.__update_files(files, 'track', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int })
-        self.__update_files(files, 'file', { 'filename': unicode, 'content_type': str, 'published': bool, 'weight': int })
+        self.__update_files(files, 'file', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int, 'filename': unicode, 'content_type': str, 'published': bool })
 
         self.redirect('/album/' + str(album.id))
 
@@ -174,6 +173,7 @@ class AlbumEditHandler(AlbumHandler):
             for key in converters.keys():
                 fieldname = '%s.%s.%s' % (prefix, file.id, key)
                 value = self.request.get(fieldname, None)
+                logging.info('%s = %s' % (fieldname, value))
                 if value is None:
                     pass
                 elif not value:
