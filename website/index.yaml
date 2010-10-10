@@ -18,3 +18,7 @@ indexes:
   - name: author
   - name: published
     direction: desc
+- kind: File
+  properties:
+  - name: album
+  - name: weight

@@ -36,8 +36,6 @@ handlers:
 - url: /doc/
   static_dir: doc
 
-- url: /
-  script: index.py
 - url: /(albums\.rss|album/.*)
   script: album.py
 - url: /(artist/\d+|artist(\.rss)?)
