@@ -102,7 +102,7 @@ class AlbumHandler(BaseHandler):
             'tracks': [],
             'other': [],
         }
-        files = model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100)
+        files = [f for f in model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100) if f.published]
         result['images'] = [f for f in files if f.image_url]
         result['other'] = [f for f in files if not f.image_url and not f.content_type.startswith('audio/')]
         for file in [f for f in files if f.content_type.startswith('audio/')]:
@@ -168,8 +168,8 @@ class AlbumEditHandler(AlbumHandler):
 
 
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self):
-        file = model.File.gql('WHERE id = :1', int(self.request.get('id'))).get()
+    def get(self, file_id):
+        file = model.File.gql('WHERE id = :1', int(file_id)).get()
         blob = blobstore.BlobInfo.get(file.file_key)
         self.send_blob(blob)
 
@@ -284,7 +284,7 @@ if __name__ == '__main__':
         ('/', IndexHandler),
         ('/album/(\d+)$', AlbumHandler),
         ('/album/edit$', AlbumEditHandler),
-        ('/file/serve', FileServeHandler),
+        ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/init', InitHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),

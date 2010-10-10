@@ -14,11 +14,9 @@
                         <tr>
                             <td class="n">{{ forloop.counter }}.</td>
                             <td class="l"><a href="/track/{{ track.id }}">{% if track.song_title %}{{ track.song_title }}{% else %}{{ track.filename }}{% endif %}</a></td>
-							<!--
                             <td class="dl"><a class="ogg" href="{{ track.ogg_link }}">ogg</a></td>
                             <td class="dl"><a class="mp3" href="{{ track.mp3_link }}">mp3</a></td>
-                            <td class="dur">{{ track.duration }}</td>
-							-->
+                            <td class="dur">{% if track.duration %}{{ track.duration }}{% endif %}</td>
                         </tr>
                     {% endifequal %}{% endfor %}
                 </tbody>

@@ -13,7 +13,7 @@ handlers:
 - url: /album/edit
   script: handlers.py
   login: admin
-- url: /file/serve
+- url: /file/serve/\d+/.+
   script: handlers.py
 - url: /init
   script: handlers.py
