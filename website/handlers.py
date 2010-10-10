@@ -121,7 +121,7 @@ class AlbumHandler(BaseHandler):
         files = [f for f in model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100) if f.published]
         result['images'] = [f for f in files if f.image_url]
         result['other'] = [f for f in files if not f.image_url and not f.content_type.startswith('audio/')]
-        for file in [f for f in files if f.content_type = 'audio/mp3']:
+        for file in [f for f in files if f.filename.endswith('.mp3')]:
             track = {
                 'id': file.id,
                 'content_type': file.content_type,
