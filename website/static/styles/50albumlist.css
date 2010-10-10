@@ -24,39 +24,3 @@
 	margin: 0;
 	padding: 0;
 }
-
-#labels {
-	background-color: gray;
-	width: 190px;
-	position: absolute;
-	top: 0;
-	left: 550px;
-	padding: 10px;
-	text-align: center;
-	border-radius: 4px;
-}
-#labels h2 {
-	color: white;
-	font-size: 1em;
-	font-weight: bold;
-	margin: 0.25em 0;
-}
-#labels ul {
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-}
-#labels li {
-	display: inline-block;
-	margin: .25em 0;
-}
-#labels li a {
-	white-space: nowrap;
-	color: white;
-	text-decoration: none;
-	padding: 0 .25em;
-}
-#labels li a:hover {
-	background-color: #666;
-	border-radius: 4px;
-}

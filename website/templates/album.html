@@ -67,6 +67,12 @@
 					<li><a href="/tag/{{ label|urlencode }}">{{ label }}</a></li>
 				{% endfor %}</ul>
 			</div>{% endif %}
+			{% if files.other %}<div class="labels">
+				<h3>Файлы</h3>
+				<ul>{% for file in files.other %}
+					<li><a href="/file/serve/{{ file.id }}/{{ file.filename|urlencode }}">{{ file.filename }}</a></li>
+				{% endfor %}</ul>
+			</div>{% endif %}
 		</div><!-- #sidebar -->
     </div>
 </div>
