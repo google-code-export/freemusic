@@ -79,6 +79,25 @@ class BaseHandler(webapp.RequestHandler):
         self.response.out.write(text)
 
 
+class AlbumEditHandler(BaseHandler):
+    def get(self):
+        album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+        self.render('album-edit.html', {
+            'album': album,
+        })
+
+    def post(self):
+        album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+        album.name = self.request.get('name')
+        album.cover_id = self.request.get('cover_id')
+        if album.cover_id:
+            album.cover_large = image.get_serving_url(album.cover_id)
+            album.cover_small = album.cover_large + '=s200-c'
+
+        album.put()
+        self.redirect('/album/' + str(album.id))
+
+
 class IndexHandler(BaseHandler):
     """
     The main page of the web site.
@@ -192,6 +211,7 @@ class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 if __name__ == '__main__':
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
+        ('/album/edit$', AlbumEditHandler),
         ('/file/serve', FileServeHandler),
         ('/init', InitHandler),
         ('/upload', UploadHandler),

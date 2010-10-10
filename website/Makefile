@@ -1,5 +1,8 @@
 all: static/styles.css
 
+upload: all
+	gae-upload
+
 clean:
 	rm -f dump bulkloader-* *.pyc
 

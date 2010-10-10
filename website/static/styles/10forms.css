@@ -1,0 +1,10 @@
+form div {
+	margin: .5em 0;
+}
+form div label {
+	display: block;
+	font-style: italic;
+}
+form .text {
+	width: 600px;
+}

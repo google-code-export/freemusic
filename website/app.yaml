@@ -8,6 +8,9 @@ api_version: 1
 handlers:
 - url: /
   script: handlers.py
+- url: /album/edit
+  script: handlers.py
+  login: admin
 - url: /file/serve
   script: handlers.py
 - url: /init

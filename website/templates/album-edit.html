@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+	<form action="/album/edit" method="post">
+		<input type="hidden" name="id" value="{{ album.id }}"/>
+		<div>
+			<label>Name:</label>
+			<input type="text" name="name" value="{{ album.name }}" class="text"/>
+		</div>
+		<div>
+			<label>Artist:</label>
+			<input type="text" name="artist" value="{% if album.artist %}{{ album.artist.name }}{% endif %}" class="text"/>
+		</div>
+		<div>
+			<label>Release date:</label>
+			<input type="text" name="release_date" value="{{ album.release_date }}" class="text"/>
+		</div>
+		<div>
+			<label>Cover ID:</label>
+			<input type="text" name="cover_id" value="{{ album.cover_id }}" class="text"/>
+		</div>
+		<div>
+			<label>Labels:</label>
+			<input type="text" name="labels" value="{% if album.labels %}{% for label in album.labels %}{{ label }}, {% endfor %}{% endif %}" class="text"/>
+		</div>
+		<div>
+			<label>Owner:</label>
+			<input type="text" name="owner" value="{{ album.owner }}" class="text"/>
+		</div>
+		<div>
+			<input type="submit" value="Save"/>
+		</div>
+	</form>
+{% endblock %}

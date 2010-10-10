@@ -85,6 +85,7 @@ class SiteAlbum(CustomModel):
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
 	rating = db.RatingProperty() # average album rate
+	cover_id = db.StringProperty() # blobstore key
 	cover_large = db.LinkProperty()
 	cover_small = db.LinkProperty()
 	labels = db.StringListProperty()
@@ -201,3 +202,9 @@ class SiteAlbumLabel(CustomModel):
 	user = db.UserProperty(required=_REQUIRED)
 	# Дата установки, на всякий случай.
 	published = db.DateTimeProperty(auto_now_add=True)
+
+
+class File(CustomModel):
+	id = db.IntegerProperty()
+	file_key = db.StringProperty()
+	image_url = db.LinkProperty()
