@@ -13,7 +13,12 @@
                     {% for track in files.tracks %}
                         <tr>
                             <td class="n">{{ forloop.counter }}.</td>
-                            <td class="l"><a href="/track/{{ track.id }}">{% if track.song_title %}{{ track.song_title }}{% else %}{{ track.filename }}{% endif %}</a></td>
+                            <td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
+							{% if compilation %}
+								<td>{% if track.song_artist %}
+									<a href="/artist/{{ track.song_artist }}">{{ track.song_artist}}</a>
+								{% endif %}</td>
+							{% endif %}
                             <td class="dl">{% if track.ogg_link %}<a class="ogg" href="{{ track.ogg_link }}">ogg</a>{% endif %}</td>
                             <td class="dl">{% if track.mp3_link %}<a class="mp3" href="{{ track.mp3_link }}">mp3</a>{% endif %}</td>
                             <td class="dur">{% if track.duration %}{{ track.duration }}{% endif %}</td>

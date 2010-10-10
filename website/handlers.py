@@ -6,6 +6,7 @@ import urllib
 import urlparse
 import os
 import os.path
+import re
 import wsgiref.handlers
 
 # GAE imports.
@@ -105,6 +106,7 @@ class AlbumHandler(BaseHandler):
         self.render('album.html', {
             'album': album,
             'files': self.__get_files(album),
+            'compilation': 'compilation' in album.labels,
             'upload_url': users.is_current_user_admin() and upload_url or None,
         })
 
@@ -125,7 +127,7 @@ class AlbumHandler(BaseHandler):
             track = {
                 'id': file.id,
                 'content_type': file.content_type,
-                'song_title': file.song_title,
+                'song_title': file.song_title or file.filename,
                 'song_artist': file.song_artist,
                 'duration': None,
                 'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
@@ -163,6 +165,7 @@ class AlbumEditHandler(AlbumHandler):
             album.cover_id = None
             album.cover_large = None
             album.cover_small = None
+        album.labels = [l for l in re.split('[,\s+]', self.request.get('labels')) if l.strip()]
         album.put()
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
