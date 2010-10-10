@@ -180,7 +180,9 @@ class AlbumEditHandler(AlbumHandler):
                     setattr(file, key, None)
                 else:
                     setattr(file, key, converters[key](self.request.get(fieldname)))
-                file.put()
+            if not self.request.get('%s.%s.published' % (prefix, file.id)):
+                file.published = False
+            file.put()
 
 
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
