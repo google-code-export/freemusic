@@ -127,10 +127,12 @@ class AlbumHandler(BaseHandler):
                 'content_type': file.content_type,
                 'song_title': file.song_title,
                 'song_artist': file.song_artist,
-                'duration': file.duration,
+                'duration': None,
                 'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
                 'ogg_link': None,
             }
+            if file.duration:
+                track['duration'] = '%u:%u' % (file.duration / 60, file.duration % 60)
             ogg_name = os.path.splitext(file.filename)[0] + '.ogg'
             for file in files:
                 if file.filename == ogg_name:
