@@ -214,6 +214,17 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
             file.image_url = images.get_serving_url(file.file_key)
         file.put()
 
+        # If the album doesn't have a cover and we've just uploaded
+        # an image, use it as the cover.
+        if file.image_url and not (album.cover_id and album.cover_small and album.cover_large):
+            album.cover_id = file.file_key
+            album.cover_large = images.get_serving_url(album.cover_id)
+            album.cover_small = album.cover_large + '=s200-c'
+            # ditch broken SDK URLs, use browser scaling
+            if album.cover_small.startswith('http://0.0.0.0:'):
+                album.cover_small = album.cover_large
+            album.put()
+
         if self.request.get('album'):
             self.redirect('/album/' + self.request.get('album'))
         else:
