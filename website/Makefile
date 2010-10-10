@@ -1,4 +1,4 @@
-all: static/styles.css
+all: rebuild
 
 upload: all
 	gae-upload

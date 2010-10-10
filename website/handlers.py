@@ -97,6 +97,7 @@ class AlbumEditHandler(BaseHandler):
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
         self.render('album-edit.html', {
             'album': album,
+            'files': model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100),
         })
 
     def post(self):
@@ -106,6 +107,13 @@ class AlbumEditHandler(BaseHandler):
         if album.cover_id:
             album.cover_large = images.get_serving_url(album.cover_id)
             album.cover_small = album.cover_large + '=s200-c'
+            # ditch broken SDK URLs, use browser scaling
+            if album.cover_small.startswith('http://0.0.0.0:'):
+                album.cover_small = album.cover_large
+        else:
+            album.cover_id = None
+            album.cover_large = None
+            album.cover_small = None
 
         album.put()
         self.redirect('/album/' + str(album.id))
@@ -113,8 +121,9 @@ class AlbumEditHandler(BaseHandler):
 
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self):
-        blob_info = blobstore.BlobInfo.get(self.request.get('id'))
-        self.send_blob(blob_info)
+        file = model.File.gql('WHERE id = :1', int(self.request.get('id'))).get()
+        blob = blobstore.BlobInfo.get(file.file_key)
+        self.send_blob(blob)
 
 
 class IndexHandler(BaseHandler):

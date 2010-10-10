@@ -29,27 +29,19 @@
             </table>
         </div>
 
-        <div id="coverart">
-            <h3>Иллюстрации</h3>
-            <ul>
-                {% for image in images %}
-                    <li>
-                        <a href="{{ image.original }}" target="_blank">
-                            <img src="{{ image.medium }}" alt="image"/>
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+        {% if album.cover_small %}<div id="coverart">
+            <h3>Обложка</h3>
+			<a href="{{ album.cover_large }}"><img src="{{ album.cover_small }}"/></a>
+        </div>{% endif %}
 
         <div id="attachments">
             <h3>Файлы для скачивания</h3>
             <table class="classic">
                 <tbody>
-                    {% for file in files %}
+                    {% for file in files %}{% if file.image_url %}{% else %}
                         <tr class="{% cycle odd,even as class %}">
                             <td>
-                                <a href="{{ file.uri }}">{{ file.name }}</a>
+                                <a href="/file/serve?id={{ file.id }}">{{ file.filename }}</a>
                             </td>
                             <!--
                             <td>{{ file.type }}</td>
@@ -61,10 +53,11 @@
                             </td>
                             <td class="size">{{ file.size|filesizeformat}}</td>
                         </tr>
-                    {% endfor %}
+                    {% endif %}{% endfor %}
                 </tbody>
             </table>
 			{% if upload_url %}
+				<h3>Добавление файла</h3>
 				<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
 					<div>
 						<input type="file" name="file"/>
