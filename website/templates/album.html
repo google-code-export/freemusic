@@ -58,7 +58,16 @@
 					</div>
 				</form>
 			{% endif %}
-        </div>
+        </div><!-- #attachments -->
+
+		<div id="sidebar">
+			{% if album.labels %}<div id="labels" class="labels">
+				<h2>Метки</h2>
+				<ul>{% for label in album.labels %}
+					<li><a href="/tag/{{ label|urlencode }}">{{ label }}</a></li>
+				{% endfor %}</ul>
+			</div>{% endif %}
+		</div><!-- #sidebar -->
     </div>
 </div>
 {% endblock %}
