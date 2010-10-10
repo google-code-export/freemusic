@@ -2,43 +2,61 @@
  * Оформление списка альбомов на главной странице.
  */
 
+#albumlist {
+	background-color: white;
+	width: 536px;
+	padding: 0;
+}
 #albumlist .tile {
-	margin: 0 0 10px 45px;
-	width: 152px;
-	height: 200px;
+	margin: 2px;
+	width: 130px;
+	height: 130px;
 	position: relative;
 	overflow: hidden;
 	display: inline-block;
 	vertical-align: top;
 	text-align: center;
 }
-
-/**
- * У всех элементов группы есть левый отступ, только первому элементу
- * отступ не нужен, он должен быть выровнен по левому краю страницы.
- */
-#albumlist .tile.first {
-	margin-left: 0;
-}
-
 #albumlist .tile img {
-	border: solid 1px black;
-	width: 150px;
-	height: 150px;
+	border: solid gray 1px;
+	width: 128px;
+	height: 128px;
+	margin: 0;
+	padding: 0;
 }
 
-#albumlist .title, #albumlist .artist {
+#labels {
+	background-color: gray;
+	width: 190px;
+	position: absolute;
+	top: 0;
+	left: 550px;
+	padding: 10px;
 	text-align: center;
-	overflow: hidden;
-	white-space: nowrap;
-	font-size: 80%;
-	display: block;
+	border-radius: 4px;
 }
-
-/**
- * Название исполнителя бледное, чтобы не отвлекать внимание
- * от названия альбома, которое более важно.
- */
-#albumlist .artist {
-	opacity: 0.5;
+#labels h2 {
+	color: white;
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0.25em 0;
+}
+#labels ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#labels li {
+	display: inline-block;
+	margin: .25em 0;
+}
+#labels li a {
+	white-space: nowrap;
+	color: white;
+	text-decoration: none;
+	padding: 0 .25em;
+}
+#labels li a:hover {
+	background-color: #666;
+	border-radius: 4px;
 }

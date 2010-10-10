@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="upload">
+	{% if url %}
+		<p>Your file was uploaded and is available as:</p>
+		<p><a href="{{ url }}">{{ url }}</a></p>
+	{% endif %}
+	<form action="{{ action }}" method="post" enctype="multipart/formdata">
+		<input type="file" name="file"/>
+		<input type="submit"/>
+	</form>
+</div>
+{% endblock %}

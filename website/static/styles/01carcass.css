@@ -3,3 +3,7 @@
 	margin: 0 auto;
 	position: relative;
 }
+
+#content {
+	position: relative;
+}

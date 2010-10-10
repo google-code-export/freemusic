@@ -6,8 +6,13 @@ api_version: 1
 # Good example: http://code.google.com/p/rietveld/source/browse/trunk/app.yaml
 
 handlers:
-- url: /remote_api
-  script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+- url: /
+  script: handlers.py
+- url: /init
+  script: handlers.py
+  login: admin
+- url: /upload($|/callback$|/serve$)
+  script: handlers.py
   login: admin
 
 - url: /favicon.ico
@@ -36,8 +41,6 @@ handlers:
   script: player.py
 - url: /radio(/.*)?
   script: radio.py
-- url: /upload/(queue|remote)
-  script: upload.py
 - url: /(users|u/[^/]+)
   script: users.py
 - url: /edit

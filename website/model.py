@@ -85,7 +85,8 @@ class SiteAlbum(CustomModel):
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
 	rating = db.RatingProperty() # average album rate
-	cover_large = db.LinkProperty() # image URL; FIXME: не используется
+	cover_large = db.LinkProperty()
+	cover_small = db.LinkProperty()
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
 	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
@@ -95,11 +96,6 @@ class SiteAlbum(CustomModel):
 		if not self.id:
 			self.id = nextId(SiteAlbum)
 			logging.info('New album: %s (album/%u)' % (self.name, self.id))
-		if not quick:
-			self.rate = self.get_avg_rate()
-			self.xml = self.to_xml()
-			self.update_shortxml()
-			logging.info('album/%u: xml updated' % self.id)
 		return CustomModel.put(self)
 
 	def get_avg_rate(self):
@@ -203,7 +199,5 @@ class SiteAlbumLabel(CustomModel):
 	label = db.StringProperty()
 	# Пользователь, добавивший метку.
 	user = db.UserProperty(required=_REQUIRED)
-	# Альбом, к которому относится метка.
-	album = db.ReferenceProperty(SiteAlbum)
 	# Дата установки, на всякий случай.
 	published = db.DateTimeProperty(auto_now_add=True)
