@@ -15,7 +15,7 @@
                             <td class="n">{{ forloop.counter }}.</td>
                             <td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
 							{% if compilation %}
-								<td>{% if track.song_artist %}
+								<td class="artist">{% if track.song_artist %}
 									<a href="/artist/{{ track.song_artist }}">{{ track.song_artist}}</a>
 								{% endif %}</td>
 							{% endif %}

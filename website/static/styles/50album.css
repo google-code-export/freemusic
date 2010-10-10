@@ -31,7 +31,6 @@
 #tracklist .dur {
 	opacity: 0.5;
 }
-
 #tracklist .dl {
 	opacity: 0.2;
 }
@@ -41,6 +40,9 @@
 #tracklist .dl a {
 	color: green;
 	padding-left: 0;
+}
+#tracklist .artist {
+	white-space: nowrap;
 }
 
 
