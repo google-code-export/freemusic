@@ -260,8 +260,11 @@ class IndexHandler(BaseHandler):
         """
         Shows self.count recent albums.
         """
+        albums = model.SiteAlbum.all().order('-release_date').fetch(100)
+        if not users.is_current_user_admin():
+            albums = [a for a in albums if a.cover_small]
         self.render('index.html', {
-            'albums': model.SiteAlbum.all().fetch(100),
+            'albums': albums,
             'labels': get_all_labels(),
         })
 
