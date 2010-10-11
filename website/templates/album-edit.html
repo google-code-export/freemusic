@@ -3,16 +3,20 @@
 	<form action="/album/edit" method="post">
 		<input type="hidden" name="id" value="{{ album.id }}"/>
 		<div>
-			<label>Name:</label>
+			<label>Название:</label>
 			<input type="text" name="name" value="{{ album.name }}" class="text"/>
 		</div>
 		<div>
-			<label>Artist:</label>
-			<input type="text" name="artist" value="{% if album.artist %}{{ album.artist.name }}{% endif %}" class="text"/>
+			<label>Исполнитель:</label>
+			<input type="text" name="artist" value="{% if album.artist %}{% if album.artist.name %}{{ album.artist.name }}{% endif %}{% endif %}" class="text"/>
 		</div>
 		<div>
-			<label>Release date:</label>
+			<label>Дата выхода:</label>
 			<input type="text" name="release_date" value="{{ album.release_date }}" class="text"/>
+		</div>
+		<div>
+			<label>Адрес сайта:</label>
+			<input type="text" name="homepage"{% if album.homepage %} value="{{ album.homepage }}"{% endif %} class="text"/>
 		</div>
 		<div>
 			<label>Обложка:</label>
@@ -24,11 +28,11 @@
 			</select>
 		</div>
 		<div>
-			<label>Labels:</label>
+			<label>Метки:</label>
 			<input type="text" name="labels" value="{% if album.labels %}{% for label in album.labels %}{{ label }}, {% endfor %}{% endif %}" class="text"/>
 		</div>
 		<div>
-			<label>Owner:</label>
+			<label>Владелец:</label>
 			<input type="text" name="owner" value="{{ album.owner }}" class="text"/>
 		</div>
 		{% if files %}<table id="editFiles">
@@ -70,7 +74,7 @@
 			{% endfor %}</tbody>
 		</table>{% endif %}
 		<div>
-			<input type="submit" value="Save"/>
+			<input type="submit" value="Сохранить"/>
 		</div>
 	</form>
 {% endblock %}

@@ -84,13 +84,13 @@ class SiteAlbum(CustomModel):
 	text = db.TextProperty()
 	artist = db.ReferenceProperty(SiteArtist)
 	release_date = db.DateProperty(auto_now_add=True)
+	homepage = db.LinkProperty()
 	rating = db.RatingProperty() # average album rate
 	cover_id = db.StringProperty() # blobstore key
 	cover_large = db.LinkProperty()
 	cover_small = db.LinkProperty()
 	labels = db.StringListProperty()
 	owner = db.UserProperty()
-	album_xml = db.LinkProperty() # ссылка на исходный album.xml, для отлова дублей
 	rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
 
 	def put(self, quick=False):
