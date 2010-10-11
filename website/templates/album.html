@@ -3,9 +3,7 @@
 {% block content %}
 <div id="album" class="left">
 	<div id="albumMeta">
-		{% if album.cover_small %}
-			<img src="{{ album.cover_small }}" alt="cover"/>
-		{% endif %}
+		<img src="{% if album.cover_small %}{{ album.cover_small }}{% else %}/static/default_album_large.png{% endif %}" alt="cover"/>
 		<div>
 			<p class="title">{{ album.name }}</p>
 			<p class="artist">{% if compilation %}Сборник{% else %}{{ album.artist.name }}{% endif %}</p>
