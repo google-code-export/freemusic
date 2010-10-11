@@ -185,7 +185,7 @@ class AlbumEditHandler(AlbumHandler):
             album.cover_id = None
             album.cover_large = None
             album.cover_small = None
-        album.labels = [l for l in re.split('[,\s+]', self.request.get('labels')) if l.strip()]
+        album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
         album.put()
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
