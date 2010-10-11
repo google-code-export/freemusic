@@ -120,26 +120,30 @@ class AlbumHandler(BaseHandler):
             'tracks': [],
             'other': [],
         }
-        files = [f for f in model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100) if f.published]
-        result['images'] = [f for f in files if f.image_url]
-        result['other'] = [f for f in files if not f.image_url and not f.content_type.startswith('audio/')]
-        for file in [f for f in files if f.filename.endswith('.mp3')]:
-            track = {
-                'id': file.id,
-                'content_type': file.content_type,
-                'song_title': file.song_title or file.filename,
-                'song_artist': file.song_artist,
-                'duration': None,
-                'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
-                'ogg_link': None,
-            }
-            if file.duration:
-                track['duration'] = '%u:%u' % (file.duration / 60, file.duration % 60)
-            ogg_name = os.path.splitext(file.filename)[0] + '.ogg'
-            for file in files:
-                if file.filename == ogg_name:
-                    track['ogg_link'] = '/file/serve/%s/%s' % (file.id, file.filename)
-            result['tracks'].append(track)
+        files = model.File.gql('WHERE album = :1 AND published = :2 ORDER BY weight', album, True).fetch(100)
+        for file in files:
+            if file.image_url:
+                result['images'].append(file)
+            elif file.content_type and file.content_type.startswith('audio/'):
+                if file.content_type == 'audio/mp3':
+                    track = {
+                        'id': file.id,
+                        'content_type': file.content_type,
+                        'song_title': file.song_title or file.filename,
+                        'song_artist': file.song_artist,
+                        'duration': None,
+                        'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
+                        'ogg_link': None,
+                    }
+                    if file.duration:
+                        track['duration'] = '%u:%u' % (file.duration / 60, file.duration % 60)
+                    ogg_name = os.path.splitext(file.filename)[0] + '.ogg'
+                    for file in files:
+                        if file.filename == ogg_name:
+                            track['ogg_link'] = '/file/serve/%s/%s' % (file.id, file.filename)
+                    result['tracks'].append(track)
+            else:
+                result['other'].append(file)
         return result
 
 
