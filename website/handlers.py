@@ -231,6 +231,18 @@ class AlbumSubmitHandler(BaseHandler):
         self.redirect('/album/' + str(album.id))
 
 
+class AlbumUploadHandler(BaseHandler):
+    """
+    Returns an HTML form used for uploading a file.
+    """
+    def get(self, album_id):
+        upload_url = blobstore.create_upload_url('/upload/callback?album=%s' % album_id)
+        self.render('album-upload.html', {
+            'album_id': album_id,
+            'upload_url': upload_url,
+        })
+
+
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, file_id):
         file = model.File.gql('WHERE id = :1', int(file_id)).get()
@@ -273,35 +285,33 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
         """
         Handles the callback.
         """
-        files = self.get_uploads('file')
-        blob = files[0]
-
         if self.request.get('album'):
             album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
         else:
             album = None
 
-        file = model.File()
-        file.file_key = str(blob.key())
-        file.owner = users.get_current_user()
-        for k in ('content_type', 'filename', 'size', 'creation'):
-            setattr(file, k, getattr(blob, k))
-        file.published = True
-        file.album = album
-        if file.content_type.startswith('image/'):
-            file.image_url = images.get_serving_url(file.file_key)
-        file.put()
+        for blob in self.get_uploads('file'):
+            file = model.File()
+            file.file_key = str(blob.key())
+            file.owner = users.get_current_user()
+            for k in ('content_type', 'filename', 'size', 'creation'):
+                setattr(file, k, getattr(blob, k))
+            file.published = True
+            file.album = album
+            if file.content_type.startswith('image/'):
+                file.image_url = images.get_serving_url(file.file_key)
+            file.put()
 
-        # If the album doesn't have a cover and we've just uploaded
-        # an image, use it as the cover.
-        if file.image_url and not (album.cover_id and album.cover_small and album.cover_large):
-            album.cover_id = file.file_key
-            album.cover_large = images.get_serving_url(album.cover_id)
-            album.cover_small = album.cover_large + '=s200-c'
-            # ditch broken SDK URLs, use browser scaling
-            if album.cover_small.startswith('http://0.0.0.0:'):
-                album.cover_small = album.cover_large
-            album.put()
+            # If the album doesn't have a cover and we've just uploaded
+            # an image, use it as the cover.
+            if file.image_url and not (album.cover_id and album.cover_small and album.cover_large):
+                album.cover_id = file.file_key
+                album.cover_large = images.get_serving_url(album.cover_id)
+                album.cover_small = album.cover_large + '=s200-c'
+                # ditch broken SDK URLs, use browser scaling
+                if album.cover_small.startswith('http://0.0.0.0:'):
+                    album.cover_small = album.cover_large
+                album.put()
 
         if self.request.get('back'):
             self.redirect(self.request.get('back'))
@@ -316,6 +326,7 @@ if __name__ == '__main__':
         ('/', IndexHandler),
         ('/album/(\d+)$', AlbumHandler),
         ('/album/(\d+)/download$', AlbumDownloadHandler),
+        ('/album/(\d+)/upload$', AlbumUploadHandler),
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),

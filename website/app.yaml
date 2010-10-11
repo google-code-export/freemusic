@@ -10,6 +10,9 @@ handlers:
   script: handlers.py
 - url: /album/\d+(|/download)
   script: handlers.py
+- url: /album/\d+/upload
+  script: handlers.py
+  login: admin
 - url: /album/edit
   script: handlers.py
   login: admin
