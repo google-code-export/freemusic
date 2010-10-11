@@ -106,11 +106,14 @@ class AlbumHandler(BaseHandler):
             'album': album,
             'files': self._get_files(album),
             'compilation': 'compilation' in album.labels,
-            'upload_url': self._get_upload_url(album),
+            'upload_url': self._get_upload_url(album, '/album/' + album_id),
         })
 
-    def _get_upload_url(self, album):
-        upload_url = blobstore.create_upload_url('/upload/callback?album=' + str(album.id))
+    def _get_upload_url(self, album, back=None):
+        after = '/upload/callback?album=' + str(album.id)
+        if back:
+            after += '&back=' + urllib.quote(back)
+        upload_url = blobstore.create_upload_url(after)
         return users.is_current_user_admin() and upload_url or None
 
     def _get_files(self, album):
@@ -159,7 +162,7 @@ class AlbumDownloadHandler(AlbumHandler):
         self.render('album-download.html', {
             'album': album,
             'files': self._get_files(album),
-            'upload_url': self._get_upload_url(album),
+            'upload_url': self._get_upload_url(album, '/album/%s/download' % album_id),
         })
 
 
@@ -316,7 +319,9 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
                 album.cover_small = album.cover_large
             album.put()
 
-        if self.request.get('album'):
+        if self.request.get('back'):
+            self.redirect(self.request.get('back'))
+        elif self.request.get('album'):
             self.redirect('/album/' + self.request.get('album'))
         else:
             self.redirect('/upload')
