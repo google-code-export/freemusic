@@ -190,11 +190,14 @@ class AlbumEditHandler(AlbumHandler):
             album.cover_small = None
         album.homepage = self.request.get('homepage') or None
         album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
-        album.put()
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
         self.__update_files(files, 'file', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int, 'filename': unicode, 'content_type': str, 'published': bool })
 
+        # Find artists.
+        album.artists = list(set([f.song_artist.strip() for f in files if f.song_artist]))
+
+        album.put()
         self.redirect('/album/' + str(album.id))
 
     def __update_files(self, files, prefix, converters):

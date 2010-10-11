@@ -82,7 +82,7 @@ class SiteAlbum(CustomModel):
 	id = db.IntegerProperty()
 	name = db.StringProperty()
 	text = db.TextProperty()
-	artist = db.ReferenceProperty(SiteArtist)
+	artists = db.StringListProperty() # all involved artists, updated automatically from tracks
 	release_date = db.DateProperty(auto_now_add=True)
 	homepage = db.LinkProperty()
 	rating = db.RatingProperty() # average album rate

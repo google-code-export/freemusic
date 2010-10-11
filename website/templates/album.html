@@ -6,7 +6,7 @@
 		<img src="{% if album.cover_small %}{{ album.cover_small }}{% else %}/static/default_album_large.png{% endif %}" alt="cover"/>
 		<div>
 			<p class="title">{{ album.name }}</p>
-			<p class="artist">{% if compilation %}Сборник{% else %}{{ album.artist.name }}{% endif %}</p>
+			<p class="artist">{% if album.artists.1 %}Сборник{% else %}<a href="/artist/{{ album.artists.0|urlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
 			{% if album.release_date %}<p class="date">Выпущен {{ album.release_date }}</p>{% endif %}
 			{% if album.homepage %}<p class="homepage"><a href="{{ album.homepage }}">Веб-сайт</a></p>{% endif %}
 			<p class="download"><a class="button" href="/album/{{ album.id }}/download"><span>Скачать</span></a></p>

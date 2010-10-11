@@ -2,7 +2,7 @@
 {% block content %}
 <div id="albumlist" class="left">
 	{% for album in albums %}<div class="tile">
-		<a href="/album/{{ album.id }}">
+		<a href="/album/{{ album.id }}" title="«{{ album.name }}» by {{ album.artist.name }}">
 			{% if album.cover_small %}
 				<img alt="cover" src="{{ album.cover_small }}"/>
 			{% else %}
