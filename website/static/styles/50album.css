@@ -32,6 +32,11 @@
 #tracklist table {
 	border-collapse: collapse;
 }
+#tracklist caption {
+	font-size: 1.25em;
+	line-height: 1.25em;
+	text-align: left;
+}
 #tracklist table, #tracklist td.l {
 	width: 100%;
 }
