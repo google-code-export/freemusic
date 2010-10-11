@@ -214,6 +214,19 @@ class AlbumEditHandler(AlbumHandler):
             file.put()
 
 
+class AlbumSubmitHandler(BaseHandler):
+    def get(self):
+        self.render('album-submit.html')
+
+    def post(self):
+        album = model.SiteAlbum()
+        album.name = self.request.get('name') or None
+        album.homepage = self.request.get('homepage') or None
+        album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
+        album.put()
+        self.redirect('/album/' + str(album.id))
+
+
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, file_id):
         file = model.File.gql('WHERE id = :1', int(file_id)).get()
@@ -334,6 +347,7 @@ if __name__ == '__main__':
         ('/album/(\d+)$', AlbumHandler),
         ('/album/(\d+)/download$', AlbumDownloadHandler),
         ('/album/edit$', AlbumEditHandler),
+        ('/album/submit$', AlbumSubmitHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/init', InitHandler),
         ('/upload', UploadHandler),

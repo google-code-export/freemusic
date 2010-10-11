@@ -13,6 +13,9 @@ handlers:
 - url: /album/edit
   script: handlers.py
   login: admin
+- url: /album/submit
+  script: handlers.py
+  login: admin
 - url: /file/serve/\d+/.+
   script: handlers.py
 - url: /init

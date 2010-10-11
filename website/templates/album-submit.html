@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+	<form method="post">
+		<div>
+			<label>Название:</label>
+			<input type="text" name="name" value="{{ album.name }}" class="text"/>
+		</div>
+		<div>
+			<label>Исполнитель:</label>
+			<input type="text" name="artist" value="{% if album.artist %}{% if album.artist.name %}{{ album.artist.name }}{% endif %}{% endif %}" class="text"/>
+		</div>
+		<div>
+			<label>Дата выхода:</label>
+			<input type="text" name="release_date" value="{{ album.release_date }}" class="text"/>
+		</div>
+		<div>
+			<label>Адрес сайта:</label>
+			<input type="text" name="homepage"{% if album.homepage %} value="{{ album.homepage }}"{% endif %} class="text"/>
+		</div>
+		<div>
+			<label>Метки:</label>
+			<input type="text" name="labels" value="{% if album.labels %}{% for label in album.labels %}{{ label }}, {% endfor %}{% endif %}" class="text"/>
+		</div>
+		<div>
+			<input type="submit" value="Сохранить"/>
+		</div>
+	</form>
+{% endblock %}
