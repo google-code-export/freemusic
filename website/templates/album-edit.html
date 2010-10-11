@@ -36,10 +36,9 @@
 			<thead>
 				<tr>
 					<th>№</th>
-					<th>Имя файла</th>
 					<th>Название</th>
-					<th>Исполнитель</th>
-					<th>Время</th>
+					<th>Тип<br/>Исполнитель</th>
+					<th>Размер<br/>Время</th>
 					<th>Виден</th>
 				</tr>
 			</thead>
@@ -52,19 +51,25 @@
 						<input type="text" class="text" name="file.{{ file.id }}.filename" value="{{ file.filename }}"/>
 					</td>
 					<td>
+						<input type="text" class="text" name="file.{{ file.id }}.content_type" value="{{ file.content_type }}"/>
+					</td>
+					<td>
+						<input type="text" class="text r" name="file.{{ file.id }}.size" value="{{ file.size }}"/>
+					</td>
+					<td>
+						<input type="checkbox" name="file.{{ file.id }}.published"{% if file.published %} checked="checked"{% endif %}/>
+					</td>
+				</tr>
+				<tr>
+					<td/>
+					<td>
 						<input type="text" class="text" name="file.{{ file.id }}.song_title" value="{% if file.song_title %}{{ file.song_title }}{% endif %}"/>
 					</td>
 					<td>
 						<input type="text" class="text" name="file.{{ file.id }}.song_artist" value="{% if file.song_artist %}{{ file.song_artist }}{% endif %}"/>
 					</td>
 					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.duration" value="{% if file.duration %}{{ file.duration }}{% endif %}"/>
-					</td>
-					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.content_type" value="{{ file.content_type }}"/>
-					</td>
-					<td>
-						<input type="checkbox" name="file.{{ file.id }}.published"{% if file.published %} checked="checked"{% endif %}/>
+						<input type="text" class="text r" name="file.{{ file.id }}.duration" value="{% if file.duration %}{{ file.duration }}{% endif %}"/>
 					</td>
 				</tr>
 			{% endfor %}</tbody>

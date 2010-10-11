@@ -7,6 +7,12 @@ form div label {
 }
 form .text {
 	width: 600px;
+	background: white url(data:image/gif;base64,R0lGODlhAQAFAKIAAPHx8e7u7vv7+/b29v///wAAAAAAAAAAACH5BAAAAAAALAAAAAABAAUAAAMEGDBCCQA7) repeat-x scroll center top;
+	border: 1px solid #BBB;
+	padding: 4px 6px;
+}
+form .r {
+	text-align: right;
 }
 
 .button {
