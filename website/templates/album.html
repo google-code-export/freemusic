@@ -2,36 +2,40 @@
 {% block ueb %}/album/edit?id={{ album.id }}{% endblock %}
 {% block content %}
 <div id="album" class="left">
-    <div class="header">
-        <h2>{{ album.name }}</h2>
-        <p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
-    </div>
-    <div class="block">
-        <div id="tracklist">
-            <table>
-                <tbody>
-                    {% for track in files.tracks %}
-                        <tr>
-                            <td class="n">{{ forloop.counter }}.</td>
-                            <td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
+	<div id="albumMeta">
+		<img src="{{ album.cover_small }}" alt="cover"/>
+		<div>
+			<p class="title">{{ album.name }}</p>
+			<p class="artist">{% if compilation %}Сборник{% else %}{{ album.artist.name }}{% endif %}</p>
+			{% if album.release_date %}<p class="date">Выпущен {{ album.release_date }}</p>{% endif %}
+			<p class="download"><a class="button" href="/album/{{ album.id }}/download">Скачать</a></p>
+		</div>
+	</div>
+
+	<div id="tracklist">
+		{% if files.tracks %}
+			<table>
+				<caption>Список дорожек</caption>
+				<tbody>
+					{% for track in files.tracks %}
+						<tr>
+							<td class="n">{{ forloop.counter }}.</td>
+							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
 							{% if compilation %}
 								<td class="artist">{% if track.song_artist %}
 									<a href="/artist/{{ track.song_artist }}">{{ track.song_artist}}</a>
 								{% endif %}</td>
 							{% endif %}
-                            <td class="dl">{% if track.ogg_link %}<a class="ogg" href="{{ track.ogg_link }}">ogg</a>{% endif %}</td>
-                            <td class="dl">{% if track.mp3_link %}<a class="mp3" href="{{ track.mp3_link }}">mp3</a>{% endif %}</td>
-                            <td class="dur">{% if track.duration %}{{ track.duration }}{% endif %}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        {% if album.cover_small %}<div id="coverart">
-            <h3>Обложка</h3>
-			<a href="{{ album.cover_large }}"><img src="{{ album.cover_small }}"/></a>
-        </div>{% endif %}
+							<td class="dl">{% if track.ogg_link %}<a class="ogg" href="{{ track.ogg_link }}">ogg</a>{% endif %}</td>
+							<td class="dl">{% if track.mp3_link %}<a class="mp3" href="{{ track.mp3_link }}">mp3</a>{% endif %}</td>
+							<td class="dur">{% if track.duration %}{{ track.duration }}{% endif %}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% else %}
+			<p>Нет информации о дорожках.</p>
+		{% endif %}
 	</div>
 </div>
 

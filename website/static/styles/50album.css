@@ -1,23 +1,36 @@
-#album .block {
-	position: relative;
+#albumMeta {
+	margin-bottom: 1em;
+}
+#albumMeta img {
+	width: 150px;
+	height: 150px;
+	float: left;
+}
+#albumMeta div {
+	margin-left: 160px;
+	height: 150px;
+}
+#albumMeta div p {
+	margin: .5em 0;
+}
+#albumMeta .date {
+	color: #555;
+}
+#albumMeta .title {
+	font-size: 1.5em;
+}
+#albumMeta .artist {
+	font-size: 1.25em;
 }
 
-#album .header {
-	background-color: #dcdcdc;
-	padding: 4px 8px;
-	margin-bottom: 10px;
-}
-#album h2 {
-	margin: 0;
-}
-#album .info {
-	margin: .35em 0 0;
-}
 
 #tracklist {
 	width: 530px;
 	float: left;
 	padding-bottom: 20px;
+}
+#tracklist table {
+	border-collapse: collapse;
 }
 #tracklist table, #tracklist td.l {
 	width: 100%;
@@ -43,6 +56,9 @@
 }
 #tracklist .artist {
 	white-space: nowrap;
+}
+#tracklist tr:nth-child(even) {
+	background-color: #eee;
 }
 
 
