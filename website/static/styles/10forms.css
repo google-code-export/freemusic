@@ -25,3 +25,9 @@ form .r {
 	color: black;
 	margin-right: 4px;
 }
+
+.fakelink {
+	color: #008;
+	text-decoration: underline;
+	cursor: pointer;
+}

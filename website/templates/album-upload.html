@@ -1,17 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 	<h2>Добавление файлов к <a href="/album/{{ album_id }}">альбому №{{ album_id }}</a></h2>
-	<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="file" name="file"/></div>
-		<div><input type="submit" value="Отправить"/> <a href="/album/{{ album_id }}">Вернуться</a></div>
+	<form id="upload_form" action="{{ upload_url }}" method="post" enctype="multipart/formdata">
+		<div id="fileControls">
+			<div><input type="file" name="file"/></div>
+			<div><input type="file" name="file"/></div>
+			<div><input type="file" name="file"/></div>
+			<div><input type="file" name="file"/></div>
+			<div><input type="file" name="file"/></div>
+		</div>
+		<div><input type="submit" value="Отправить"/> <span class="fakelink" id="addMoreFiles">Добавить ещё файлов</span></div>
 	</form>
 {% endblock %}
