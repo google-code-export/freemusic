@@ -123,7 +123,7 @@ class AlbumHandler(BaseHandler):
             'tracks': [],
             'other': [],
         }
-        files = model.File.gql('WHERE album = :1 AND published = :2 ORDER BY weight', album, True).fetch(100)
+        files = [f for f in model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100) if f.published]
         for file in files:
             if file.image_url:
                 result['images'].append(file)
