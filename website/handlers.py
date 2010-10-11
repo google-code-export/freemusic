@@ -1,6 +1,7 @@
 # vim: set ts=4 sts=4 sw=4 et fileencoding=utf-8:
 
 # Python imports.
+import datetime
 import logging
 import urllib
 import urlparse
@@ -190,6 +191,10 @@ class AlbumEditHandler(AlbumHandler):
             album.cover_large = None
             album.cover_small = None
         album.homepage = self.request.get('homepage') or None
+        if self.request.get('release_date'):
+            album.release_date = datetime.datetime.strptime(self.request.get('release_date'), '%Y-%m-%d').date()
+        else:
+            album.release_date = None
         album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
