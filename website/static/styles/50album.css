@@ -22,6 +22,9 @@
 #albumMeta .artist {
 	font-size: 1.25em;
 }
+#albumMeta .download {
+	margin-top: .75em;
+}
 
 
 #tracklist {

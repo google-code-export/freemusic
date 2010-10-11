@@ -8,3 +8,13 @@ form div label {
 form .text {
 	width: 600px;
 }
+
+.button {
+	background: #e3e3e3 url(/static/themes/default/button-back.png) repeat-x 50% 50%;
+	border: 1px solid #aaa;
+	border-right: 1px solid #888;
+	border-bottom: 1px solid #888;
+	padding: 4px 10px;
+	text-decoration: none;
+	color: black;
+}
