@@ -102,15 +102,18 @@ class BaseHandler(webapp.RequestHandler):
 class AlbumHandler(BaseHandler):
     def get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
-        upload_url = blobstore.create_upload_url('/upload/callback?album=' + album_id)
         self.render('album.html', {
             'album': album,
-            'files': self.__get_files(album),
+            'files': self._get_files(album),
             'compilation': 'compilation' in album.labels,
-            'upload_url': users.is_current_user_admin() and upload_url or None,
+            'upload_url': self._get_upload_url(album),
         })
 
-    def __get_files(self, album):
+    def _get_upload_url(self, album):
+        upload_url = blobstore.create_upload_url('/upload/callback?album=' + str(album.id))
+        return users.is_current_user_admin() and upload_url or None
+
+    def _get_files(self, album):
         """
         Returns a dictionary with all album files.  Keys: images, tracks,
         other, all lists.  Tracks are dictionaries, other are models.
@@ -145,6 +148,19 @@ class AlbumHandler(BaseHandler):
             else:
                 result['other'].append(file)
         return result
+
+
+class AlbumDownloadHandler(AlbumHandler):
+    """
+    Shows files that can be downloaded.
+    """
+    def get(self, album_id):
+        album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
+        self.render('album-download.html', {
+            'album': album,
+            'files': self._get_files(album),
+            'upload_url': self._get_upload_url(album),
+        })
 
 
 class AlbumEditHandler(AlbumHandler):
@@ -310,6 +326,7 @@ if __name__ == '__main__':
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
         ('/album/(\d+)$', AlbumHandler),
+        ('/album/(\d+)/download$', AlbumDownloadHandler),
         ('/album/edit$', AlbumEditHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/init', InitHandler),

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block ueb %}/album/edit?id={{ album.id }}{% endblock %}
 {% block content %}
-<div id="album">
+<div id="album" class="left">
     <div class="header">
         <h2>{{ album.name }}</h2>
         <p class="info"><a title="Перейти на страницу исполнителя" href="/artist/{{ album.artist.id }}">{{ album.artist.name }}</a>{% if album.release_date %}, {{ album.release_date|date:"Y" }}{% endif %}</p>
@@ -32,48 +32,15 @@
             <h3>Обложка</h3>
 			<a href="{{ album.cover_large }}"><img src="{{ album.cover_small }}"/></a>
         </div>{% endif %}
-
-        <div id="attachments">
-            {% if files.other %}<h3>Файлы для скачивания</h3>
-            <table class="classic">
-                <tbody>
-                    {% for file in files.other %}
-                        <tr class="{% cycle odd,even as class %}">
-                            <td>
-                                <a href="/file/serve/{{ file.id }}/{{ file.filename|urlencode }}">{{ file.filename }}</a>
-                            </td>
-                            <td class="size">{{ file.size|filesizeformat}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>{% endif %}
-			{% if upload_url %}
-				<h3>Добавление файла</h3>
-				<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
-					<div>
-						<input type="file" name="file"/>
-					</div>
-					<div>
-						<input type="submit" value="Добавить файл"/>
-					</div>
-				</form>
-			{% endif %}
-        </div><!-- #attachments -->
-
-		<div id="sidebar">
-			{% if album.labels %}<div id="labels" class="labels">
-				<h2>Метки</h2>
-				<ul>{% for label in album.labels %}
-					<li><a href="/tag/{{ label|urlencode }}">{{ label }}</a></li>
-				{% endfor %}</ul>
-			</div>{% endif %}
-			{% if files.other %}<div class="labels">
-				<h3>Файлы</h3>
-				<ul>{% for file in files.other %}
-					<li><a href="/file/serve/{{ file.id }}/{{ file.filename|urlencode }}">{{ file.filename }}</a></li>
-				{% endfor %}</ul>
-			</div>{% endif %}
-		</div><!-- #sidebar -->
-    </div>
+	</div>
 </div>
+
+<div id="sidebar">
+	{% if album.labels %}<div id="labels" class="labels">
+		<h2>Метки</h2>
+		<ul>{% for label in album.labels %}
+			<li><a href="/tag/{{ label|urlencode }}">{{ label }}</a></li>
+		{% endfor %}</ul>
+	</div>{% endif %}
+</div><!-- #sidebar -->
 {% endblock %}

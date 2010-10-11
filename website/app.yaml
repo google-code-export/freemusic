@@ -8,7 +8,7 @@ api_version: 1
 handlers:
 - url: /
   script: handlers.py
-- url: /album/\d+
+- url: /album/\d+(|/download)
   script: handlers.py
 - url: /album/edit
   script: handlers.py

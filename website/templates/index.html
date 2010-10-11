@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="albumlist">
+<div id="albumlist" class="left">
 	{% for album in albums %}<div class="tile">
 		<a href="/album/{{ album.id }}">
 			{% if album.cover_small %}

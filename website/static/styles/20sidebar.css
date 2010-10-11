@@ -37,3 +37,9 @@
 	background-color: #666;
 	border-radius: 4px;
 }
+
+#content > .left {
+	background-color: white;
+	width: 536px;
+	padding: 0;
+}

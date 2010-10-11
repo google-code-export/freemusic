@@ -2,11 +2,6 @@
  * Оформление списка альбомов на главной странице.
  */
 
-#albumlist {
-	background-color: white;
-	width: 536px;
-	padding: 0;
-}
 #albumlist .tile {
 	margin: 2px;
 	width: 130px;

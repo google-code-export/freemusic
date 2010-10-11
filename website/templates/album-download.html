@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="fileList" class="left">
+	<h2>Скачать альбом «<a href="/album/{{ album.id }}">{{ album.name }}</a>»</h2>
+	{% if files.other %}<table class="classic">
+		<tbody>
+			{% for file in files.other %}
+				<tr class="{% cycle odd,even as class %}">
+					<td>
+						<a href="/file/serve/{{ file.id }}/{{ file.filename|urlencode }}">{{ file.filename }}</a>
+					</td>
+					<td class="size">{{ file.size|filesizeformat}}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>{% endif %}
+	{% if upload_url %}
+		<h3>Добавление файла</h3>
+		<form action="{{ upload_url }}" method="post" enctype="multipart/formdata">
+			<div>
+				<input type="file" name="file"/>
+			</div>
+			<div>
+				<input type="submit" value="Добавить файл"/>
+			</div>
+		</form>
+	{% endif %}
+</div>
+{% endblock %}
