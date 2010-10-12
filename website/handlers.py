@@ -358,6 +358,7 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
 
 
 if __name__ == '__main__':
+    webapp.template.register_template_library('filters')
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
         ('/album/(\d+)$', AlbumHandler),

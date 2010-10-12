@@ -6,7 +6,7 @@
 		<img src="{% if album.cover_small %}{{ album.cover_small }}{% else %}/static/default_album_large.png{% endif %}" alt="cover"/>
 		<div>
 			<p class="title">{{ album.name }}</p>
-			<p class="artist">{% if album.artists.1 %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|urlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
+			<p class="artist">{% if album.artists.1 %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|uurlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
 			{% if album.release_date %}<p class="date">Выпущен {{ album.release_date }}</p>{% endif %}
 			{% if album.homepage %}<p class="homepage"><a href="{{ album.homepage }}">Веб-сайт</a></p>{% endif %}
 			<p class="download"><a class="button" href="/album/{{ album.id }}/download"><span>Скачать</span></a>{% if is_admin %}<a class="button" href="/album/{{ album.id }}/upload">Добавить файлы</a>{% endif %}</p>
@@ -26,7 +26,7 @@
 							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
 							{% if compilation %}
 								<td class="artist">{% if track.song_artist %}
-									<a href="/artist/{{ track.song_artist }}">{{ track.song_artist}}</a>
+									<a href="/artist/{{ track.song_artist|uurlencode }}">{{ track.song_artist}}</a>
 								{% endif %}</td>
 							{% endif %}
 							<td class="dl">{% if track.ogg_link %}<a class="ogg" href="{{ track.ogg_link }}">ogg</a>{% endif %}</td>
@@ -46,7 +46,7 @@
 	{% if album.labels %}<div id="labels" class="labels">
 		<h2>Метки</h2>
 		<ul>{% for label in album.labels %}
-			<li><a href="/tag/{{ label|urlencode }}">{{ label }}</a></li>
+			<li><a href="/tag/{{ label|uurlencode }}">{{ label }}</a></li>
 		{% endfor %}</ul>
 	</div>{% endif %}
 </div><!-- #sidebar -->
