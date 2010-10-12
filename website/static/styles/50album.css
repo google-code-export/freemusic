@@ -87,3 +87,10 @@
 #editFiles td:nth-child(6) .text {
 	width: 180px;
 }
+
+
+#sidebar #cover img {
+	width: 210px;
+	margin: 0;
+	border: none;
+}
