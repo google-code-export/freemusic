@@ -19,6 +19,8 @@ handlers:
 - url: /album/submit
   script: handlers.py
   login: admin
+- url: /artist/[^/]+
+  script: handlers.py
 - url: /file/serve/\d+/.+
   script: handlers.py
 - url: /tag/[^/]+

@@ -276,6 +276,15 @@ class IndexHandler(BaseHandler):
         })
 
 
+class ArtistHandler(IndexHandler):
+    """
+    Shows albums by an artist.
+    """
+    def get(self, artist_name):
+        albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', urllib.unquote(artist_name).strip()).fetch(100)
+        self._send_albums(albums)
+
+
 class TagHandler(IndexHandler):
     """
     Shows albums tagged with a certain tag.
@@ -348,6 +357,7 @@ if __name__ == '__main__':
         ('/album/(\d+)/upload$', AlbumUploadHandler),
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
+        ('/artist/([^/]+)$', ArtistHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/tag/([^/]+)$', TagHandler),
         ('/upload', UploadHandler),
