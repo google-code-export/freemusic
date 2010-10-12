@@ -5,7 +5,7 @@
 	<div id="albumMeta">
 		<div>
 			<p class="title">{{ album.name }}</p>
-			<p class="artist">{% if album.artists.1 %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|uurlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
+			<p class="artist">{% if compilation %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|uurlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
 			<p class="date">&copy; {{ year }}{% if album.homepage %} &middot; <a href="{{ album.homepage|escape }}">{{ album.homepage|hostname }}</a>{% endif %}</p>
 			{% if files.other %}<p class="download"><a class="button" href="#"><span>Скачать</span></a>{% if is_admin %}<a href="/album/{{ album.id }}/upload">Добавить файлы</a>{% endif %}</p>{% endif %}
 		</div>
