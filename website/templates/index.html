@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="albumlist" class="left">
+	{% if artist %}
+		<h2>{{ artist }}</h2>
+		<p>{% if albums %}Альбомы с участием этого исполнителя:{% else %}Нет альбомов с участием этого исполнителя.{% endif %}</p>
+	{% endif %}
+	{% if tag %}
+		<h2>Альбомы с меткой «{{ tag }}»</h2>
+	{% endif %}
 	{% for album in albums %}<div class="tile">
 		<a href="/album/{{ album.id }}" title="«{{ album.name|escape }}»{% if album.artists.1 %}{% else %}{% if album.artists.0 %} by {{ album.artists.0|escape }}{% endif %}{% endif %}">
 			{% if album.cover_small %}

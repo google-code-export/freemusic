@@ -267,13 +267,15 @@ class IndexHandler(BaseHandler):
         """
         self._send_albums(model.SiteAlbum.all().order('-release_date').fetch(100))
 
-    def _send_albums(self, albums):
+    def _send_albums(self, albums, attrs=None):
         if not users.is_current_user_admin():
             albums = [a for a in albums if a.cover_small]
-        self.render('index.html', {
+        attrs = attrs or dict()
+        attrs.update({
             'albums': albums,
             'labels': get_all_labels(),
         })
+        self.render('index.html', attrs)
 
 
 class ArtistHandler(IndexHandler):
@@ -281,8 +283,11 @@ class ArtistHandler(IndexHandler):
     Shows albums by an artist.
     """
     def get(self, artist_name):
-        albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', urllib.unquote(artist_name).strip()).fetch(100)
-        self._send_albums(albums)
+        artist_name = urllib.unquote(artist_name).strip()
+        albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
+        self._send_albums(albums, {
+            'artist': artist_name,
+        })
 
 
 class TagHandler(IndexHandler):
@@ -290,8 +295,11 @@ class TagHandler(IndexHandler):
     Shows albums tagged with a certain tag.
     """
     def get(self, tag):
-        albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', urllib.unquote(tag).strip()).fetch(100)
-        self._send_albums(albums)
+        tag = urllib.unquote(tag).strip()
+        albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
+        self._send_albums(albums, {
+            'tag': tag,
+        })
 
 
 class UploadHandler(BaseHandler):
