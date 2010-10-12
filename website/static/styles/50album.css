@@ -1,14 +1,5 @@
 #albumMeta {
-	margin-bottom: 1em;
-}
-#albumMeta img {
-	width: 150px;
-	height: 150px;
-	float: left;
-}
-#albumMeta div {
-	margin-left: 160px;
-	height: 150px;
+	margin-bottom: 2em;
 }
 #albumMeta div p {
 	margin: .5em 0;
