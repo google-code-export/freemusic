@@ -5,7 +5,7 @@
 	<div id="albumMeta">
 		<div>
 			<p class="title">{{ album.name }}</p>
-			<p class="artist">{% if compilation %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|uurlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
+			<p class="artist">{% if compilation %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ artist|uurlencode }}">{{ artist }}</a>{% endif %}</p>
 			<p class="date">&copy; {{ year }}{% if album.homepage %} &middot; <a href="{{ album.homepage|escape }}">{{ album.homepage|hostname }}</a>{% endif %}</p>
 			{% if files.other %}<p class="download"><a class="button" href="#"><span>Скачать</span></a>{% if is_admin %}<a href="/album/{{ album.id }}/upload">Добавить файлы</a>{% endif %}</p>{% endif %}
 		</div>
@@ -39,7 +39,7 @@
 					{% for track in files.tracks %}
 						<tr>
 							<td class="n">{{ forloop.counter }}.</td>
-							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a>{% if track.remixer %}<br/>&nbsp;- remix by <a href="/artist/{{ track.remixer|uurlencode }}">{{ track.remixer }}</a>{% endif %}</td>
+							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a>{% if remixers %}<br/>&nbsp;&nbsp;&nbsp;&nbsp;{% endif %}{% if track.remixer %}- remix by <a href="/artist/{{ track.remixer|uurlencode }}">{{ track.remixer }}</a>{% endif %}</td>
 							{% if compilation %}
 								<td class="artist">{% if track.song_artist %}
 									<a href="/artist/{{ track.song_artist|uurlencode }}">{{ track.song_artist}}</a>

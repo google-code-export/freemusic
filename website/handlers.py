@@ -106,11 +106,15 @@ class BaseHandler(webapp.RequestHandler):
 class AlbumHandler(BaseHandler):
     def get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
+        files = self._get_files(album)
+        artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
         self.render('album.html', {
             'album': album,
+            'artist': artist,
             'year': album.release_date.strftime('%Y'),
-            'files': self._get_files(album),
+            'files': files,
             'compilation': 'compilation' in album.labels,
+            'remixers': len([f for f in files['tracks'] if f['remixer']]),
             'upload_url': self._get_upload_url(album, '/album/' + album_id),
         })
 
