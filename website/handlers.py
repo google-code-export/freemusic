@@ -13,6 +13,7 @@ import wsgiref.handlers
 # GAE imports.
 from google.appengine.api import images
 from google.appengine.api import users
+from google.appengine.api import mail
 from google.appengine.api import memcache
 from google.appengine.ext import blobstore
 from google.appengine.ext import webapp
@@ -88,6 +89,7 @@ class BaseHandler(webapp.RequestHandler):
         vars['login_uri'] = users.create_login_url(self.request.uri)
         vars['is_admin'] = users.is_current_user_admin()
         vars['class_name'] = self.__class__.__name__
+        vars['user'] = users.get_current_user()
         directory = os.path.dirname(__file__)
         path = os.path.join(directory, 'templates', template_name)
         result = template.render(path, vars)
@@ -111,6 +113,33 @@ class AlbumHandler(BaseHandler):
             'compilation': 'compilation' in album.labels or len(album.artists) > 1,
             'upload_url': self._get_upload_url(album, '/album/' + album_id),
         })
+
+    def post(self, album_id):
+        """
+        Processes download requests.  Sends the user an email with the links.
+        For each link there is a unique download ticket created.
+        """
+        links = []
+        email = self.request.get('email')
+        if not email:
+            raise Exception('Not a valid email.')
+        album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
+        if album is None:
+            raise Exception(u'Нет такого альбома.')
+        for file_id in self.request.get_all('id'):
+            file = model.File.gql('WHERE id = :1', int(file_id)).get()
+            if file is not None:
+                ticket = model.DownloadTicket(email=email, album_id=int(album_id), file_id=int(file_id), used=False)
+                ticket.put()
+                links.append(self.getBaseURL() + 'download/' + str(ticket.key()) + '/' + file.filename.encode('utf-8'))
+        if not links:
+            raise Exception('No file selected.')
+        data = {'email': email, 'links': links, 'album': album}
+        html = self.render('download.html', data, ret=True)
+        text = self.render('download.txt', data, ret=True)
+        subject = u'Ссылки для скачивания альбома «%s»' % album.name
+        mail.send_mail(sender=config.MAIL_FROM, to=email, bcc=config.MAIL_FROM, subject=subject, body=text, html=html)
+        self.send_text(u'Ссылки отправлены на указанный почтовый адрес.')
 
     def _get_upload_url(self, album, back=None):
         after = '/upload/callback?album=' + str(album.id)
@@ -249,6 +278,26 @@ class AlbumUploadHandler(BaseHandler):
         })
 
 
+class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    def get(self, ticket_key, filename):
+        ticket = model.DownloadTicket.get_by_key(ticket_key)
+        if ticket is None:
+            raise Exception('No such ticket.')
+        file = model.File.gql('WHERE id = :1', ticket.file_id).get()
+        if file is None:
+            raise Exception('File does not exist.')
+        if file.filename != filename:
+            raise Exception('File does not exist.')
+        now = datetime.datetime.now()
+        if ticket.activated is None:
+            ticket.activated = now
+            ticket.put()
+        elif (now - ticket.activated).seconds > 6:
+            raise Exception('This link is too old, please request a new one at http://www.freemusichub.net/album/%s' % (ticket.album_id))
+        blob = blobstore.BlobInfo.get(file.file_key)
+        self.send_blob(blob)
+
+
 class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
     def get(self, file_id):
         file = model.File.gql('WHERE id = :1', int(file_id)).get()
@@ -368,6 +417,7 @@ if __name__ == '__main__':
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
         ('/artist/([^/]+)$', ArtistHandler),
+        ('/download/([^/]+)/([^/]+)$', DownloadHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/tag/([^/]+)$', TagHandler),
         ('/upload', UploadHandler),

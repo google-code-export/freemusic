@@ -227,3 +227,15 @@ class File(CustomModel):
 		if not self.content_type:
 			self.content_type = 'application/octet-stream'
 		return CustomModel.put(self)
+
+
+class DownloadTicket(CustomModel):
+	created = db.DateTimeProperty(auto_now_add=True)
+	activated = db.DateTimeProperty() # first access, used to block after 10 minutes
+	email = db.EmailProperty()
+	album_id = db.IntegerProperty()
+	file_id = db.IntegerProperty()
+
+	@classmethod
+	def get_by_key(cls, key):
+		return db.get(db.Key(key))

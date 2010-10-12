@@ -7,8 +7,26 @@
 			<p class="title">{{ album.name }}</p>
 			<p class="artist">{% if album.artists.1 %}<a href="/tag/compilation">Сборник</a>{% else %}<a href="/artist/{{ album.artists.0|uurlencode }}">{{ album.artists.0 }}</a>{% endif %}</p>
 			<p class="date">&copy; {{ year }}{% if album.homepage %} &middot; <a href="{{ album.homepage|escape }}">{{ album.homepage|hostname }}</a>{% endif %}</p>
-			<p class="download"><a class="button" href="/album/{{ album.id }}/download"><span>Скачать</span></a>{% if is_admin %}<a class="button" href="/album/{{ album.id }}/upload">Добавить файлы</a>{% endif %}</p>
+			{% if files.other %}<p class="download"><a class="button" href="#"><span>Скачать</span></a>{% if is_admin %}<a href="/album/{{ album.id }}/upload">Добавить файлы</a>{% endif %}</p>{% endif %}
 		</div>
+		{% if files.other %}<div id="downloads" class="hidden">
+			<h3>Выберите интересующие файлы</h3>
+			<form method="post">
+				<input type="hidden" name="mode" value="download"/>
+				<table class="classic">
+					<tbody>
+						{% for file in files.other %}
+							<tr class="{% cycle odd,even as class %}">
+								<td class="check"><input checked="checked" id="file-check-{{ file.id }}" type="checkbox" name="id" value="{{ file.id }}"/></td>
+								<td class="name"><label for="file-check-{{ file.id }}">{{ file.filename }}</label></td>
+								<td class="size"><label for="file-check-{{ file.id }}">{{ file.size|filesizeformat}}</label></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				<label>Ваш email: <input type="text" class="text" name="email"{% if user %} value="{{ user.email }}"{% endif %}/></label> <input type="submit" value="Получить ссылки"/>
+			</form>
+		</div>{% endif %}
 	</div>
 
 	<div id="tracklist">
