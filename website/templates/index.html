@@ -2,7 +2,7 @@
 {% block content %}
 <div id="albumlist" class="left">
 	{% for album in albums %}<div class="tile">
-		<a href="/album/{{ album.id }}" title="«{{ album.name }}»{% if album.artists.1 %}{% else %}{% if album.artists.0 %} by {{ album.artists.0 }}{% endif %}{% endif %}">
+		<a href="/album/{{ album.id }}" title="«{{ album.name|escape }}»{% if album.artists.1 %}{% else %}{% if album.artists.0 %} by {{ album.artists.0|escape }}{% endif %}{% endif %}">
 			{% if album.cover_small %}
 				<img alt="cover" src="{{ album.cover_small }}"/>
 			{% else %}

@@ -4,7 +4,7 @@
 		<input type="hidden" name="id" value="{{ album.id }}"/>
 		<div>
 			<label>Название:</label>
-			<input type="text" name="name" value="{{ album.name }}" class="text"/>
+			<input type="text" name="name" value="{{ album.name|escape }}" class="text"/>
 		</div>
 		<div>
 			<label>Дата выхода:</label>
@@ -12,7 +12,7 @@
 		</div>
 		<div>
 			<label>Адрес сайта:</label>
-			<input type="text" name="homepage"{% if album.homepage %} value="{{ album.homepage }}"{% endif %} class="text"/>
+			<input type="text" name="homepage"{% if album.homepage %} value="{{ album.homepage|escape }}"{% endif %} class="text"/>
 		</div>
 		<div>
 			<label>Обложка:</label>
@@ -25,11 +25,11 @@
 		</div>
 		<div>
 			<label>Метки:</label>
-			<input type="text" name="labels" value="{% if album.labels %}{% for label in album.labels %}{{ label }}, {% endfor %}{% endif %}" class="text"/>
+			<input type="text" name="labels" value="{% if album.labels %}{% for label in album.labels %}{{ label|escape }}, {% endfor %}{% endif %}" class="text"/>
 		</div>
 		<div>
 			<label>Владелец:</label>
-			<input type="text" name="owner" value="{{ album.owner }}" class="text"/>
+			<input type="text" name="owner" value="{{ album.owner.email|escape }}" class="text"/>
 		</div>
 		{% if files %}<table id="editFiles">
 			<caption>Прикреплённые файлы</caption>
@@ -48,7 +48,7 @@
 						<input type="text" class="text" name="file.{{ file.id }}.weight" value="{{ file.weight }}"/>
 					</td>
 					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.filename" value="{{ file.filename }}"/>
+						<input type="text" class="text" name="file.{{ file.id }}.filename" value="{{ file.filename|escape }}"/>
 					</td>
 					<td>
 						<input type="text" class="text" name="file.{{ file.id }}.content_type" value="{{ file.content_type }}"/>
@@ -63,10 +63,10 @@
 				<tr>
 					<td/>
 					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.song_title" value="{% if file.song_title %}{{ file.song_title }}{% endif %}"/>
+						<input type="text" class="text" name="file.{{ file.id }}.song_title" value="{% if file.song_title %}{{ file.song_title|escape }}{% endif %}"/>
 					</td>
 					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.song_artist" value="{% if file.song_artist %}{{ file.song_artist }}{% endif %}"/>
+						<input type="text" class="text" name="file.{{ file.id }}.song_artist" value="{% if file.song_artist %}{{ file.song_artist|escape }}{% endif %}"/>
 					</td>
 					<td>
 						<input type="text" class="text r" name="file.{{ file.id }}.duration" value="{% if file.duration %}{{ file.duration }}{% endif %}"/>
