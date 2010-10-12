@@ -110,7 +110,7 @@ class AlbumHandler(BaseHandler):
             'album': album,
             'year': album.release_date.strftime('%Y'),
             'files': self._get_files(album),
-            'compilation': 'compilation' in album.labels or len(album.artists) > 1,
+            'compilation': 'compilation' in album.labels,
             'upload_url': self._get_upload_url(album, '/album/' + album_id),
         })
 
