@@ -107,7 +107,7 @@ class AlbumHandler(BaseHandler):
         self.render('album.html', {
             'album': album,
             'files': self._get_files(album),
-            'compilation': 'compilation' in album.labels,
+            'compilation': 'compilation' in album.labels or len(album.artists) > 1,
             'upload_url': self._get_upload_url(album, '/album/' + album_id),
         })
 
