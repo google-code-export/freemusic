@@ -153,36 +153,38 @@ class AlbumHandler(BaseHandler):
         Returns a dictionary with all album files.  Keys: images, tracks,
         other, all lists.  Tracks are dictionaries, other are models.
         """
-        result = {
-            'images': [],
-            'tracks': [],
-            'other': [],
-        }
         files = [f for f in model.File.gql('WHERE album = :1 ORDER BY weight', album).fetch(100) if f.published]
-        for file in files:
-            if file.image_url:
-                result['images'].append(file)
-            elif file.content_type and file.content_type.startswith('audio/'):
-                if file.content_type == 'audio/mp3':
-                    track = {
-                        'id': file.id,
-                        'content_type': file.content_type,
-                        'song_title': file.song_title or file.filename,
-                        'song_artist': file.song_artist,
-                        'duration': None,
-                        'mp3_link': '/file/serve/%s/%s' % (file.id, file.filename),
-                        'ogg_link': None,
-                    }
-                    if file.duration:
-                        track['duration'] = '%u:%u' % (file.duration / 60, file.duration % 60)
-                    ogg_name = os.path.splitext(file.filename)[0] + '.ogg'
-                    for file in files:
-                        if file.filename == ogg_name:
-                            track['ogg_link'] = '/file/serve/%s/%s' % (file.id, file.filename)
-                    result['tracks'].append(track)
-            else:
-                result['other'].append(file)
+        result = {
+            'images': self.__get_images(files),
+            'tracks': self.__get_tracks(files),
+            'other': self.__get_other(files),
+        }
         return result
+
+    def __get_images(self, files):
+        return [f for f in files if f.image_url]
+
+    def __get_tracks(self, files):
+        tracks = dict()
+        for file in files:
+            if file.content_type.startswith('audio/'):
+                key = os.path.splitext(file.filename)[0]
+                if not tracks.has_key(key):
+                    tracks[key] = {'id': file.id, 'weight': file.weight}
+                tracks[key].update({
+                    'song_title': file.song_title,
+                    'song_artist': file.song_artist,
+                    'duration': file.duration,
+                })
+                uri = '/file/serve/%s/%s' % (file.id, file.filename)
+                if file.content_type == 'audio/mp3':
+                    tracks[key]['mp3_link'] = uri
+                elif file.content_type == 'audio/ogg':
+                    tracks[key]['ogg_link'] = uri
+        return sorted(tracks.values(), cmp=lambda a, b: int(a['weight'] - b['weight']))
+
+    def __get_other(self, files):
+        return [f for f in files if not f.image_url and not f.content_type.startswith('audio/')]
 
 
 class AlbumDownloadHandler(AlbumHandler):
@@ -241,7 +243,7 @@ class AlbumEditHandler(AlbumHandler):
             for key in converters.keys():
                 fieldname = '%s.%s.%s' % (prefix, file.id, key)
                 value = self.request.get(fieldname, None)
-                logging.info('%s = %s' % (fieldname, value))
+                logging.debug('%s = %s' % (fieldname, value))
                 if value is None:
                     pass
                 elif not value:
