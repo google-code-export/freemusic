@@ -75,7 +75,7 @@
 				<tr>
 					<td colspan="2"/>
 					<td>
-						<input type="text" class="text" name="file.{{ file.id }}.remixer" value=""/>
+						<input type="text" class="text" name="file.{{ file.id }}.remixer"{% if file.remixer %} value="{{ file.remixer }}"{% endif %}/>
 					</td>
 					<td colspan="2"/>
 				</tr>
