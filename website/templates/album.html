@@ -39,7 +39,7 @@
 					{% for track in files.tracks %}
 						<tr>
 							<td class="n">{{ forloop.counter }}.</td>
-							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a></td>
+							<td class="l"><a href="/track/{{ track.id }}">{{ track.song_title }}</a>{% if track.remixer %}<br/>&nbsp;- remix by <a href="/artist/{{ track.remixer|uurlencode }}">{{ track.remixer }}</a>{% endif %}</td>
 							{% if compilation %}
 								<td class="artist">{% if track.song_artist %}
 									<a href="/artist/{{ track.song_artist|uurlencode }}">{{ track.song_artist}}</a>

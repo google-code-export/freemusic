@@ -174,6 +174,7 @@ class AlbumHandler(BaseHandler):
                 tracks[key].update({
                     'song_title': file.song_title,
                     'song_artist': file.song_artist,
+                    'remixer': file.remixer,
                     'duration': file.duration,
                 })
                 uri = '/file/serve/%s/%s' % (file.id, file.filename)
@@ -230,13 +231,22 @@ class AlbumEditHandler(AlbumHandler):
         album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
-        self.__update_files(files, 'file', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int, 'filename': unicode, 'content_type': str, 'published': bool })
+        self.__update_files(files, 'file', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int, 'filename': unicode, 'content_type': str, 'published': bool, 'remixer': unicode })
 
         # Find artists.
-        album.artists = list(set([f.song_artist.strip() for f in files if f.song_artist]))
+        album.artists = self.__get_artists(album, files)
 
         album.put()
         self.redirect('/album/' + str(album.id))
+
+    def __get_artists(self, album, files):
+        artists = []
+        for f in files:
+            if f.song_artist:
+                artists.append(f.song_artist.strip())
+            if f.remixer:
+                artists.append(f.remixer.strip())
+        return list(set(artists))
 
     def __update_files(self, files, prefix, converters):
         for file in files:

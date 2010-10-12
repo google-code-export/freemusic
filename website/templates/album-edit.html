@@ -72,6 +72,13 @@
 						<input type="text" class="text r" name="file.{{ file.id }}.duration" value="{% if file.duration %}{{ file.duration }}{% endif %}"/>
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2"/>
+					<td>
+						<input type="text" class="text" name="file.{{ file.id }}.remixer" value=""/>
+					</td>
+					<td colspan="2"/>
+				</tr>
 			{% endfor %}</tbody>
 		</table>{% endif %}
 		<div>

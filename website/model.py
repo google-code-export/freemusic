@@ -219,6 +219,7 @@ class File(CustomModel):
 	weight = db.IntegerProperty() # used for sorting
 	song_artist = db.StringProperty()
 	song_title = db.StringProperty()
+	remixer = db.StringProperty()
 
 	def put(self):
 		if not self.id:

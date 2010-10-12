@@ -36,6 +36,7 @@
 }
 #tracklist td {
 	padding: 2px 4px;
+	vertical-align: top;
 }
 #tracklist .n {
 	text-align: right;
