@@ -265,13 +265,24 @@ class IndexHandler(BaseHandler):
         """
         Shows self.count recent albums.
         """
-        albums = model.SiteAlbum.all().order('-release_date').fetch(100)
+        self._send_albums(model.SiteAlbum.all().order('-release_date').fetch(100))
+
+    def _send_albums(self, albums):
         if not users.is_current_user_admin():
             albums = [a for a in albums if a.cover_small]
         self.render('index.html', {
             'albums': albums,
             'labels': get_all_labels(),
         })
+
+
+class TagHandler(IndexHandler):
+    """
+    Shows albums tagged with a certain tag.
+    """
+    def get(self, tag):
+        albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', urllib.unquote(tag).strip()).fetch(100)
+        self._send_albums(albums)
 
 
 class UploadHandler(BaseHandler):
@@ -338,6 +349,7 @@ if __name__ == '__main__':
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
+        ('/tag/([^/]+)$', TagHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),
     ], debug=config.DEBUG))

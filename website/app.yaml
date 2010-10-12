@@ -21,6 +21,8 @@ handlers:
   login: admin
 - url: /file/serve/\d+/.+
   script: handlers.py
+- url: /tag/[^/]+
+  script: handlers.py
 - url: /upload($|/callback$|/serve$)
   script: handlers.py
   login: admin
