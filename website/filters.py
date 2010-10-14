@@ -2,6 +2,7 @@
 
 # Python imports.
 import urllib
+import logging
 
 # GAE imports.
 from google.appengine.ext import webapp
@@ -12,7 +13,13 @@ register = webapp.template.create_template_register()
 def uurlencode(value):
     if type(value) == unicode:
         value = value.encode('utf-8')
-    return urllib.quote(value)
+    try:
+        if type(value) != str:
+            raise Exception('got \"%s\" instead of a string.' % value.__class__.__name__)
+        return urllib.quote(value)
+    except Exception, e:
+        logging.error('Error in the uurlencode filter: %s' % e)
+        return ''
 
 @register.filter
 def hostname(value):
