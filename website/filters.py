@@ -27,3 +27,10 @@ def hostname(value):
     if host.startswith('www.'):
         host = host[4:]
     return host
+
+
+@register.filter
+def nonestr(value):
+    if value is None:
+        return ''
+    return value

@@ -1,9 +1,16 @@
 {% extends "base.html" %}
+{% block ueb %}{% if artist %}/artist/{{ artist.name|uurlencode }}/edit{% endif %}{% endblock %}
 {% block content %}
 <div id="albumlist" class="left">
 	{% if artist %}
-		<h2>{{ artist }}</h2>
-		<p>{% if albums %}Альбомы с участием этого исполнителя:{% else %}Нет альбомов с участием этого исполнителя.{% endif %}</p>
+		<h2>{{ artist.name }}</h2>
+		<div class="links">
+			{% if artist.lastfm_name %}<a class="lastfm" href="http://www.last.fm/user/{{ artist.lastfm_name|uurlencode }}"><img src="/static/last.fm.png" alt="Last.fm"/></a>{% endif %}
+			{% if artist.twitter %}<a href="http://twitter.com/{{ artist.twitter|uurlencode }}"><img src="/static/twitter.png" alt="Twitter.png"/></a>{% endif %}
+			{% if artist.homepage %}<a href="{{ artist.homepage|escape }}"><img src="/static/homepage.png" alt="Home Page"/></a>{% endif %}
+			{% if artist.vk %}<a href="{{ artist.vk|escape }}"><img src="/static/vkontakte.png" alt="ВКонтакте"/></a>{% endif %}
+		</div>
+		{% if albums %}<h3>Альбомы с участием этого исполнителя</h3>{% else %}<p>Нет альбомов с участием этого исполнителя.</p>{% endif %}
 	{% endif %}
 	{% if tag %}
 		<h2>Альбомы с меткой «{{ tag }}»</h2>

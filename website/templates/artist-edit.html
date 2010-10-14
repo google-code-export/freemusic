@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="editArtist">
+		<h2>Редактирование исполнителя: {{ artist.name }}</h2>
+		<form method="post">
+			<div>
+				<label>Имя в Last.fm:</label>
+				<input type="text" name="lastfm_name" class="text" value="{{ artist.lastfm_name|nonestr|escape }}"/>
+			</div>
+			<div>
+				<label>Имя в Twitter:</label>
+				<input type="text" name="twitter" class="text" value="{{ artist.twitter|nonestr|escape }}"/>
+			</div>
+			<div>
+				<label>Адрес сайта:</label>
+				<input type="text" name="homepage" class="text" value="{{ artist.homepage|nonestr|escape }}"/>
+			</div>
+			<div>
+				<label>Адрес страницы ВКонтакте:</label>
+				<input type="text" name="vk" class="text" value="{{ artist.vk|nonestr|escape }}"/>
+			</div>
+			<div>
+				<input type="submit" value="Сохранить"/>
+			</div>
+		</form>
+	</div>
+{% endblock %}

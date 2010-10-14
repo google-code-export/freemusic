@@ -251,3 +251,5 @@ class Artist(CustomModel):
     twitter = db.StringProperty()
     # Адрес основного сайта.
     homepage = db.LinkProperty()
+    # Адрес страницы в контакте
+    vk = db.LinkProperty()

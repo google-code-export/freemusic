@@ -21,19 +21,6 @@ handlers:
 - url: /doc/
   static_dir: doc
 
-- url: /(albums\.rss|album/.*)
-  script: album.py
-- url: /labels(/cache)?
-  script: labels.py
-- url: /player
-  script: player.py
-- url: /radio(/.*)?
-  script: radio.py
-- url: /(users|u/[^/]+)
-  script: users.py
-- url: /edit
-  script: edit.py
-
 - url: /album/edit
   script: handlers.py
   login: admin

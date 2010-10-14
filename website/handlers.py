@@ -350,10 +350,35 @@ class ArtistHandler(IndexHandler):
     """
     def get(self, artist_name):
         artist_name = urllib.unquote(artist_name).strip().decode('utf-8')
+        artist = model.Artist.gql('WHERE name = :1', artist_name).get()
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
         self._send_albums(albums, {
-            'artist': artist_name,
+            'artist': artist,
         })
+
+
+class EditArtistHandler(BaseHandler):
+    def get(self, name):
+        artist = self.__get_artist(name)
+        self.render('artist-edit.html', {
+            'artist': artist,
+        })
+
+    def post(self, name):
+        artist = self.__get_artist(name)
+        for k in ('lastfm_name', 'twitter', 'homepage', 'vk'):
+            v = self.request.get(k)
+            logging.info('%s = %s' % (k, v))
+            setattr(artist, k, v or None)
+        artist.put()
+        self.redirect('/artist/' + name)
+
+    def __get_artist(self, quoted_name):
+        name = urllib.unquote(quoted_name).strip().decode('utf-8')
+        artist = model.Artist.gql('WHERE name = :1', name).get()
+        if artist is None:
+            artist = model.Artist(name=name)
+        return artist
 
 
 class ArtistsHandler(BaseHandler):
@@ -486,6 +511,7 @@ if __name__ == '__main__':
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
         ('/artist/([^/]+)$', ArtistHandler),
+        ('/artist/([^/]+)/edit$', EditArtistHandler),
         ('/artists', ArtistsHandler),
         ('/download/([^/]+)/([^/]+)$', DownloadHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
