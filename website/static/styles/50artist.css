@@ -40,14 +40,17 @@
 #artists li {
 	display: inline-block;
 	margin: 0 .5em;
-	font-size: 7pt;
-}
-#artists li.w2 {
 	font-size: 9pt;
 }
-#artists li.w3 {
+#artists li.w2 {
 	font-size: 11pt;
 }
-#artists li.w4 {
+#artists li.w3 {
 	font-size: 13pt;
+}
+#artists li.w4 {
+	font-size: 15pt;
+}
+#artists li a {
+	white-space: nowrap;
 }
