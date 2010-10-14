@@ -349,7 +349,7 @@ class ArtistHandler(IndexHandler):
     Shows albums by an artist.
     """
     def get(self, artist_name):
-        artist_name = urllib.unquote(artist_name).strip()
+        artist_name = urllib.unquote(artist_name).strip().decode('utf-8')
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
         self._send_albums(albums, {
             'artist': artist_name,
@@ -361,7 +361,7 @@ class TagHandler(IndexHandler):
     Shows albums tagged with a certain tag.
     """
     def get(self, tag):
-        tag = urllib.unquote(tag).strip()
+        tag = urllib.unquote(tag).strip().decode('utf-8')
         albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
         self._send_albums(albums, {
             'tag': tag,
