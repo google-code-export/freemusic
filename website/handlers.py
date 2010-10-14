@@ -383,6 +383,32 @@ class ArtistsHandler(BaseHandler):
         })
 
 
+class RobotsHandler(BaseHandler):
+    """
+    Returns a robots.txt file which lists the sitemap.
+    """
+    def get(self):
+        content = "Sitemap: %ssitemap.xml\n" % self.getBaseURL()
+        content += "User-agent: *\n"
+        content += "Disallow: /static/\n"
+        self.send_text(content)
+
+
+class SiteMapHandler(BaseHandler):
+    """
+    Returns a sitemap with links to all interesting pages.
+    """
+    def get(self):
+        content = '<?xml version="1.0" encoding="utf-8"?>\n'
+        content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        base = self.getBaseURL()
+        for album in model.SiteAlbum.all().order('-id').fetch(1000):
+            content += "<url><loc>%salbum/%u</loc></url>\n" % (base, album.id)
+        content += "</urlset>"
+        self.response.headers['Content-Type'] = 'text/xml'
+        self.response.out.write(content)
+
+
 class TagHandler(IndexHandler):
     """
     Shows albums tagged with a certain tag.
@@ -463,6 +489,8 @@ if __name__ == '__main__':
         ('/artists', ArtistsHandler),
         ('/download/([^/]+)/([^/]+)$', DownloadHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
+        ('/robots.txt$', RobotsHandler),
+        ('/sitemap.xml$', SiteMapHandler),
         ('/tag/([^/]+)$', TagHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),

@@ -9,7 +9,6 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
 from base import BaseRequestHandler, run
-from s3 import S3SettingsHandler, S3UploadHandler
 import api
 import chart
 import clips
@@ -17,7 +16,6 @@ import events
 import index
 import model
 import reviews
-import sitemap
 import settings
 import tracks
 import upload
@@ -75,12 +73,8 @@ if __name__ == '__main__':
 		('/events/update', events.Update),
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
-		('/robots.txt', sitemap.RobotsHandler),
 		('/settings', settings.SettingsPage),
-		('/settings/s3', S3SettingsHandler),
-		('/sitemap.xml', sitemap.SitemapHandler),
 		('/submit', SubmitHandler),
 		('/track/(\d+)$', tracks.Viewer),
 		('/tracks\.rss', tracks.RSSHandler),
-		('/upload', S3UploadHandler),
 	])
