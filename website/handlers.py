@@ -29,7 +29,7 @@ class BreakRequestHandlingException(Exception): pass
 
 def get_labels_from_albums(albums):
     labels = []
-    for album in model.SiteAlbum.all().fetch(1000):
+    for album in albums:
         for label in album.labels:
             if label not in labels:
                 labels.append(label)
@@ -492,7 +492,6 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
         """
         Handles the callback.
         """
-        self._check_admin('Only admins can upload files.')
         if self.request.get('album'):
             album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
         else:
