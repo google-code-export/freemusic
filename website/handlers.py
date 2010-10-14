@@ -47,6 +47,10 @@ def get_all_labels():
 
 
 class BaseHandler(webapp.RequestHandler):
+    requireLogin = False
+    requireAdmin = False
+    cache = True
+
     def getHost(self):
         url = urlparse.urlparse(self.request.url)
         return url[1]
@@ -111,6 +115,30 @@ class BaseHandler(webapp.RequestHandler):
         if type(e) != BreakRequestHandlingException:
             webapp.RequestHandler.handle_exception(self, e, debug_mode)
 
+    def get(self, *args):
+        """
+        Adds transparent caching to GET request handlers.  Real work is done by
+        the _real_get() method.  Uses the URL as the cache key.  Cache hits and
+        misses are logged to the DEBUG facility.
+        """
+        if not hasattr(self, '_real_get'):
+            logging.error('Class %s does not define the _real_get() method, sending 501.' % self.__class__.__name__)
+            self.error(501)
+        else:
+            cached = memcache.get(self.request.uri)
+            if not self.cache or type(cached) != tuple:
+                if not self.cache:
+                    logging.debug('Cache MISS (disabled) for %s' % self.request.uri)
+                else:
+                    logging.debug('Cache MISS for %s' % self.request.uri)
+                self._real_get(*args)
+                cached = (self.response.headers, self.response.out, )
+                memcache.set(self.request.uri, cached)
+            else:
+                logging.debug('Cache HIT for %s' % self.request.uri)
+            self.response.headers = cached[0]
+            self.response.out = cached[1]
+
     def _check_admin(self, message):
         if users.is_current_user_admin():
             return True
@@ -121,7 +149,7 @@ class BaseHandler(webapp.RequestHandler):
 
 
 class AlbumHandler(BaseHandler):
-    def get(self, album_id):
+    def _real_get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
         files = self._get_files(album)
         artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
@@ -214,7 +242,7 @@ class AlbumDownloadHandler(AlbumHandler):
     """
     Shows files that can be downloaded.
     """
-    def get(self, album_id):
+    def _real_get(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
         self.render('album-download.html', {
             'album': album,
@@ -350,7 +378,7 @@ class IndexHandler(BaseHandler):
     """
     count = 100
 
-    def get(self):
+    def _real_get(self):
         """
         Shows self.count recent albums.
         """
@@ -372,7 +400,7 @@ class ArtistHandler(IndexHandler):
     """
     Shows albums by an artist.
     """
-    def get(self, artist_name):
+    def _real_get(self, artist_name):
         artist_name = urllib.unquote(artist_name).strip().decode('utf-8')
         artist = model.Artist.gql('WHERE name = :1', artist_name).get()
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
@@ -411,7 +439,7 @@ class ArtistsHandler(BaseHandler):
     """
     Displays the list of all artists.
     """
-    def get(self):
+    def _real_get(self):
         total_count = 0.0
         stats = dict()
         # calculate counts
@@ -449,7 +477,7 @@ class SiteMapHandler(BaseHandler):
     """
     Returns a sitemap with links to all interesting pages.
     """
-    def get(self):
+    def _real_get(self):
         content = '<?xml version="1.0" encoding="utf-8"?>\n'
         content += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         base = self.getBaseURL()
@@ -464,7 +492,7 @@ class TagHandler(IndexHandler):
     """
     Shows albums tagged with a certain tag.
     """
-    def get(self, tag):
+    def _real_get(self, tag):
         tag = urllib.unquote(tag).strip().decode('utf-8')
         albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
         self._send_albums(albums, {
@@ -530,6 +558,8 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
 
 
 if __name__ == '__main__':
+    if config.DEBUG:
+        logging.getLogger().setLevel(logging.DEBUG)
     webapp.template.register_template_library('filters')
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         ('/', IndexHandler),
