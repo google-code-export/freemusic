@@ -27,18 +27,21 @@ import model
 
 class BreakRequestHandlingException(Exception): pass
 
+def get_labels_from_albums(albums):
+    labels = []
+    for album in model.SiteAlbum.all().fetch(1000):
+        for label in album.labels:
+            if label not in labels:
+                labels.append(label)
+    return sorted(labels)
+
 def get_all_labels():
     """
     Returns a list of all labels.  Uses memcache.
     """
     labels = memcache.get('all-labels')
     if not labels or type(labels) != list:
-        labels = []
-        for album in model.SiteAlbum.all().fetch(1000):
-            for label in album.labels:
-                if label not in labels:
-                    labels.append(label)
-        labels = sorted(labels)
+        labels = get_labels_from_albums(model.SiteAlbum.all().fetch(1000))
         memcache.set('all-labels', labels)
     return labels
 
@@ -358,8 +361,9 @@ class IndexHandler(BaseHandler):
         attrs = attrs or dict()
         attrs.update({
             'albums': albums,
-            'labels': get_all_labels(),
         })
+        if not attrs.has_key('labels'):
+            attrs['labels'] = get_all_labels()
         self.render('index.html', attrs)
 
 
@@ -374,6 +378,7 @@ class ArtistHandler(IndexHandler):
         self._send_albums(albums, {
             'artist': artist,
             'artist_name': artist_name,
+            'labels': get_labels_from_albums(albums),
         })
 
 
