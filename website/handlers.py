@@ -159,6 +159,9 @@ class BaseHandler(webapp.RequestHandler):
         self.redirect(users.create_login_url(self.requrest.uri))
         return False
 
+    def _reset_cache(self, uri):
+        memcache.delete(self.getBaseURL() + uri)
+
 
 class AlbumHandler(BaseHandler):
     def _real_get(self, album_id):
@@ -300,6 +303,13 @@ class AlbumEditHandler(AlbumHandler):
         # Find artists.
         album.artists = self.__get_artists(album, files)
 
+        # Reset cache.
+        self._reset_cache('album/' + str(album.id))
+        for label in album.labels:
+            self._reset_cache('tag/' + urllib.quote(label.encode('utf-8')))
+        for artist in album.artists:
+            self._reset_cache('artist/' + urllib.quote(artist.encode('utf-8')))
+
         album.put()
         self.redirect('/album/' + str(album.id))
 
@@ -437,6 +447,10 @@ class EditArtistHandler(BaseHandler):
             logging.info('%s = %s' % (k, v))
             setattr(artist, k, v or None)
         artist.put()
+
+        # Reset cache.
+        self._reset_cache('artist/' + name)
+
         self.redirect('/artist/' + name)
 
     def __get_artist(self, quoted_name):
