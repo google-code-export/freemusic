@@ -469,6 +469,7 @@ class TagHandler(IndexHandler):
         albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
         self._send_albums(albums, {
             'tag': tag,
+            'labels': get_labels_from_albums(albums),
         })
 
 
