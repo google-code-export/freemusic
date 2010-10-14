@@ -1,6 +1,7 @@
 all: rebuild
 
 upload: all
+	hg push
 	gae-upload
 
 clean:
