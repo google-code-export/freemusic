@@ -9,9 +9,7 @@ from google.appengine.ext.webapp.util import login_required
 
 # Site imports.
 from base import BaseRequestHandler, run
-import api
 import chart
-import clips
 import events
 import index
 import model
@@ -60,14 +58,7 @@ if __name__ == '__main__':
 		('/', index.Recent),
 		('/add/file', AddFileHandler),
 		('/album/(\d+)/reviews\.rss$', reviews.AlbumRSS),
-		('/api', api.Index),
-		('/api/submit/album', api.SubmitAlbum),
-		('/api/update', api.Update),
-		('/api/dump\.json', api.Dump),
 		('/chart', chart.ShowChart),
-		('/clips', clips.ShowClips),
-		('/clips/random\.json', clips.GetRandomClip),
-		('/clips/recent.xml', clips.GetRecentClips),
 		('/events', events.All),
 		('/events/update', events.Update),
 		('/reviews', reviews.ShowReviews),
