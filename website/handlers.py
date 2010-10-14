@@ -127,6 +127,7 @@ class AlbumHandler(BaseHandler):
         artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
         self.render('album.html', {
             'album': album,
+            'labels': sorted(album.labels),
             'artist': artist,
             'year': album.release_date.strftime('%Y'),
             'files': files,
