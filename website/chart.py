@@ -5,7 +5,6 @@ from logging import debug as log
 import base
 import lastfm
 import model
-import myxml
 
 class ShowChart(base.CachingRequestHandler):
 	xsltName = 'chart.xsl'

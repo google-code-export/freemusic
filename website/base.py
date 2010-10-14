@@ -20,7 +20,6 @@ from django.utils import simplejson
 # Local imports
 import config
 from model import SiteUser
-import myxml as xml
 
 class HTTPException(Exception):
     def __init__(self, code, message):
