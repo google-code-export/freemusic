@@ -139,6 +139,18 @@ class BaseHandler(webapp.RequestHandler):
             self.response.headers = cached[0]
             self.response.out = cached[1]
 
+    def post(self, *args):
+        """
+        Calls the _real_post() method, then flushes the page cache.
+        """
+        if not hasattr(self, '_real_post'):
+            logging.error('Class %s does not define the _real_post() method, sending 501.' % self.__class__.__name__)
+            self.error(501)
+        else:
+            self._real_post(*args)
+            logging.debug('Cache DELETE for %s' % self.request.uri)
+            memcache.delete(self.request.uri)
+
     def _check_admin(self, message):
         if users.is_current_user_admin():
             return True
