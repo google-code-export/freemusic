@@ -16,7 +16,6 @@ import events
 import index
 import model
 import reviews
-import settings
 import tracks
 import upload
 
@@ -73,7 +72,6 @@ if __name__ == '__main__':
 		('/events/update', events.Update),
 		('/reviews', reviews.ShowReviews),
 		('/reviews\.rss', reviews.AllRSS),
-		('/settings', settings.SettingsPage),
 		('/submit', SubmitHandler),
 		('/track/(\d+)$', tracks.Viewer),
 		('/tracks\.rss', tracks.RSSHandler),

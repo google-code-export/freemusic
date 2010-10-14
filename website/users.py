@@ -12,7 +12,6 @@ import base
 import mail
 import model
 import myxml
-import invite
 
 class List(base.BaseRequestHandler):
 	xsltName = 'users.xsl'
@@ -24,19 +23,6 @@ class List(base.BaseRequestHandler):
 
 	def post(self):
 		self.check_access(admin=True)
-		if self.request.get('invite'):
-			for email in self.request.get_all('email'):
-				user = model.SiteUser.gql('WHERE user = :1', users.User(email)).get()
-				log(user)
-				if user:
-					user.invited = True
-					user.put()
-					mail.send(email, self.render('invitation.html', {
-						'base': self.getBaseURL(),
-						'nickname': user.user.nickname(),
-						'email': email,
-						'link': users.create_login_url(self.getBaseURL()),
-					}))
 		self.redirect('/users')
 
 class ShowUser(base.CachingRequestHandler):

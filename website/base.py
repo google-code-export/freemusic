@@ -21,7 +21,6 @@ from django.utils import simplejson
 import config
 from model import SiteUser
 import myxml as xml
-import invite
 
 class HTTPException(Exception):
     def __init__(self, code, message):
@@ -66,10 +65,6 @@ class BaseRequestHandler(webapp.RequestHandler):
                     user = self.force_admin()
                 else:
                     user = self.force_user()
-
-                luser = invite.store(self, user.email())
-                if not luser.invited:
-                    raise ClosedException(saved)
             except HTTPException:
                 raise ClosedException(saved)
 

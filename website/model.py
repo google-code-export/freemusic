@@ -68,7 +68,6 @@ class SiteUser(CustomModel):
 	user = db.UserProperty(required=_REQUIRED)
 	joined = db.DateTimeProperty(auto_now_add=True)
 	weight = db.FloatProperty()
-	invited = db.BooleanProperty(required=_REQUIRED)
 	nickname = db.StringProperty()
 
 class SiteArtist(CustomModel):
