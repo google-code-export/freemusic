@@ -26,14 +26,14 @@
 	</div>{% endfor %}
 </div>
 <div id="sidebar">
-	<div class="labels">
+	{% if labels %}<div class="labels">
 		<h2>Метки</h2>
 		<ul>
 			{% for label in labels %}
 				<li><a href="/tag/{{ label|uurlencode }}">{{ label }}</a></li>
 			{% endfor %}
 		</ul>
-	</div>
+	</div>{% endif %}
 
 	<div id="twitter">
 		<script src="http://widgets.twimg.com/j/2/widget.js"></script>
