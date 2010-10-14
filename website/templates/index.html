@@ -5,7 +5,7 @@
 	{% if artist_name %}
 		<h2>{{ artist_name }}</h2>
 		{% if artist %}<div class="links">
-			{% if artist.lastfm_name %}<a class="lastfm" href="http://www.last.fm/user/{{ artist.lastfm_name|uurlencode }}"><img src="/static/last.fm.png" alt="Last.fm"/></a>{% endif %}
+			{% if artist.lastfm_name %}<a class="lastfm" href="http://www.last.fm/music/{{ artist.lastfm_name|uurlencode }}"><img src="/static/last.fm.png" alt="Last.fm"/></a>{% endif %}
 			{% if artist.twitter %}<a href="http://twitter.com/{{ artist.twitter|uurlencode }}"><img src="/static/twitter.png" alt="Twitter.png"/></a>{% endif %}
 			{% if artist.homepage %}<a href="{{ artist.homepage|escape }}"><img src="/static/homepage.png" alt="Home Page"/></a>{% endif %}
 			{% if artist.vk %}<a href="{{ artist.vk|escape }}"><img src="/static/vkontakte.png" alt="ВКонтакте"/></a>{% endif %}
