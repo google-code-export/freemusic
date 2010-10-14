@@ -25,6 +25,8 @@ from django.utils import simplejson
 import config
 import model
 
+class BreakRequestHandlingException(Exception): pass
+
 def get_all_labels():
     """
     Returns a list of all labels.  Uses memcache.
@@ -101,6 +103,18 @@ class BaseHandler(webapp.RequestHandler):
     def send_text(self, text):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         self.response.out.write(text)
+
+    def handle_exception(self, e, debug_mode):
+        if type(e) != BreakRequestHandlingException:
+            webapp.RequestHandler.handle_exception(self, e, debug_mode)
+
+    def _check_admin(self, message):
+        if users.is_current_user_admin():
+            return True
+        if self.request.method == 'POST':
+            raise Exception(message)
+        self.redirect(users.create_login_url(self.requrest.uri))
+        return False
 
 
 class AlbumHandler(BaseHandler):
@@ -207,6 +221,7 @@ class AlbumDownloadHandler(AlbumHandler):
 
 class AlbumEditHandler(AlbumHandler):
     def get(self):
+        self._check_admin('Only admins can edit albums.')
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
         self.render('album-edit.html', {
             'album': album,
@@ -214,6 +229,7 @@ class AlbumEditHandler(AlbumHandler):
         })
 
     def post(self):
+        self._check_admin('Only admins can edit albums.')
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
         album.name = self.request.get('name')
         album.cover_id = self.request.get('cover_id')
@@ -271,9 +287,11 @@ class AlbumEditHandler(AlbumHandler):
 
 class AlbumSubmitHandler(BaseHandler):
     def get(self):
+        self._check_admin('Only admins can add albums.')
         self.render('album-submit.html')
 
     def post(self):
+        self._check_admin('Only admins can add albums.')
         album = model.SiteAlbum()
         album.name = self.request.get('name') or None
         album.homepage = self.request.get('homepage') or None
@@ -287,6 +305,7 @@ class AlbumUploadHandler(BaseHandler):
     Returns an HTML form used for uploading a file.
     """
     def get(self, album_id):
+        self._check_admin('Only admins can upload files.')
         upload_url = blobstore.create_upload_url('/upload/callback?album=%s' % album_id)
         self.render('album-upload.html', {
             'album_id': album_id,
@@ -454,6 +473,7 @@ class UploadHandler(BaseHandler):
         """
         Shows the form.
         """
+        self._check_admin('Only admins can upload files.')
         self.render('upload.html', {
             'action': blobstore.create_upload_url('/upload/callback?album=' + self.request.get('album')),
             'files': model.File.all().order('-id').fetch(100),
@@ -465,6 +485,7 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
         """
         Handles the callback.
         """
+        self._check_admin('Only admins can upload files.')
         if self.request.get('album'):
             album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('album'))).get()
         else:

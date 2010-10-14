@@ -21,18 +21,5 @@ handlers:
 - url: /doc/
   static_dir: doc
 
-- url: /album/edit
-  script: handlers.py
-  login: admin
-- url: /album/\d+/upload
-  script: handlers.py
-  login: admin
-- url: /album/submit
-  script: handlers.py
-  login: admin
-- url: /upload($|/callback$|/serve$)
-  script: handlers.py
-  login: admin
-
 - url: .*
   script: handlers.py
