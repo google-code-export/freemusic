@@ -373,6 +373,7 @@ class ArtistHandler(IndexHandler):
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
         self._send_albums(albums, {
             'artist': artist,
+            'artist_name': artist_name,
         })
 
 
