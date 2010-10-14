@@ -356,6 +356,33 @@ class ArtistHandler(IndexHandler):
         })
 
 
+class ArtistsHandler(BaseHandler):
+    """
+    Displays the list of all artists.
+    """
+    def get(self):
+        total_count = 0.0
+        stats = dict()
+        # calculate counts
+        tracks = model.File.all().fetch(1000)
+        for track in tracks:
+            for name in (track.song_artist, track.remixer):
+                if name:
+                    if not stats.has_key(name):
+                        stats[name] = 0
+                    stats[name] += 1
+                    total_count += 1
+
+        # calculate weight
+        for name in stats:
+            stats[name] = int(stats[name] * 10 / total_count)
+
+        artists = [{'name': name, 'weight': stats[name]} for name in sorted(stats.keys())]
+        self.render('artists.html', {
+            'artists': artists,
+        })
+
+
 class TagHandler(IndexHandler):
     """
     Shows albums tagged with a certain tag.
@@ -433,6 +460,7 @@ if __name__ == '__main__':
         ('/album/edit$', AlbumEditHandler),
         ('/album/submit$', AlbumSubmitHandler),
         ('/artist/([^/]+)$', ArtistHandler),
+        ('/artists', ArtistsHandler),
         ('/download/([^/]+)/([^/]+)$', DownloadHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),
         ('/tag/([^/]+)$', TagHandler),

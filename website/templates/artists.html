@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+	<div id="artists">
+		<h2>Все исполнители</h2>
+		<ul>{% for artist in artists %}
+			<li class="w{{ artist.weight }}"><a href="/artist/{{ artist.name|uurlencode }}">{{ artist.name }}</a></li>
+		{% endfor %}</ul>
+	</div>
+{% endblock %}

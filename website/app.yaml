@@ -21,6 +21,8 @@ handlers:
   login: admin
 - url: /artist/[^/]+
   script: handlers.py
+- url: /artists
+  script: handlers.py
 - url: /download/[^/]+/[^/]+
   script: handlers.py
 - url: /file/serve/\d+/.+

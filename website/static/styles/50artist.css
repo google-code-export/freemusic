@@ -30,3 +30,24 @@
 	height: 50px;
 	border: 0;
 }
+
+#artists ul {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	list-style-type: none;
+}
+#artists li {
+	display: inline-block;
+	margin: 0 .5em;
+	font-size: 7pt;
+}
+#artists li.w2 {
+	font-size: 9pt;
+}
+#artists li.w3 {
+	font-size: 11pt;
+}
+#artists li.w4 {
+	font-size: 13pt;
+}
