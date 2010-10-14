@@ -6,32 +6,6 @@ api_version: 1
 # Good example: http://code.google.com/p/rietveld/source/browse/trunk/app.yaml
 
 handlers:
-- url: /
-  script: handlers.py
-- url: /album/\d+(|/download)
-  script: handlers.py
-- url: /album/\d+/upload
-  script: handlers.py
-  login: admin
-- url: /album/edit
-  script: handlers.py
-  login: admin
-- url: /album/submit
-  script: handlers.py
-  login: admin
-- url: /artist/[^/]+
-  script: handlers.py
-- url: /artists
-  script: handlers.py
-- url: /download/[^/]+/[^/]+
-  script: handlers.py
-- url: /file/serve/\d+/.+
-  script: handlers.py
-- url: /tag/[^/]+
-  script: handlers.py
-- url: /upload($|/callback$|/serve$)
-  script: handlers.py
-  login: admin
 
 - url: /favicon.ico
   static_files: static/favicon.2.ico
@@ -60,5 +34,18 @@ handlers:
 - url: /edit
   script: edit.py
 
+- url: /album/edit
+  script: handlers.py
+  login: admin
+- url: /album/\d+/upload
+  script: handlers.py
+  login: admin
+- url: /album/submit
+  script: handlers.py
+  login: admin
+- url: /upload($|/callback$|/serve$)
+  script: handlers.py
+  login: admin
+
 - url: .*
-  script: main.py
+  script: handlers.py
