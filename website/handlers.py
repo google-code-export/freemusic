@@ -5,6 +5,7 @@ import datetime
 import logging
 import urllib
 import urlparse
+import operator # for sorting
 import os
 import os.path
 import re
@@ -450,6 +451,7 @@ class EditArtistHandler(BaseHandler):
 
         # Reset cache.
         self._reset_cache('artist/' + name)
+        self._reset_cache('artists')
 
         self.redirect('/artist/' + name)
 
@@ -466,23 +468,27 @@ class ArtistsHandler(BaseHandler):
     Displays the list of all artists.
     """
     def _real_get(self):
-        total_count = 0.0
-        stats = dict()
-        # calculate counts
-        tracks = model.File.all().fetch(1000)
-        for track in tracks:
+        artists = dict()
+
+        # Find track artists.
+        for track in model.File.all().fetch(1000):
             for name in (track.song_artist, track.remixer):
                 if name:
-                    if not stats.has_key(name):
-                        stats[name] = 0
-                    stats[name] += 1
-                    total_count += 1
+                    artists[name] = {'name': name}
 
-        # calculate weight
-        for name in stats:
-            stats[name] = int(stats[name] * 10 / total_count)
+        # Add existing profiles.
+        for artist in model.Artist.all().fetch(1000):
+            artists[artist.name] = {
+                'name': artist.name,
+                'lastfm_name': artist.lastfm_name,
+                'twitter': artist.twitter,
+                'homepage': artist.homepage,
+                'vk': artist.vk,
+            }
 
-        artists = [{'name': name, 'weight': stats[name]} for name in sorted(stats.keys())]
+        # Sort 'em up.
+        artists = sorted(artists.values(), cmp=lambda a, b: cmp(a['name'], b['name']))
+
         self.render('artists.html', {
             'artists': artists,
         })

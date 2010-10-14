@@ -2,8 +2,26 @@
 {% block content %}
 	<div id="artists">
 		<h2>Все исполнители</h2>
-		<ul>{% for artist in artists %}
-			<li class="w{{ artist.weight }}"><a href="/artist/{{ artist.name|uurlencode }}">{{ artist.name }}</a></li>
-		{% endfor %}</ul>
+		<table id="artistList">
+			<tbody>
+				{% for artist in artists %}
+					<tr>
+						<td><a href="/artist/{{ artist.name|uurlencode }}">{{ artist.name }}</a></td>
+						<td>{% if artist.lastfm_name %}
+							<a href="http://www.last.fm/music/{{ artist.lastfm_name|uurlencode }}"><img src="/static/last.fm.png" alt="Last.fm"/></a>
+						{% endif %}</td>
+						<td>{% if artist.twitter %}
+							<a href="http://twitter.com/{{ artist.twitter|uurlencode }}"><img src="/static/twitter.png" alt="Twitter"/></a>
+						{% endif %}</td>
+						<td>{% if artist.homepage %}
+							<a href="{{ artist.homepage|escape }}"><img src="/static/homepage.png" alt="Web Site"/></a>
+						{% endif %}</td>
+						<td>{% if artist.vk %}
+							<a href="{{ artist.vk|escape }}"><img src="/static/vkontakte.png" alt="VK.com"/></a>
+						{% endif %}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
 {% endblock %}

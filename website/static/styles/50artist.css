@@ -54,3 +54,17 @@
 #artists li a {
 	white-space: nowrap;
 }
+
+#artistList {
+	border-collapse: collapse;
+}
+#artistList td {
+	padding: 2px;
+}
+#artistList td:nth-child(1) {
+	padding-right: 20px;
+	white-space: nowrap;
+}
+#artistList tr:nth-child(even) td {
+	background-color: #eee;
+}
