@@ -126,17 +126,23 @@ class BaseHandler(webapp.RequestHandler):
             logging.error('Class %s does not define the _real_get() method, sending 501.' % self.__class__.__name__)
             self.error(501)
         else:
-            cached = memcache.get(self.request.uri)
-            if not self.cache or type(cached) != tuple or users.is_current_user_admin():
-                if not self.cache:
-                    logging.debug('Cache MISS (disabled) for %s' % self.request.uri)
-                else:
-                    logging.debug('Cache MISS for %s' % self.request.uri)
+            cached = memcache.get(self.request.path)
+            use_cache = True
+            if not self.cache:
+                logging.debug('Cache MISS (disabled) for %s' % self.request.path)
+                use_cache = False
+            if use_cache and type(cached) != tuple:
+                logging.debug('Cache MISS for %s' % self.request.path)
+                use_cache = False
+            if use_cache and users.is_current_user_admin() and 'nocache' in self.request.arguments():
+                logging.debug('Cache MISS (admin) for %s' % self.request.path)
+                use_cache = False
+            if not use_cache:
                 self._real_get(*args)
                 cached = (self.response.headers, self.response.out, )
-                memcache.set(self.request.uri, cached)
+                memcache.set(self.request.path, cached)
             else:
-                logging.debug('Cache HIT for %s' % self.request.uri)
+                logging.debug('Cache HIT for %s' % self.request.path)
             self.response.headers = cached[0]
             self.response.out = cached[1]
 
@@ -161,7 +167,7 @@ class BaseHandler(webapp.RequestHandler):
         return False
 
     def _reset_cache(self, uri):
-        memcache.delete(self.getBaseURL() + uri)
+        memcache.delete(uri)
 
 
 class AlbumHandler(BaseHandler):
@@ -305,11 +311,11 @@ class AlbumEditHandler(AlbumHandler):
         album.artists = self.__get_artists(album, files)
 
         # Reset cache.
-        self._reset_cache('album/' + str(album.id))
+        self._reset_cache('/album/' + str(album.id))
         for label in album.labels:
-            self._reset_cache('tag/' + urllib.quote(label.encode('utf-8')))
+            self._reset_cache('/tag/' + urllib.quote(label.encode('utf-8')))
         for artist in album.artists:
-            self._reset_cache('artist/' + urllib.quote(artist.encode('utf-8')))
+            self._reset_cache('/artist/' + urllib.quote(artist.encode('utf-8')))
 
         album.put()
         self.redirect('/album/' + str(album.id))
@@ -450,8 +456,8 @@ class EditArtistHandler(BaseHandler):
         artist.put()
 
         # Reset cache.
-        self._reset_cache('artist/' + name)
-        self._reset_cache('artists')
+        self._reset_cache('/artist/' + name)
+        self._reset_cache('/artists')
 
         self.redirect('/artist/' + name)
 
