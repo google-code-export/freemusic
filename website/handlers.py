@@ -479,7 +479,6 @@ class ArtistsHandler(BaseHandler):
         columns = self.__split_by_columns(letters, total_count)
 
         self.render('artists.html', {
-            'letters': artists,
             'columns': columns,
         })
 
