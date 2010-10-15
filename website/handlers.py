@@ -469,7 +469,7 @@ class ArtistsHandler(BaseHandler):
     """
     def _real_get(self):
         # Get a simple list of artists.
-        artists = self.__gen_artists()
+        artists = self.__get_artists()
         total_count = len(artists)
 
         # Group by letters.
