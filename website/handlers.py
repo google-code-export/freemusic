@@ -471,6 +471,7 @@ class EditArtistHandler(BaseHandler):
 
         # Reset cache.
         self._reset_cache('/artist/' + name)
+        self._reset_cache('/artist/' + name + '/rss')
         self._reset_cache('/artists')
 
         self.redirect(destination)
