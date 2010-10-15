@@ -91,3 +91,12 @@
 #artists .homepage {
 	background-image: url(/static/homepage.png);
 }
+#artists .lastfm {
+	background-image: url(/static/last.fm.png);
+}
+#artists .twitter {
+	background-image: url(/static/twitter.png);
+}
+#artists .vk {
+	background-image: url(/static/vkontakte.png);
+}
