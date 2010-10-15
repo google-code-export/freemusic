@@ -8,7 +8,7 @@
 <link>{{ base }}artist/{{ artist_name|uurlencode }}</link>
 {% for album in albums %}
 <item>
-<title>{{ album.title }}</title>
+<title>{{ album.name }}</title>
 <link>{{ base }}album/{{ album.id }}</link>
 <guid>{{ base }}album/{{ album.id }}</guid>
 </item>
