@@ -12,6 +12,6 @@
 <link>{{ base }}album/{{ album.id }}</link>
 <guid>{{ base }}album/{{ album.id }}</guid>
 </item>
-{% endif %}
+{% endfor %}
 </channel>
 </rss>
