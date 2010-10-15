@@ -448,18 +448,23 @@ class EditArtistHandler(BaseHandler):
         })
 
     def post(self, name):
+        destination = '/artist/' + name
         artist = self.__get_artist(name)
         for k in ('lastfm_name', 'twitter', 'homepage', 'vk'):
             v = self.request.get(k)
             logging.info('%s = %s' % (k, v))
             setattr(artist, k, v or None)
-        artist.put()
+        if self.request.get('delete'):
+            artist.delete()
+            destination = '/artists'
+        else:
+            artist.put()
 
         # Reset cache.
         self._reset_cache('/artist/' + name)
         self._reset_cache('/artists')
 
-        self.redirect('/artist/' + name)
+        self.redirect(destination)
 
     def __get_artist(self, quoted_name):
         name = urllib.unquote(quoted_name).strip().decode('utf-8')
