@@ -2,6 +2,25 @@
 {% block content %}
 	<div id="artists">
 		<h2>Все исполнители</h2>
+		{% for column in columns %}<div class="column">
+			{% for letter in column %}<table>
+				<caption>{{ letter.letter }}</caption>
+				<tbody>
+					{% for artist in letter.artists %}
+						<tr>
+							<td class="name">
+								<a href="/artist/{{ artist.id }}">{{ artist.name }}</a>
+							</td>
+							<td>{% if artist.homepage %}
+								<a class="homepage icon" href="{{ artist.homepage|escape }}"><span>Web Site</span></a>
+							{% endif %}</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>{% endfor %}
+		</div>{% endfor %}
+
+		{% for letter in letters %}{% endfor %}
 		<table id="artistList">
 			<tbody>
 				{% for artist in artists %}

@@ -55,16 +55,42 @@
 	white-space: nowrap;
 }
 
-#artistList {
+
+#artists .column {
+	width: 240px;
+	float: left;
+	margin-right: 10px;
+}
+#artists table {
+	width: 100%;
+	margin: 0 0 30px;
 	border-collapse: collapse;
 }
-#artistList td {
+#artists caption {
+	text-align: left;
+	font-weight: bold;
+	font-size: 1.5em;
+}
+#artists td {
 	padding: 2px;
 }
-#artistList td:nth-child(1) {
-	padding-right: 20px;
-	white-space: nowrap;
-}
-#artistList tr:nth-child(even) td {
+#artists tr:nth-child(even) td {
 	background-color: #eee;
+}
+#artists .name {
+	width: 100%;
+}
+#artists .icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: top left;
+}
+#artists .icon span {
+	display: none;
+}
+#artists .homepage {
+	background-image: url(/static/homepage.png);
 }

@@ -127,7 +127,7 @@ class BaseHandler(webapp.RequestHandler):
             self.error(501)
         else:
             cached = memcache.get(self.request.uri)
-            if not self.cache or type(cached) != tuple:
+            if not self.cache or type(cached) != tuple or users.is_current_user_admin():
                 if not self.cache:
                     logging.debug('Cache MISS (disabled) for %s' % self.request.uri)
                 else:
@@ -157,7 +157,7 @@ class BaseHandler(webapp.RequestHandler):
             return True
         if self.request.method == 'POST':
             raise Exception(message)
-        self.redirect(users.create_login_url(self.requrest.uri))
+        self.redirect(users.create_login_url(self.request.uri))
         return False
 
     def _reset_cache(self, uri):
@@ -468,30 +468,90 @@ class ArtistsHandler(BaseHandler):
     Displays the list of all artists.
     """
     def _real_get(self):
-        artists = dict()
+        # Get a simple list of artists.
+        artists = self.__gen_artists()
+        total_count = len(artists)
 
+        # Group by letters.
+        letters = self.__split_by_letter(artists)
+
+        # Group by columns.
+        columns = self.__split_by_columns(letters, total_count)
+
+        self.render('artists.html', {
+            'letters': artists,
+            'columns': columns,
+        })
+
+    def __gen_artists(self):
+        import random
+        artists = dict()
+        for idx in range(random.randrange(50)):
+            letter = chr(random.randrange(ord('A'), ord('Z') + 1))
+            name = letter + str(random.randrange(1000, 10000))
+            artists[name] = {
+                'name': name,
+                'sortname': name,
+                'id': random.randrange(1000),
+            }
+        return artists
+
+    def __get_artists(self):
+        artists = dict()
         # Find track artists.
         for track in model.File.all().fetch(1000):
             for name in (track.song_artist, track.remixer):
                 if name:
-                    artists[name] = {'name': name}
-
+                    artists[name] = {'name': name, 'sortname': self.__mksortname(name)}
         # Add existing profiles.
         for artist in model.Artist.all().fetch(1000):
             artists[artist.name] = {
                 'name': artist.name,
+                'sortname': self.__mksortname(artist.name),
                 'lastfm_name': artist.lastfm_name,
                 'twitter': artist.twitter,
                 'homepage': artist.homepage,
                 'vk': artist.vk,
             }
+        return artists
 
-        # Sort 'em up.
-        artists = sorted(artists.values(), cmp=lambda a, b: cmp(a['name'], b['name']))
+    def __split_by_letter(self, artists):
+        letters = {}
+        for k in artists:
+            artist = artists[k]
+            letter = artist['sortname'][0].upper()
+            if not letters.has_key(letter):
+                letters[letter] = {'letter':letter, 'artists':[]}
+            letters[letter]['artists'].append(artist)
+        return sorted(letters.values(), cmp=lambda a, b: cmp(a['letter'], b['letter']))
 
-        self.render('artists.html', {
-            'artists': artists,
-        })
+    def __split_by_columns(self, letters, total_count):
+        columns = []
+        column = []
+        per_column = total_count / 3
+        column_size = 0
+
+        for letter in letters:
+            column.append(letter)
+            column_size += len(letter['artists'])
+            if column_size >= per_column and len(columns) < 2:
+                columns.append(column)
+                column = []
+                column_size = 0
+
+        if len(column):
+            columns.append(column)
+
+        return columns
+
+    def __mksortname(self, name):
+        name = unicode(name).lower()
+        name = re.sub('[-_/\s.]+', ' ', name)
+        name = re.sub(re.compile('[^\w\s]', re.U), u'', name)
+        for prefix in (u'a', u'the'):
+            if name.startswith(prefix + u' '):
+                name = name[len(prefix)+1:] + u', ' + prefix
+        return name
 
 
 class RobotsHandler(BaseHandler):
