@@ -508,16 +508,17 @@ class ArtistsHandler(BaseHandler):
             for name in (track.song_artist, track.remixer):
                 if name:
                     artists[name] = {'name': name, 'sortname': self.__mksortname(name)}
-        # Add existing profiles.
+        # Add extended profiles.
         for artist in model.Artist.all().fetch(1000):
-            artists[artist.name] = {
-                'name': artist.name,
-                'sortname': self.__mksortname(artist.name),
-                'lastfm_name': artist.lastfm_name,
-                'twitter': artist.twitter,
-                'homepage': artist.homepage,
-                'vk': artist.vk,
-            }
+            if artists.has_key(artist.name):
+                artists[artist.name] = {
+                    'name': artist.name,
+                    'sortname': self.__mksortname(artist.name),
+                    'lastfm_name': artist.lastfm_name,
+                    'twitter': artist.twitter,
+                    'homepage': artist.homepage,
+                    'vk': artist.vk,
+                }
         return artists
 
     def __split_by_letter(self, artists):
