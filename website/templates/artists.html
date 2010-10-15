@@ -9,7 +9,7 @@
 					{% for artist in letter.artists %}
 						<tr>
 							<td class="name">
-								<a href="/artist/{{ artist.id }}">{{ artist.name }}</a>
+								<a href="/artist/{{ artist.name|uurlencode }}">{{ artist.name }}</a>
 							</td>
 							<td>{% if artist.homepage %}
 								<a class="homepage icon" href="{{ artist.homepage|escape }}"><span>Web Site</span></a>
