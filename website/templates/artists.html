@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 	<div id="artists">
+	QWE
 		<h2>Все исполнители</h2>
 		{% for column in columns %}<div class="column">
 			{% for letter in column %}<table>
@@ -23,6 +24,9 @@
 							<td>{% if artist.homepage %}
 								<a class="homepage icon" href="{{ artist.homepage|escape }}"><span>Web Site</span></a>
 							{% endif %}</td>
+							<td>
+								<a class="rss icon" href="/artist/{{ artist.name|uurlencode }}/rss"><span>RSS</span></a>
+							</td>
 						</tr>
 					{% endfor %}
 				</tbody>

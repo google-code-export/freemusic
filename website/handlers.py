@@ -50,7 +50,10 @@ def get_all_labels():
 class BaseHandler(webapp.RequestHandler):
     requireLogin = False
     requireAdmin = False
+    # Page cache is enabled by default.
     cache = True
+    # Default content type, used by render().  Subclasses can override this.
+    content_type = 'text/html'
 
     def getHost(self):
         url = urlparse.urlparse(self.request.url)
@@ -104,7 +107,7 @@ class BaseHandler(webapp.RequestHandler):
         path = os.path.join(directory, 'templates', template_name)
         result = template.render(path, vars)
         if not ret:
-            self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
+            self.response.headers['Content-Type'] = self.content_type + '; charset=utf-8'
             self.response.out.write(result)
         return result
 
@@ -406,6 +409,7 @@ class IndexHandler(BaseHandler):
     The main page of the web site.
     """
     count = 100
+    template = 'index.html'
 
     def _real_get(self):
         """
@@ -422,7 +426,7 @@ class IndexHandler(BaseHandler):
         })
         if not attrs.has_key('labels'):
             attrs['labels'] = get_all_labels()
-        self.render('index.html', attrs)
+        self.render(self.template, attrs)
 
 
 class ArtistHandler(IndexHandler):
@@ -430,7 +434,7 @@ class ArtistHandler(IndexHandler):
     Shows albums by an artist.
     """
     def _real_get(self, artist_name):
-        artist_name = urllib.unquote(artist_name).strip().decode('utf-8')
+        artist_name = urllib.unquote(artist_name).decode('utf-8')
         artist = model.Artist.gql('WHERE name = :1', artist_name).get()
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
         self._send_albums(albums, {
@@ -438,6 +442,11 @@ class ArtistHandler(IndexHandler):
             'artist_name': artist_name,
             'labels': get_labels_from_albums(albums),
         })
+
+
+class ArtistFeedHandler(ArtistHandler):
+    template = 'artist.rss'
+    content_type = 'text/xml'
 
 
 class EditArtistHandler(BaseHandler):
@@ -673,6 +682,7 @@ if __name__ == '__main__':
         ('/album/submit$', AlbumSubmitHandler),
         ('/artist/([^/]+)$', ArtistHandler),
         ('/artist/([^/]+)/edit$', EditArtistHandler),
+        ('/artist/([^/]+)/rss$', ArtistFeedHandler),
         ('/artists', ArtistsHandler),
         ('/download/([^/]+)/([^/]+)$', DownloadHandler),
         ('/file/serve/(\d+)/.+$', FileServeHandler),

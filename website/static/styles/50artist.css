@@ -100,3 +100,6 @@
 #artists .vk {
 	background-image: url(/static/vkontakte.png);
 }
+#artists .rss {
+	background-image: url(/static/rss.png);
+}
