@@ -230,6 +230,9 @@ class File(CustomModel):
     song_artist = db.StringProperty()
     song_title = db.StringProperty()
     remixer = db.StringProperty()
+    # Имена всех задействованных исполнителей, обновляются при сохранении,
+    # используются для поиска.
+    all_artists = db.StringListProperty()
     # The number of times this file was downloaded.
     download_count = db.IntegerProperty()
     # The number of bytes downloaded.
@@ -241,6 +244,12 @@ class File(CustomModel):
             logging.info('New file: %s (file/serve?id=%u)' % (self.filename, self.id))
         if not self.content_type:
             self.content_type = 'application/octet-stream'
+        # Обновление списка исполнителей, для более простого поиска.
+        self.all_artists = []
+        if self.song_artist:
+            self.all_artists.append(self.song_artist)
+        if self.remixer and self.remixer not in self.all_artists:
+            self.all_artists.append(self.remixer)
         return CustomModel.put(self)
 
 

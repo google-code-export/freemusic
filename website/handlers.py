@@ -390,8 +390,7 @@ class AlbumEditHandler(AlbumHandler):
             artist = model.Artist.gql('WHERE name = :1', artist_name).get()
             if artist is None:
                 artist = model.Artist(name=artist_name)
-            artist.track_count = model.File.gql('WHERE song_artist = :1', artist_name).count(100)
-            artist.track_count += model.File.gql('WHERE remixer = :1', artist_name).count(100)
+            artist.track_count = model.File.gql('WHERE all_artists = :1', artist_name).count(100)
             artist.put()
             logging.debug('Artist "%s" now has %u tracks.' % (artist_name, artist.track_count))
 
