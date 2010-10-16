@@ -452,6 +452,7 @@ class ArtistHandler(IndexHandler):
 class ArtistFeedHandler(ArtistHandler):
     template = 'artist.rss'
     content_type = 'text/xml'
+    cache = False
 
 
 class EditArtistHandler(BaseHandler):
