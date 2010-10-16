@@ -340,15 +340,16 @@ class AlbumEditHandler(AlbumHandler):
         if album is None:
             raise NotFoundException('No such album.')
         # Сохраняем список исполнителей для обновления количества альбомов.
-        album_artists = album.artists
+        old_artists = album.artists
+        old_labels = album.labels
         # Обновление сведений об альбома.
         self.__update_album(album)
         # Обновление статистики исполнителей.
-        self.__update_artist_counters(album_artists + album.artists)
+        self.__update_artist_counters(old_artists + album.artists)
 
         # Reset cache.
         self._reset_cache('/album/' + str(album.id))
-        for label in album.labels:
+        for label in list(set(old_labels + album.labels)):
             self._reset_cache('/tag/' + urllib.quote(label.encode('utf-8')))
         for artist in album.artists:
             self._reset_cache('/artist/' + urllib.quote(artist.encode('utf-8')))
@@ -762,6 +763,25 @@ class UploadCallbackHandler(blobstore_handlers.BlobstoreUploadHandler):
             self.redirect('/upload')
 
 
+class ZzzHandler(BaseHandler):
+    def get(self):
+        if not users.is_current_user_admin():
+            raise Exception('Restricted area.')
+        artists = []
+        for file in model.File.all().fetch(1000):
+            if self.request.get('action') == 'update-files':
+                file.put()
+            artists += file.all_artists
+        if self.request.get('action') == 'update-artists':
+            for artist_name in list(set(artists)):
+                artist = model.Artist.gql('WHERE name = :1', artist_name).get()
+                if artist is None:
+                    artist = model.Artist(name=artist_name)
+                artist.track_count = model.File.gql('WHERE all_artists = :1', artist_name).count(100)
+                artist.put()
+        self.send_text('OK')
+
+
 if __name__ == '__main__':
     if config.DEBUG:
         logging.getLogger().setLevel(logging.DEBUG)
@@ -783,4 +803,5 @@ if __name__ == '__main__':
         ('/tag/([^/]+)$', TagHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),
+        ('/zzz', ZzzHandler),
     ], debug=config.DEBUG))
