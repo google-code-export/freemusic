@@ -40,6 +40,7 @@
                         <a href="/chart">Рейтинг</a>
                     </li>
 					-->
+					<li>{% if user %}<a href="{{ logout_uri|escape }}">Выйти</a>{% else %}<a href="{{ login_uri|escape }}" title="Даёт возможность писать рецензии и голосовать.">Войти</a>{% endif %}</li>
                 </ul>
 				<!--
                 <form action="/search" method="get" class="search">
