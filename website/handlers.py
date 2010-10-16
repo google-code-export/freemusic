@@ -28,6 +28,8 @@ import model
 
 class BreakRequestHandlingException(Exception): pass
 
+class NotFoundException(Exception): pass
+
 def get_labels_from_albums(albums):
     labels = []
     for album in albums:
@@ -220,6 +222,8 @@ class AlbumHandler(BaseHandler):
 
     def _get_data(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
+        if album is None:
+            raise NotFoundException('No such album.')
         files = self._get_files(album)
         artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
         return {
