@@ -221,7 +221,7 @@ class File(CustomModel):
     # The number of times this file was downloaded.
     download_count = db.IntegerProperty()
     # The number of bytes downloaded.
-    downloaded_bytes = db.IntegerProperty()
+    download_bytes = db.IntegerProperty()
 
     def put(self):
         if not self.id:

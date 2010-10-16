@@ -262,7 +262,8 @@ class AlbumHandler(BaseHandler):
             if file is not None:
                 ticket = model.DownloadTicket(email=email, album_id=int(album_id), file_id=int(file_id), used=False)
                 ticket.put()
-                links.append(self.getBaseURL() + 'download/' + str(ticket.key()) + '/' + file.filename.encode('utf-8'))
+                link = self.getBaseURL() + 'file/%u/%s/%s' % (file.id, ticket.key(), file.filename.encode('utf-8'))
+                links.append(link)
         if not links:
             raise Exception('No file selected.')
         data = {'email': email, 'links': links, 'album': album}
@@ -308,7 +309,7 @@ class AlbumHandler(BaseHandler):
                     'remixer': file.remixer,
                     'duration': file.duration,
                 })
-                uri = '/file/serve/%s/%s' % (file.id, file.filename)
+                uri = '/file/%u/-/%s' % (file.id, file.filename)
                 if file.content_type == 'audio/mp3':
                     tracks[key]['mp3_link'] = uri
                 elif file.content_type == 'audio/ogg':
@@ -433,36 +434,41 @@ class AlbumUploadHandler(BaseHandler):
         })
 
 
-class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self, ticket_key, filename):
-        ticket = model.DownloadTicket.get_by_key(ticket_key)
-        if ticket is None:
-            raise Exception('No such ticket.')
-        file = model.File.gql('WHERE id = :1', ticket.file_id).get()
+class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
+    """
+    Serves a file.  Requires a ticket for large files.
+    """
+    def get(self, file_id, ticket_id, filename):
+        file = model.File.gql('WHERE id = :1', int(file_id)).get()
         if file is None:
-            raise Exception('File does not exist.')
-        if file.filename != filename:
-            raise Exception('File does not exist.')
-        now = datetime.datetime.now()
-        if ticket.activated is None:
-            ticket.activated = now
-            ticket.put()
-        elif (now - ticket.activated).seconds > 6:
-            raise Exception('This link is too old, please request a new one at http://www.freemusichub.net/album/%s' % (ticket.album_id))
+            raise NotFoundException('No such file.')
+        if file.filename != filename.decode('utf-8'):
+            raise NotFoundException('No file with such name.')
+        if file.filename.endswith('.zip'):
+            self.__check_ticket(file, ticket_id)
         blob = blobstore.BlobInfo.get(file.file_key)
-        # Track download statistics.
+        # Update statistics.
+        if not file.download_count: file.download_count = 0
+        if not file.download_bytes: file.download_bytes = 0
         file.download_count += 1
         file.download_bytes += blob.size
         file.put()
         # Send the file.
         self.send_blob(blob)
 
-
-class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
-    def get(self, file_id):
-        file = model.File.gql('WHERE id = :1', int(file_id)).get()
-        blob = blobstore.BlobInfo.get(file.file_key)
-        self.send_blob(blob)
+    def __check_ticket(self, file, ticket_id):
+        """
+        Makes sure that ticket_id is valid and the ticked did not expire yet.
+        """
+        ticket = model.DownloadTicket.get_by_key(ticket_id)
+        if ticket is None:
+            raise NotFoundException('Invalid download ticket.')
+        now = datetime.datetime.now()
+        if ticket.activated is None:
+            ticket.activated = now
+            ticket.put()
+        elif (now - ticket.activated).seconds > 600:
+            raise NotFoundException('This link is too old, please request a new one at http://www.freemusichub.net/album/%s' % (ticket.album_id))
 
 
 class IndexHandler(BaseHandler):
@@ -771,8 +777,7 @@ if __name__ == '__main__':
         ('/artist/([^/]+)/edit$', EditArtistHandler),
         ('/artist/([^/]+)/rss$', ArtistFeedHandler),
         ('/artists', ArtistsHandler),
-        ('/download/([^/]+)/([^/]+)$', DownloadHandler),
-        ('/file/serve/(\d+)/.+$', FileServeHandler),
+        ('/file/(\d+)/([^/]+)/(.+)$', FileServeHandler),
         ('/robots.txt$', RobotsHandler),
         ('/sitemap.xml$', SiteMapHandler),
         ('/tag/([^/]+)$', TagHandler),
