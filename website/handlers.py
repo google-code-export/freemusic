@@ -446,6 +446,11 @@ class DownloadHandler(blobstore_handlers.BlobstoreDownloadHandler):
         elif (now - ticket.activated).seconds > 6:
             raise Exception('This link is too old, please request a new one at http://www.freemusichub.net/album/%s' % (ticket.album_id))
         blob = blobstore.BlobInfo.get(file.file_key)
+        # Track download statistics.
+        file.download_count += 1
+        file.download_bytes += blob.size
+        file.put()
+        # Send the file.
         self.send_blob(blob)
 
 

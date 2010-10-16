@@ -218,6 +218,10 @@ class File(CustomModel):
     song_artist = db.StringProperty()
     song_title = db.StringProperty()
     remixer = db.StringProperty()
+	# The number of times this file was downloaded.
+	download_count = db.IntegerProperty()
+	# The number of bytes downloaded.
+	downloaded_bytes = db.IntegerProperty()
 
     def put(self):
         if not self.id:
