@@ -348,11 +348,13 @@ class AlbumEditHandler(AlbumHandler):
         self.__update_artist_counters(old_artists + album.artists)
 
         # Reset cache.
+        self._reset_cache('/')
         self._reset_cache('/album/' + str(album.id))
         for label in list(set(old_labels + album.labels)):
             self._reset_cache('/tag/' + urllib.quote(label.encode('utf-8')))
         for artist in album.artists:
             self._reset_cache('/artist/' + urllib.quote(artist.encode('utf-8')))
+        self._reset_cache('/artists')
 
         album.put()
         self.redirect('/album/' + str(album.id))
