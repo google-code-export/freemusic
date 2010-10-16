@@ -75,7 +75,7 @@ class BaseHandler(webapp.RequestHandler):
         отдельные стили из /static/styles/, в нормальном режиме — один
         готовый файл.
         """
-        if hostname.endswith(':8080'):
+        if False and hostname.endswith(':8080'):
             return sorted(['/static/styles/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'styles')).next()[2]])
         else:
             return ['/static/styles.css']
@@ -86,7 +86,7 @@ class BaseHandler(webapp.RequestHandler):
         отдельные стили из /static/scripts/, в нормальном режиме — один
         готовый файл.
         """
-        if hostname.endswith(':8080'):
+        if False and hostname.endswith(':8080'):
             return sorted(['/static/scripts/' + x for x in os.walk(os.path.join(os.path.dirname(__file__), 'static', 'scripts')).next()[2]])
         else:
             return ['/static/scripts.js']
