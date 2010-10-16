@@ -430,6 +430,8 @@ class IndexHandler(BaseHandler):
 
 
 class ArtistHandler(IndexHandler):
+    template = 'artist.html'
+
     """
     Shows albums by an artist.
     """

@@ -49,3 +49,15 @@
 	margin: 0;
 	padding: 0;
 }
+
+#artistLinks h3 {
+	display: none;
+}
+#artistLinks ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+#artistLinks li {
+	display: inline-block;
+}

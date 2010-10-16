@@ -1,0 +1,23 @@
+a.icon {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+}
+.icon.rss {
+	background-image: url(/static/rss.png);
+}
+.icon.lastfm {
+	background-image: url(/static/last.fm.png);
+}
+.icon.twitter {
+	background-image: url(/static/twitter.png);
+}
+.icon.homepage {
+	background-image: url(/static/homepage.png);
+}
+.icon.vk {
+	background-image: url(/static/vkontakte.png);
+}
+.icon span {
+	display: none;
+}

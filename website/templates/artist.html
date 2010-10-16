@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% block header %}
+	<h2>{{ artist_name }}</h2>
+	<div id="artistLinks">
+		<h3>Ссылки</h3>
+		<ul class="icons">
+			<li><a class="rss icon" href="/artist/{{ artist.name|uurlencode }}/rss"><span>RSS с альбомами</span></a></li>
+			{% if artist.lastfm_name %}<li><a class="lastfm icon" href="http://www.last.fm/music/{{ artist.lastfm_name|uurlencode }}"><span>Профиль в Last.fm</span></a></li>{% endif %}
+			{% if artist.twitter %}<li><a class="twitter icon" href="http://twitter.com/{{ artist.twitter|uurlencode }}"><span>Twitter</span></a></li>{% endif %}
+			{% if artist.homepage %}<li><a class="homepage icon" href="{{ artist.homepage|escape }}"><span>Web Site</span></a></li>{% endif %}
+			{% if artist.vk %}<li><a class="vk icon" href="{{ artist.vk|escape }}"><span>ВКонтакте</span></a></li>{% endif %}
+		</ul>
+	</div>
+	{% if albums %}<h3>Альбомы с участием этого исполнителя</h3>{% else %}<p>Нет альбомов с участием этого исполнителя.</p>{% endif %}
+{% endblock %}
