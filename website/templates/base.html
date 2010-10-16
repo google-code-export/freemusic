@@ -30,6 +30,7 @@
 							<!--
                             <li><a href="/reviews">Рецензии</a></li>
 							-->
+							{% if is_admin %}<li><a href="/album/submit">Добавить альбом</a></li>{% endif %}
                         </ul>
                     </li>
 					<!--
@@ -61,7 +62,6 @@
 				- <a href="http://freemusichub.blogspot.com/" target="_blank">Наш блог</a> 
 				-->
 				{% if is_admin %}
-				- <a href="/album/submit">Загрузить альбом</a>
 				- <a href="https://appengine.google.com/dashboard?app_id=free-music">Admin Console</a>
 				{% endif %}
 			{% endblock %}</div>
