@@ -707,6 +707,11 @@ class TagHandler(IndexHandler):
         }
 
 
+class TagFeedHandler(TagHandler):
+    template = 'tag.rss'
+    content_type = 'text/xml'
+
+
 class UploadHandler(BaseHandler):
     """
     Lets admins upload files.  One at a time and only manually.
@@ -801,6 +806,7 @@ if __name__ == '__main__':
         ('/robots.txt$', RobotsHandler),
         ('/sitemap.xml$', SiteMapHandler),
         ('/tag/([^/]+)$', TagHandler),
+        ('/tag/([^/]+)/rss$', TagFeedHandler),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),
         ('/zzz', ZzzHandler),
