@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# vim: set ts=4 sts=4 sw=4 noet:
+# vim: set ts=4 sts=4 sw=4 et:
 
 import hashlib
 import logging
@@ -269,3 +269,5 @@ class Artist(CustomModel):
     homepage = db.LinkProperty()
     # Адрес страницы в контакте
     vk = db.LinkProperty()
+    # Количество альбомов, в которых задействован.
+    track_count = db.IntegerProperty()

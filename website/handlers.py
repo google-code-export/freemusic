@@ -335,7 +335,28 @@ class AlbumEditHandler(AlbumHandler):
 
     def post(self):
         self._check_admin('Only admins can edit albums.')
+        # Make sure the album exists.
         album = model.SiteAlbum.gql('WHERE id = :1', int(self.request.get('id'))).get()
+        if album is None:
+            raise NotFoundException('No such album.')
+        # Сохраняем список исполнителей для обновления количества альбомов.
+        album_artists = album.artists
+        # Обновление сведений об альбома.
+        self.__update_album(album)
+        # Обновление статистики исполнителей.
+        self.__update_artist_counters(album_artists + album.artists)
+
+        # Reset cache.
+        self._reset_cache('/album/' + str(album.id))
+        for label in album.labels:
+            self._reset_cache('/tag/' + urllib.quote(label.encode('utf-8')))
+        for artist in album.artists:
+            self._reset_cache('/artist/' + urllib.quote(artist.encode('utf-8')))
+
+        album.put()
+        self.redirect('/album/' + str(album.id))
+
+    def __update_album(self, album):
         album.name = self.request.get('name')
         album.cover_id = self.request.get('cover_id')
         if album.cover_id:
@@ -361,15 +382,18 @@ class AlbumEditHandler(AlbumHandler):
         # Find artists.
         album.artists = self.__get_artists(album, files)
 
-        # Reset cache.
-        self._reset_cache('/album/' + str(album.id))
-        for label in album.labels:
-            self._reset_cache('/tag/' + urllib.quote(label.encode('utf-8')))
-        for artist in album.artists:
-            self._reset_cache('/artist/' + urllib.quote(artist.encode('utf-8')))
-
-        album.put()
-        self.redirect('/album/' + str(album.id))
+    def __update_artist_counters(self, artists):
+        """
+        Updates the track_count for all listed artists.
+        """
+        for artist_name in list(set(artists)):
+            artist = model.Artist.gql('WHERE name = :1', artist_name).get()
+            if artist is None:
+                artist = model.Artist(name=artist_name)
+            artist.track_count = model.File.gql('WHERE song_artist = :1', artist_name).count(100)
+            artist.track_count += model.File.gql('WHERE remixer = :1', artist_name).count(100)
+            artist.put()
+            logging.debug('Artist "%s" now has %u tracks.' % (artist_name, artist.track_count))
 
     def __get_artists(self, album, files):
         artists = []
@@ -587,23 +611,19 @@ class ArtistsHandler(BaseHandler):
         return artists
 
     def __get_artists(self):
+        """
+        Returns all artists that have tracks.
+        """
         artists = dict()
-        # Find track artists.
-        for track in model.File.all().fetch(1000):
-            for name in (track.song_artist, track.remixer):
-                if name:
-                    artists[name] = {'name': name, 'sortname': self.__mksortname(name)}
-        # Add extended profiles.
-        for artist in model.Artist.all().fetch(1000):
-            if artists.has_key(artist.name):
-                artists[artist.name] = {
-                    'name': artist.name,
-                    'sortname': self.__mksortname(artist.name),
-                    'lastfm_name': artist.lastfm_name,
-                    'twitter': artist.twitter,
-                    'homepage': artist.homepage,
-                    'vk': artist.vk,
-                }
+        for artist in model.Artist.gql('WHERE track_count > 0').fetch(1000):
+            artists[artist.name] = {
+                'name': artist.name,
+                'sortname': self.__mksortname(artist.name),
+                'lastfm_name': artist.lastfm_name,
+                'twitter': artist.twitter,
+                'homepage': artist.homepage,
+                'vk': artist.vk,
+            }
         return artists
 
     def __split_by_letter(self, artists):
