@@ -102,6 +102,18 @@ class SiteAlbum(CustomModel):
         if len(rates):
             return sum(rates) / len(rates)
 
+    def dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'artists': self.artists,
+            'release_date': self.release_date,
+            'homepage': self.homepage,
+            'cover_small': self.cover_small,
+            'cover_large': self.cover_large,
+            'labels': self.labels,
+        }
+
 class SiteAlbumStar(CustomModel):
     "Хранит информацию о любимых альбомах пользователей."
     album = db.ReferenceProperty(SiteAlbum)

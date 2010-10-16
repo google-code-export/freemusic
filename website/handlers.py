@@ -44,7 +44,7 @@ def get_all_labels():
     """
     labels = memcache.get('all-labels')
     if not labels or type(labels) != list:
-        labels = get_labels_from_albums(model.SiteAlbum.all().fetch(1000))
+        labels = get_labels_from_albums([l.dict() for l in model.SiteAlbum.all().fetch(1000)])
         memcache.set('all-labels', labels)
     return labels
 
@@ -227,16 +227,7 @@ class AlbumHandler(BaseHandler):
         files = self._get_files(album)
         artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
         return {
-            'album': {
-                'id': album.id,
-                'name': album.name,
-                'artists': album.artists,
-                'release_date': album.release_date,
-                'homepage': album.homepage,
-                'cover_small': album.cover_small,
-                'cover_large': album.cover_large,
-                'labels': album.labels,
-            },
+            'album': album.dict(),
             'labels': sorted(album.labels),
             'artist': artist,
             'year': album.release_date.strftime('%Y'),
@@ -479,17 +470,7 @@ class IndexHandler(BaseHandler):
     template = 'index.html'
 
     def _get_data(self, *args):
-        albums = [{
-            'id': a.id,
-            'name': a.name,
-            'artists': a.artists,
-            'release_date': a.release_date,
-            'homepage': a.homepage,
-            'cover_small': a.cover_small,
-            'cover_large': a.cover_large,
-            'labels': a.labels,
-        } for a in self._get_albums(*args)]
-
+        albums = [a.dict() for a in self._get_albums(*args)]
         data = { 'albums': albums, 'labels': get_labels_from_albums(albums), }
         data.update(self._get_extra_data(*args))
         return data
