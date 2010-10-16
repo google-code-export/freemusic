@@ -675,16 +675,16 @@ class TagHandler(IndexHandler):
     """
     Shows albums tagged with a certain tag.
     """
-    def _real_get(self, tag):
-        tag = urllib.unquote(tag).strip().decode('utf-8')
-        albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
-        if not albums:
-            self.error(404)
-            return
-        self._send_albums(albums, {
-            'tag': tag,
-            'labels': [x for x in get_labels_from_albums(albums) if x != tag],
-        })
+    template = 'tag.html'
+
+    def _get_albums(self, tag):
+        tag = urllib.unquote(tag).decode('utf-8')
+        return model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
+
+    def _get_extra_data(self, tag):
+        return {
+            'tag': urllib.unquote(tag).decode('utf-8'),
+        }
 
 
 class UploadHandler(BaseHandler):
