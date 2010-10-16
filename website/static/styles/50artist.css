@@ -31,75 +31,21 @@
 	border: 0;
 }
 
-#artists ul {
-	margin: 0;
-	padding: 0;
-	text-align: center;
-	list-style-type: none;
-}
-#artists li {
-	display: inline-block;
-	margin: 0 .5em;
-	font-size: 9pt;
-}
-#artists li.w2 {
-	font-size: 11pt;
-}
-#artists li.w3 {
-	font-size: 13pt;
-}
-#artists li.w4 {
-	font-size: 15pt;
-}
-#artists li a {
-	white-space: nowrap;
-}
-
 
 #artists .column {
 	width: 230px;
 	float: left;
 	margin-right: 20px;
 }
-#artists table {
-	width: 100%;
+#artists h3 {
+	margin: 0 0 .25em;
+}
+#artists ul {
 	margin: 0 0 30px;
-	border-collapse: collapse;
+	padding: 0;
+	list-style-type: none;
 }
-#artists caption {
-	text-align: left;
-	font-weight: bold;
-	font-size: 1.5em;
-}
-#artists td {
-	padding: 2px;
-}
-#artists .name {
-	width: 100%;
-}
-#artists .icon {
-	display: inline-block;
-	width: 16px;
-	height: 16px;
-	text-decoration: none;
-	background-repeat: no-repeat;
-	background-position: top left;
-}
-#artists .icon span {
-	display: none;
-}
-#artists .homepage {
-	background-image: url(/static/homepage.png);
-}
-#artists .lastfm {
-	background-image: url(/static/last.fm.png);
-}
-#artists .twitter {
-	background-image: url(/static/twitter.png);
-}
-#artists .vk {
-	background-image: url(/static/vkontakte.png);
-}
-#artists .rss {
-	background-image: url(/static/rss.png);
+#artists li {
+	margin: 0;
+	padding: 0;
 }

@@ -486,11 +486,15 @@ class EditArtistHandler(BaseHandler):
 
 class ArtistsHandler(BaseHandler):
     """
-    Displays the list of all artists.
+    Displays the list of all artists.  If an admin adds ?gen&nocache to the URL, a fake
+    list of artists will be generated for testing purposes.
     """
     def _real_get(self):
         # Get a simple list of artists.
-        artists = self.__get_artists()
+        if users.is_current_user_admin() and 'gen' in self.request.arguments():
+            artists = self.__gen_artists()
+        else:
+            artists = self.__get_artists()
         total_count = len(artists)
 
         # Group by letters.
