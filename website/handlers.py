@@ -31,7 +31,7 @@ class BreakRequestHandlingException(Exception): pass
 def get_labels_from_albums(albums):
     labels = []
     for album in albums:
-        for label in album.labels:
+        for label in album['labels']:
             if label not in labels:
                 labels.append(label)
     return sorted(labels)
@@ -51,7 +51,8 @@ class BaseHandler(webapp.RequestHandler):
     requireLogin = False
     requireAdmin = False
     # Page cache is enabled by default.
-    cache = True
+    cache_page = False
+    cache_data = True
     # Default content type, used by render().  Subclasses can override this.
     content_type = 'text/html'
 
@@ -93,6 +94,8 @@ class BaseHandler(webapp.RequestHandler):
         Вызывает указанный шаблон, возвращает результат.
         """
         vars = vars or dict()
+        if type(vars) != dict:
+            raise Exception('%s.render() expects a dictionary!' % self.__class__.__name__)
         vars['base'] = self.getBaseURL()
         vars['self'] = self.request.uri
         vars['host'] = self.getHost()
@@ -105,6 +108,7 @@ class BaseHandler(webapp.RequestHandler):
         vars['user'] = users.get_current_user()
         directory = os.path.dirname(__file__)
         path = os.path.join(directory, 'templates', template_name)
+        logging.debug('Rendering %s with %s' % (self.request.path, template_name))
         result = template.render(path, vars)
         if not ret:
             self.response.headers['Content-Type'] = self.content_type + '; charset=utf-8'
@@ -129,25 +133,59 @@ class BaseHandler(webapp.RequestHandler):
             logging.error('Class %s does not define the _real_get() method, sending 501.' % self.__class__.__name__)
             self.error(501)
         else:
+            cache_key = self.request.path + '#page'
             cached = memcache.get(self.request.path)
             use_cache = True
-            if not self.cache:
-                logging.debug('Cache MISS (disabled) for %s' % self.request.path)
+            if not self.cache_page:
                 use_cache = False
+                logging.debug('Cache MIS for \"%s\": disabled by class %s' % (cache_key, self.__class__.__name__))
             if use_cache and type(cached) != tuple:
-                logging.debug('Cache MISS for %s' % self.request.path)
                 use_cache = False
+                logging.debug('Cache MIS for \"%s\"' % cache_key)
             if use_cache and users.is_current_user_admin() and 'nocache' in self.request.arguments():
-                logging.debug('Cache MISS (admin) for %s' % self.request.path)
+                logging.debug('Cache MIS for \"%s\": requested by admin' % cache_key)
                 use_cache = False
             if not use_cache:
                 self._real_get(*args)
                 cached = (self.response.headers, self.response.out, )
                 memcache.set(self.request.path, cached)
             else:
-                logging.debug('Cache HIT for %s' % self.request.path)
+                logging.debug('Cache HIT for \"%s\"' % cache_key)
             self.response.headers = cached[0]
             self.response.out = cached[1]
+
+    def _real_get(self, *args):
+        """
+        Calls the _get_data() method, which must return a dictionary to be used
+        with render().  The dictionary must contain only simple data, not
+        objects or models, otherwise caching will break up.
+        """
+        if not hasattr(self, '_get_data'):
+            logging.error('Class %s does not define the _get_data() method, sending 501.' % self.__class__.__name__)
+            self.error(501)
+        else:
+            cache_key = self.request.path + '#data'
+            data = memcache.get(cache_key)
+            use_cache = True
+            if type(data) != dict:
+                use_cache = False
+                logging.debug('Cache MIS for "%s"' % cache_key)
+            elif not self.cache_data:
+                use_cache = False
+                logging.debug('Cache IGN for "%s": disabled for class %s.' % (cache_key, self.__class__.__name__))
+            elif users.is_current_user_admin() and 'nocache' in self.request.arguments():
+                use_cache = False
+                logging.debug('Cache IGN for "%s": requested by admin.' % (cache_key))
+            if not use_cache:
+                data = self._get_data(*args)
+                if type(data) != dict:
+                    logging.warning('%s._get_data() returned something other than a dictionary (%s), not caching.' % (self.__class__.__name__, data.__class__.__name__))
+                else:
+                    memcache.set(cache_key, data)
+            else:
+                logging.debug('Cache HIT for "%s"' % cache_key)
+                # logging.debug(data)
+            self.render(self.template, data)
 
     def post(self, *args):
         """
@@ -170,24 +208,38 @@ class BaseHandler(webapp.RequestHandler):
         return False
 
     def _reset_cache(self, uri):
-        memcache.delete(uri)
+        """
+        Removes a page from cache, both data and the whole page.
+        """
+        memcache.delete(uri + '#data')
+        memcache.delete(uri + '#page')
 
 
 class AlbumHandler(BaseHandler):
-    def _real_get(self, album_id):
+    template = 'album.html'
+
+    def _get_data(self, album_id):
         album = model.SiteAlbum.gql('WHERE id = :1', int(album_id)).get()
         files = self._get_files(album)
         artist = files['tracks'] and files['tracks'][0]['song_artist'] or None
-        self.render('album.html', {
-            'album': album,
+        return {
+            'album': {
+                'id': album.id,
+                'name': album.name,
+                'artists': album.artists,
+                'release_date': album.release_date,
+                'homepage': album.homepage,
+                'cover_small': album.cover_small,
+                'cover_large': album.cover_large,
+                'labels': album.labels,
+            },
             'labels': sorted(album.labels),
             'artist': artist,
             'year': album.release_date.strftime('%Y'),
             'files': files,
             'compilation': 'compilation' in album.labels,
             'remixers': len([f for f in files['tracks'] if f['remixer']]),
-            'upload_url': self._get_upload_url(album, '/album/' + album_id),
-        })
+        }
 
     def post(self, album_id):
         """
@@ -411,48 +463,58 @@ class IndexHandler(BaseHandler):
     count = 100
     template = 'index.html'
 
-    def _real_get(self):
-        """
-        Shows self.count recent albums.
-        """
-        self._send_albums(model.SiteAlbum.all().order('-release_date').fetch(100))
+    def _get_data(self, *args):
+        albums = [{
+            'id': a.id,
+            'name': a.name,
+            'artists': a.artists,
+            'release_date': a.release_date,
+            'homepage': a.homepage,
+            'cover_small': a.cover_small,
+            'cover_large': a.cover_large,
+            'labels': a.labels,
+        } for a in self._get_albums(*args)]
 
-    def _send_albums(self, albums, attrs=None):
-        if not users.is_current_user_admin():
-            albums = [a for a in albums if a.cover_small]
-        attrs = attrs or dict()
-        attrs.update({
-            'albums': albums,
-        })
-        if not attrs.has_key('labels'):
-            attrs['labels'] = get_all_labels()
-        self.render(self.template, attrs)
+        data = { 'albums': albums, 'labels': get_labels_from_albums(albums), }
+        data.update(self._get_extra_data(*args))
+        return data
+
+    def _get_albums(self):
+        """
+        Returns albums (models) to show, filtered by whatever you need.
+        """
+        return model.SiteAlbum.all().order('-release_date').fetch(self.count)
+
+    def _get_extra_data(self, *args):
+        return {
+            'labels': get_all_labels(),
+        }
 
 
 class ArtistHandler(IndexHandler):
     template = 'artist.html'
 
-    """
-    Shows albums by an artist.
-    """
-    def _real_get(self, artist_name):
+    def _get_albums(self, artist_name):
         artist_name = urllib.unquote(artist_name).decode('utf-8')
+        return model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
+
+    def _get_extra_data(self, artist_name):
+        data = {'artist_name': urllib.unquote(artist_name).decode('utf-8')}
         artist = model.Artist.gql('WHERE name = :1', artist_name).get()
-        albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
-        if not albums:
-            self.error(404)
-            return
-        self._send_albums(albums, {
-            'artist': artist,
-            'artist_name': artist_name,
-            'labels': get_labels_from_albums(albums),
-        })
+        if artist:
+            data['artist'] = {
+            'name': artist.name,
+            'lastfm_name': artist.lastfm_name,
+            'twitter': artist.twitter,
+            'homepage': artist.homepage,
+            'vk': artist.vk,
+            }
+        return data
 
 
 class ArtistFeedHandler(ArtistHandler):
     template = 'artist.rss'
     content_type = 'text/xml'
-    cache = False
 
 
 class EditArtistHandler(BaseHandler):
@@ -495,7 +557,9 @@ class ArtistsHandler(BaseHandler):
     Displays the list of all artists.  If an admin adds ?gen&nocache to the URL, a fake
     list of artists will be generated for testing purposes.
     """
-    def _real_get(self):
+    template = 'artists.html'
+
+    def _get_data(self):
         # Get a simple list of artists.
         if users.is_current_user_admin() and 'gen' in self.request.arguments():
             artists = self.__gen_artists()
@@ -509,9 +573,9 @@ class ArtistsHandler(BaseHandler):
         # Group by columns.
         columns = self.__split_by_columns(letters, total_count)
 
-        self.render('artists.html', {
+        return {
             'columns': columns,
-        })
+        }
 
     def __gen_artists(self):
         import random

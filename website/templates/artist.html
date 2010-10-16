@@ -6,7 +6,7 @@
 	<div id="artistLinks">
 		<h3>Ссылки</h3>
 		<ul class="icons">
-			<li><a class="rss icon" href="/artist/{{ artist.name|uurlencode }}/rss"><span>RSS с альбомами</span></a></li>
+			<li><a class="rss icon" href="/artist/{{ artist_name|uurlencode }}/rss"><span>RSS с альбомами</span></a></li>
 			{% if artist.lastfm_name %}<li><a class="lastfm icon" href="http://www.last.fm/music/{{ artist.lastfm_name|uurlencode }}"><span>Профиль в Last.fm</span></a></li>{% endif %}
 			{% if artist.twitter %}<li><a class="twitter icon" href="http://twitter.com/{{ artist.twitter|uurlencode }}"><span>Twitter</span></a></li>{% endif %}
 			{% if artist.homepage %}<li><a class="homepage icon" href="{{ artist.homepage|escape }}"><span>Web Site</span></a></li>{% endif %}
