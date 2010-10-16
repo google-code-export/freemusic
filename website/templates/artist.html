@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block ueb %}<link rel="alternate" type="application/x-wiki" title="Редактировать исполнителя" href="/artist/{{ artist_name|uurlencode }}/edit"/>{% endblock %}
 {% block title %}{{ artist_name|escape }} на Free Music Hub{% endblock %}
-{% block rss %}<link rel="alternate" type="application/rss+xml" title="{{ artist.name|escape }} (альбомы)" href="/artist/{{ artist.name|uurlencode }}/rss"/>{% endblock %}
+{% block rss %}<link rel="alternate" type="application/rss+xml" title="{{ artist_name|escape }} (альбомы)" href="/artist/{{ artist_name|uurlencode }}/rss"/>{% endblock %}
 {% block header %}
 	<h2>{{ artist_name }}</h2>
 	<div id="artistLinks">
