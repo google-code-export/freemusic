@@ -11,7 +11,7 @@
 			<script type="text/javascript" src="{{ line }}"></script>
 		{% endfor %}
 		{% block rss %}{% endblock %}
-		<link rel="alternate" type="application/x-wiki" href="{% block ueb %}/upload{% endblock %}"/>
+		{% block ueb %}{% endblock %}
 		<link rel="shortcut icon" type="image/png" href="/static/favicon.ico"/>
     </head>
     <body id="{{ class_name }}">

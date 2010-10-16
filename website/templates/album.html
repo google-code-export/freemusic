@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}«{{ album.name|escape }}» на Free Music Hub{% endblock %}
-{% block ueb %}/album/edit?id={{ album.id }}{% endblock %}
+{% block ueb %}<link rel="alternate" type="application/x-wiki" title="Редактировать альбом" href="/album/edit?id={{ album.id }}"/>{% endblock %}
 {% block content %}
 <div id="album" class="left">
 	<div id="albumMeta">
