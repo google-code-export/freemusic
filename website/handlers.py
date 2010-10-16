@@ -262,7 +262,7 @@ class AlbumHandler(BaseHandler):
             if file is not None:
                 ticket = model.DownloadTicket(email=email, album_id=int(album_id), file_id=int(file_id), used=False)
                 ticket.put()
-                link = self.getBaseURL() + 'file/%u/%s/%s' % (file.id, ticket.key(), file.filename.encode('utf-8'))
+                link = self.getBaseURL() + 'file/%u/%s/%s' % (file.id, ticket.key(), urllib.quote(file.filename.encode('utf-8')))
                 links.append(link)
         if not links:
             raise Exception('No file selected.')
