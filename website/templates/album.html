@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}«{{ album.name|escape }}» на Free Music Hub{% endblock %}
 {% block ueb %}/album/edit?id={{ album.id }}{% endblock %}
 {% block content %}
 <div id="album" class="left">
