@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
         <title>{% block title %}Free Music{% endblock %}</title>
+		<script type="text/javascript">var fmh={system:{url:'{{ base }}'}};</script>
         {% for file in styles %}
             <link rel="stylesheet" type="text/css" href="{{ file }}"/>
         {% endfor %}
