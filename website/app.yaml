@@ -23,3 +23,6 @@ handlers:
 
 - url: .*
   script: handlers.py
+
+builtins:
+- datastore_admin: on
