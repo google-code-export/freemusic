@@ -617,6 +617,9 @@ class TagHandler(IndexHandler):
     def _real_get(self, tag):
         tag = urllib.unquote(tag).strip().decode('utf-8')
         albums = model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
+        if not albums:
+            self.error(404)
+            return
         self._send_albums(albums, {
             'tag': tag,
             'labels': [x for x in get_labels_from_albums(albums) if x != tag],
