@@ -439,6 +439,9 @@ class ArtistHandler(IndexHandler):
         artist_name = urllib.unquote(artist_name).decode('utf-8')
         artist = model.Artist.gql('WHERE name = :1', artist_name).get()
         albums = model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
+        if not albums:
+            self.error(404)
+            return
         self._send_albums(albums, {
             'artist': artist,
             'artist_name': artist_name,
