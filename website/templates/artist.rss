@@ -4,7 +4,7 @@
 <language>ru-RU</language>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 <generator>Free Music Hub</generator>
-<title>{{ artist_name }} (альбомы)</title>
+<title>Free Music Hub: {{ artist_name }}</title>
 <link>{{ base }}artist/{{ artist_name|uurlencode }}</link>
 {% for album in albums %}
 <item>

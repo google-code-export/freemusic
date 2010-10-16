@@ -4,8 +4,8 @@
 <language>ru-RU</language>
 <docs>http://blogs.law.harvard.edu/tech/rss</docs>
 <generator>Free Music Hub</generator>
-<title>Free Music Hub: метка «{{ tag|escape }}»</title>
-<link>{{ base }}tag/{{ tag|uurlencode }}</link>
+<title>Free Music Hub: новые альбомы</title>
+<link>{{ base }}</link>
 {% for album in albums %}
 <item>
 <title>{{ album.name }}</title>

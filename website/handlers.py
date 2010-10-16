@@ -517,6 +517,11 @@ class IndexHandler(BaseHandler):
         }
 
 
+class IndexFeedHandler(IndexHandler):
+    template = 'index.rss'
+    content_type = 'text/xml'
+
+
 class ArtistHandler(IndexHandler):
     template = 'artist.html'
 
@@ -810,6 +815,7 @@ if __name__ == '__main__':
         ('/artists', ArtistsHandler),
         ('/file/(\d+)/([^/]+)/(.+)$', FileServeHandler),
         ('/robots.txt$', RobotsHandler),
+        ('/rss$', IndexFeedHandler),
         ('/sitemap.xml$', SiteMapHandler),
         ('/tag/([^/]+)$', TagHandler),
         ('/tag/([^/]+)/rss$', TagFeedHandler),
