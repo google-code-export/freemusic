@@ -10,4 +10,5 @@ website/dump
 website/local-images
 website/*.sql3
 website/*-log-*
+website/.gae
 robot/import/*.xml
