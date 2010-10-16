@@ -6,10 +6,6 @@
 			<input type="text" name="name" value="{{ album.name }}" class="text"/>
 		</div>
 		<div>
-			<label>Исполнитель:</label>
-			<input type="text" name="artist" value="{% if album.artist %}{% if album.artist.name %}{{ album.artist.name }}{% endif %}{% endif %}" class="text"/>
-		</div>
-		<div>
 			<label>Дата выхода:</label>
 			<input type="text" name="release_date" value="{{ album.release_date }}" class="text"/>
 		</div>

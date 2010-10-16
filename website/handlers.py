@@ -375,7 +375,7 @@ class AlbumEditHandler(AlbumHandler):
             album.release_date = datetime.datetime.strptime(self.request.get('release_date'), '%Y-%m-%d').date()
         else:
             album.release_date = None
-        album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
+        album.labels = [l.strip() for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
 
         files = model.File.gql('WHERE album = :1', album).fetch(100)
         self.__update_files(files, 'file', { 'weight': int, 'song_title': unicode, 'song_artist': unicode, 'duration': int, 'filename': unicode, 'content_type': str, 'published': bool, 'remixer': unicode })
@@ -431,7 +431,11 @@ class AlbumSubmitHandler(BaseHandler):
         album = model.SiteAlbum()
         album.name = self.request.get('name') or None
         album.homepage = self.request.get('homepage') or None
-        album.labels = [l for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
+        album.labels = [l.strip() for l in re.split(',\s+', self.request.get('labels')) if l.strip()]
+        if self.request.get('release_date'):
+            album.release_date = datetime.datetime.strptime(self.request.get('release_date'), '%Y-%m-%d').date()
+        else:
+            album.release_date = None
         album.put()
         self.redirect('/album/' + str(album.id))
 
