@@ -154,15 +154,6 @@ class SiteAlbumReview(CustomModel):
             'author': self.author.user.email(),
         }
 
-class Event(CustomModel):
-    lastfm_id = db.IntegerProperty()
-    artist = db.ReferenceProperty(SiteArtist)
-    title = db.StringProperty()
-    date = db.DateTimeProperty()
-    venue = db.StringProperty()
-    city = db.StringProperty()
-    url = db.LinkProperty()
-
 
 class File(CustomModel):
     id = db.IntegerProperty()
