@@ -540,7 +540,7 @@ class ArtistHandler(IndexHandler):
 
     def _get_extra_data(self, artist_name):
         data = {'artist_name': urllib.unquote(artist_name).decode('utf-8')}
-        artist = model.Artist.gql('WHERE name = :1', artist_name).get()
+        artist = model.Artist.gql('WHERE name = :1', data['artist_name']).get()
         if artist:
             data['artist'] = artist.to_dict()
         return data
