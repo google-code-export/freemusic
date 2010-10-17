@@ -111,12 +111,14 @@ class BaseHandler(webapp.RequestHandler):
         directory = os.path.dirname(__file__)
         path = os.path.join(directory, 'templates', template_name)
         logging.debug('Rendering %s with %s' % (self.request.path, template_name))
-        if vars['is_admin'] and self.request.get('dump'):
+        content_type = self.content_type
+        if vars['is_admin'] and 'dump' in self.request.arguments():
             result = unicode(vars)
+            content_type = 'text/plain'
         else:
             result = template.render(path, vars)
         if not ret:
-            self.response.headers['Content-Type'] = self.content_type + '; charset=utf-8'
+            self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
             self.response.out.write(result)
         return result
 
