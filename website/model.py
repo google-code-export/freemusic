@@ -26,7 +26,6 @@ def nextId(cls):
 class CustomModel(db.Model):
     JSON_TYPE_MAP = {
         'SiteAlbum': lambda x: x.id,
-        'SiteArtist': lambda x: x.id,
         'datetime': lambda x: x.strftime('%Y-%m-%d %H:%M:%S'),
         'date': lambda x: x.strftime('%Y-%m-%d'),
         'User': lambda x: x.email(),
@@ -68,13 +67,6 @@ class SiteUser(CustomModel):
     joined = db.DateTimeProperty(auto_now_add=True)
     weight = db.FloatProperty()
     nickname = db.StringProperty()
-
-class SiteArtist(CustomModel):
-    id = db.IntegerProperty()
-    name = db.StringProperty(required=_REQUIRED)
-    sortname = db.StringProperty(required=False)
-    twitter = db.StringProperty()
-    lastfm_name = db.StringProperty()
 
 class SiteAlbum(CustomModel):
     id = db.IntegerProperty()
@@ -119,32 +111,6 @@ class SiteAlbumStar(CustomModel):
     album = db.ReferenceProperty(SiteAlbum)
     user = db.UserProperty()
     added = db.DateTimeProperty(auto_now_add=True)
-
-class SiteImage(CustomModel):
-    album = db.ReferenceProperty(SiteAlbum)
-    medium = db.LinkProperty()
-    original = db.LinkProperty()
-    type = db.StringProperty()
-
-class SiteTrack(CustomModel):
-    id = db.IntegerProperty()
-    album = db.ReferenceProperty(SiteAlbum)
-    title = db.StringProperty()
-    artist = db.ReferenceProperty(SiteArtist) # for compilations
-    lyrics = db.TextProperty()
-    number = db.IntegerProperty()
-    mp3_link = db.LinkProperty()
-    mp3_length = db.IntegerProperty() # нужно для RSS с подкастом
-    ogg_link = db.LinkProperty()
-    ogg_length = db.IntegerProperty() # нужно для RSS с подкастом
-    duration = db.StringProperty()
-
-class SiteFile(CustomModel):
-    album = db.ReferenceProperty(SiteAlbum)
-    name = db.StringProperty()
-    uri = db.LinkProperty()
-    type = db.StringProperty()
-    size = db.IntegerProperty()
 
 class SiteAlbumReview(CustomModel):
     # рецензируемый альбом
@@ -196,22 +162,6 @@ class Event(CustomModel):
     venue = db.StringProperty()
     city = db.StringProperty()
     url = db.LinkProperty()
-
-class SiteAlbumLabel(CustomModel):
-    """
-    Метка для альбома. Используется для хранения сырых данных,
-    которые в сыром виде не используются: они периодически
-    агрегируются, результаты сохраняются в SiteAlbum.
-
-    Метки есть только у альбомов. Метки исполнителя формируются
-    на основании меток его альбомов.
-    """
-    # Метка.
-    label = db.StringProperty()
-    # Пользователь, добавивший метку.
-    user = db.UserProperty(required=_REQUIRED)
-    # Дата установки, на всякий случай.
-    published = db.DateTimeProperty(auto_now_add=True)
 
 
 class File(CustomModel):
