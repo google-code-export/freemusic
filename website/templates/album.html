@@ -61,7 +61,7 @@
 
 <div id="sidebar">
 	{% if album.cover_small %}<div id="cover">
-		<img src="{% if album.cover_small %}{{ album.cover_small }}{% else %}/static/default_album_large.png{% endif %}" alt="cover"/>
+		<a class="external" title="Открыть в исходном размере." href="{{ album.cover_large|escape }}"><img src="{% if album.cover_small %}{{ album.cover_small }}{% else %}/static/default_album_large.png{% endif %}" alt="cover"/></a>
 	</div>{% endif %}
 	{% if labels %}<div id="labels" class="labels">
 		<h2>Метки</h2>
