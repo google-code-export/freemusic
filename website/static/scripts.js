@@ -15,6 +15,9 @@
   $('a[href*="://"]:not([href^="'+ fmh.system.url +'"])').attr('target', '_blank').addClass('external');
 });
 $(document).ready(function(){
+	$('form .text:first').focus();
+});
+$(document).ready(function(){
 	$('#album .download .button').click(function(){
 		$('#downloads').toggleClass('hidden');
 		return false;
