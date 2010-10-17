@@ -113,7 +113,9 @@ class BaseHandler(webapp.RequestHandler):
         logging.debug('Rendering %s with %s' % (self.request.path, template_name))
         content_type = self.content_type
         if vars['is_admin'] and 'dump' in self.request.arguments():
-            result = unicode(vars)
+            result = u''
+            for k in sorted(vars.keys()):
+                result += u'%s: %s\n\n' % (k, vars[k])
             content_type = 'text/plain'
         else:
             result = template.render(path, vars)
