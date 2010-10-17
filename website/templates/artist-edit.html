@@ -20,6 +20,10 @@
 				<input type="text" name="vk" class="text" value="{{ artist.vk|nonestr|escape }}"/>
 			</div>
 			<div>
+				<label>Связанные артисты:</label>
+				<input type="text" name="related_artists" class="text" value="{% for name in artist.related_artists %}{{ name|escape }}, {% endfor %}"/>
+			</div>
+			<div>
 				<label><input type="checkbox" name="delete" value="1"/> Удалить исполнителя</label>
 			</div>
 			<div>

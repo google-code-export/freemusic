@@ -1,14 +1,14 @@
 syntax: glob
 *.pyc
 *.orig
+.gae
+robot/import/*.xml
 tmp
-website/static/import.xml
-website/static/data.xml
-website/static/styles.css
+website/*-log-*
+website/*.sql3
 website/config.py
 website/dump
 website/local-images
-website/*.sql3
-website/*-log-*
-website/.gae
-robot/import/*.xml
+website/static/data.xml
+website/static/import.xml
+website/static/styles.css

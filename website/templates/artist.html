@@ -16,3 +16,11 @@
 	</div>
 	{% if albums %}<h3>Альбомы с участием этого исполнителя</h3>{% else %}<p>Нет альбомов с участием этого исполнителя.</p>{% endif %}
 {% endblock %}
+{% block below_albums %}
+	{% if artist.related_artists %}
+		<h3>Связанные артисты</h3>
+		<ul>{% for name in artist.related_artists %}
+			<li><a href="/artist/{{ name|uurlencode }}">{{ name|escape }}</a></li>
+		{% endfor %}</ul>
+	{% endif %}
+{% endblock %}

@@ -278,5 +278,18 @@ class Artist(CustomModel):
     homepage = db.LinkProperty()
     # Адрес страницы в контакте
     vk = db.LinkProperty()
+    # Связанные артисты.
+    related_artists = db.StringListProperty()
     # Количество альбомов, в которых задействован.
     track_count = db.IntegerProperty()
+
+    def to_dict(self):
+        return {
+        'name': self.name,
+        'sortname': util.mksortname(self.name),
+        'lastfm_name': self.lastfm_name,
+        'twitter': self.twitter,
+        'homepage': self.homepage,
+        'vk': self.vk,
+        'related_artists': self.related_artists,
+        }

@@ -533,13 +533,7 @@ class ArtistHandler(IndexHandler):
         data = {'artist_name': urllib.unquote(artist_name).decode('utf-8')}
         artist = model.Artist.gql('WHERE name = :1', artist_name).get()
         if artist:
-            data['artist'] = {
-            'name': artist.name,
-            'lastfm_name': artist.lastfm_name,
-            'twitter': artist.twitter,
-            'homepage': artist.homepage,
-            'vk': artist.vk,
-            }
+            data['artist'] = artist.to_dict()
         return data
 
 
@@ -562,6 +556,7 @@ class EditArtistHandler(BaseHandler):
             v = self.request.get(k)
             logging.info('%s = %s' % (k, v))
             setattr(artist, k, v or None)
+        artist.related_artists = list(set(sorted([name.strip() for name in self.request.get('related_artists').split(',') if name.strip()])))
         if self.request.get('delete'):
             artist.delete()
             destination = '/artists'
@@ -627,14 +622,7 @@ class ArtistsHandler(BaseHandler):
         """
         artists = dict()
         for artist in model.Artist.gql('WHERE track_count > 0').fetch(1000):
-            artists[artist.name] = {
-                'name': artist.name,
-                'sortname': self.__mksortname(artist.name),
-                'lastfm_name': artist.lastfm_name,
-                'twitter': artist.twitter,
-                'homepage': artist.homepage,
-                'vk': artist.vk,
-            }
+            artists[artist.name] = artist.to_dict()
         return artists
 
     def __split_by_letter(self, artists):
