@@ -472,7 +472,7 @@ class FileServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         file = model.File.gql('WHERE id = :1', int(file_id)).get()
         if file is None:
             raise NotFoundException('No such file.')
-        if file.filename != filename.decode('utf-8'):
+        if file.filename != urllib.unquote(filename).decode('utf-8'):
             raise NotFoundException('No file with such name.')
         if file.filename.endswith('.zip'):
             self.__check_ticket(file, ticket_id)
