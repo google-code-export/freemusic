@@ -214,7 +214,9 @@ class BaseHandler(webapp.RequestHandler):
         Removes a page from cache, both data and the whole page.
         """
         memcache.delete(uri + '#data')
+        logging.debug('Cache DEL for \"%s#data\"' % uri)
         memcache.delete(uri + '#page')
+        logging.debug('Cache DEL for \"%s#page\"' % uri)
 
 
 class AlbumHandler(BaseHandler):
@@ -549,9 +551,9 @@ class EditArtistHandler(BaseHandler):
             'artist': artist,
         })
 
-    def post(self, name):
-        destination = '/artist/' + name
-        artist = self.__get_artist(name)
+    def post(self, artist_name):
+        destination = '/artist/' + artist_name
+        artist = self.__get_artist(artist_name)
         for k in ('lastfm_name', 'twitter', 'homepage', 'vk'):
             v = self.request.get(k)
             logging.info('%s = %s' % (k, v))
@@ -564,8 +566,8 @@ class EditArtistHandler(BaseHandler):
             artist.put()
 
         # Reset cache.
-        self._reset_cache('/artist/' + name)
-        self._reset_cache('/artist/' + name + '/rss')
+        self._reset_cache('/artist/' + artist_name)
+        self._reset_cache('/artist/' + artist_name + '/rss')
         self._reset_cache('/artists')
 
         self.redirect(destination)
