@@ -886,7 +886,7 @@ class MLHandler(BaseHandler):
         if not data['email']:
             raise Exception(u'You forgot to specify your email address.')
         self.send_mail('mailing-list-confirmation', data['email'], data)
-        self.redirect('/artist/%s/mail?status=sent' % name)
+        self.redirect('/artist/%s/mail?status=sent&back=%s' % (name, data['back']))
 
     def __get_artist(self, quoted_name):
         name = urllib.unquote(quoted_name).strip().decode('utf-8')
