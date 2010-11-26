@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Отправка сообщения в рассылку {{ artist.name|escape }}{% endblock %}
 {% block content %}
-<h2>Отправка сообщения в рассылку «{{ artist.name }}»</h2>
+<h1>Отправка сообщения в рассылку «{{ artist.name }}»</h1>
 {% if status_sent %}
 	<p>Сообщение будет отправлено в ближайшее время.</p>
 	<p>Теперь можно <a href="/artist/{{ artist.name|uurlencode }}/mail/send">написать ещё одно</a> или <a href="/artist/{{ artist.name|uurlencode }}">вернуться на страницу исполнителя</a>.</p>
