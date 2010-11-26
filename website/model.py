@@ -207,22 +207,34 @@ class DownloadTicket(CustomModel):
 
 
 class Artist(CustomModel):
+    """Описание исполнителя."""
+
     # Отображаемое на сайте имя.
     name = db.StringProperty(required=_REQUIRED)
+
     # Имя, используемое для сортировки.  Всякие "the" из начала удаляются.
     sortname = db.StringProperty(required=False)
+
     # Имя, используемое в last.fm (может несоответствовать)
     lastfm_name = db.StringProperty()
+
     # Идентификатор в твиттере, если есть.
     twitter = db.StringProperty()
+
     # Адрес основного сайта.
     homepage = db.LinkProperty()
+
     # Адрес страницы в контакте
     vk = db.LinkProperty()
+
     # Связанные артисты.
     related_artists = db.StringListProperty()
+
     # Количество альбомов, в которых задействован.
     track_count = db.IntegerProperty()
+
+    # Почтовые адреса администраторов.
+    admins = db.StringListProperty()
 
     def to_dict(self):
         return {
@@ -234,3 +246,39 @@ class Artist(CustomModel):
         'vk': self.vk,
         'related_artists': self.related_artists,
         }
+
+
+class MLSubscriber(CustomModel):
+    """Информация о подписчике на рассылку."""
+
+    # Дата добавления в список (подтверждение).
+    added = db.DateTimeProperty(auto_now_add=True)
+
+    # Почтовый адрес (проверенный).
+    email = db.EmailProperty()
+
+    # Имя исполнителя.
+    artist = db.StringProperty()
+
+
+class MLMessage(CustomModel):
+    """Сообщение для рассылки."""
+
+    # Дата создания.  Обновляется при редактировании.  Фактически сообщение
+    # отправляется через час после указанной здесь даты.
+    created = db.DateTimeProperty(auto_now_add=True)
+
+    # Адрес отправителя.
+    sender = db.EmailProperty()
+
+    # Имя исполнителя, в чью рассылку отправлено сообщение.
+    artist = db.StringProperty()
+
+    # Заголовок сообщения.
+    subject = db.StringProperty()
+
+    # Текст сообщения (сырой Markdown).
+    text = db.TextProperty()
+
+    # True если сообщение ушло и редактировать его нельзя.
+    sent = db.BooleanProperty()

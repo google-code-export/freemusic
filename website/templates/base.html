@@ -10,6 +10,10 @@
 		{% for line in scripts %}
 			<script type="text/javascript" src="{{ line }}"></script>
 		{% endfor %}
+		{% if show_wmd %}
+			<script type="text/javascript">wmd_options = { output: "Markdown", buttons: "bold italic | link blockquote image | ol ul", autostart: true };</script>
+			<script type="text/javascript" src="/static/wmd/wmd.js"></script>
+		{% endif %}
 		{% block rss %}{% endblock %}
 		{% block ueb %}{% endblock %}
 		<link rel="shortcut icon" type="image/png" href="/static/favicon.ico"/>
@@ -41,7 +45,15 @@
                         <a href="/chart">Рейтинг</a>
                     </li>
 					-->
-					<li>{% if user %}<a href="{{ logout_uri|escape }}">Выйти</a>{% else %}<a href="{{ login_uri|escape }}" title="Даёт возможность писать рецензии и голосовать.">Войти</a>{% endif %}</li>
+					{% if user %}
+						<li class="wsub">
+							<a href="/my">Моё</a>
+							<ul class="submenu">
+								<li><a href="/mail">Почта</a></li>
+								<li><a href="{{ logout_uri|escape }}">Выйти</a></li>
+							</ul>
+						</li>
+					{% endif %}
                 </ul>
 				<!--
                 <form action="/search" method="get" class="search">
@@ -58,6 +70,7 @@
             <div id="footer">{% block footer %}&copy; ebm.net.ru
 				&middot; <a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Об этом сайте</a>
 				&middot; <a href="http://code.google.com/p/freemusic/wiki/WhatsNew">Новости</a>
+				&middot; <a href="http://code.google.com/p/freemusic/wiki/Uploading">Добавить альбом</a>
 				<!--
 				&middot; <a href="http://code.google.com/p/freemusic/issues/list">Поддержка</a>
 				&middot; <a href="http://freemusichub.blogspot.com/">Наш блог</a> 

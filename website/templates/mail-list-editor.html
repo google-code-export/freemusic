@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Отправка сообщения в рассылку {{ artist.name|escape }}{% endblock %}
+{% block content %}
+<h2>Отправка сообщения в рассылку «{{ artist.name }}»</h2>
+{% if status_sent %}
+	<p>Сообщение будет отправлено в ближайшее время.</p>
+	<p>Теперь можно <a href="/artist/{{ artist.name|uurlencode }}/mail/send">написать ещё одно</a> или <a href="/artist/{{ artist.name|uurlencode }}">вернуться на страницу исполнителя</a>.</p>
+{% else %}
+	<p>Рассылку читают {{ recipient_count }} человек.  Прежде чем писать, пожалуйста, ознакомьтесь с нашей <a href="http://code.google.com/p/freemusic/wiki/MailingLists#Правила_хорошего_тона">рекомендацией по оформлению сообщений</a>.</p>
+	<form method="post">
+		<input class="text subject" type="text" name="subject" value="Новости от {{ artist.name|escape }}"/>
+		<div>
+			<textarea class="text" name="text"></textarea>
+		</div>
+		<div>
+			<input type="submit" value="Отправить сообщение"/> или <a href="/artist/{{ artist.name|uurlencode }}">вернуться к странице исполнителя</a>
+		</div>
+	</form>
+	<h2>Предварительный просмотр</h2>
+	<div class="wmd-preview">Появится здесь, как только вы что-нибудь наберёте.</div>
+{% endif %}
+{% endblock %}

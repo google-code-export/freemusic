@@ -3,32 +3,49 @@
 # Python imports.
 import datetime
 import logging
-import urllib
-import urlparse
 import operator # for sorting
 import os
 import os.path
+import random
 import re
+import urllib
+import urlparse
 import wsgiref.handlers
 
 # GAE imports.
 from google.appengine.api import images
-from google.appengine.api import users
 from google.appengine.api import mail
 from google.appengine.api import memcache
+from google.appengine.api import users
+from google.appengine.api.labs import taskqueue
 from google.appengine.ext import blobstore
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.ext.webapp import template
+from django.template import TemplateDoesNotExist
 from django.utils import simplejson
 
 # Site imports.
 import config
+import markdown
 import model
+
+def get_artist(quoted_name, create=False):
+    name = urllib.unquote(quoted_name).strip().decode('utf-8')
+    artist = model.Artist.gql('WHERE name = :1', name).get()
+    if artist is None:
+        if create:
+            artist = model.Artist(name=name)
+        else:
+            raise NotFoundException
+    return artist
+
 
 class BreakRequestHandlingException(Exception): pass
 
 class NotFoundException(Exception): pass
+
+class BadRequestException(Exception): pass
 
 def get_labels_from_albums(albums):
     labels = []
@@ -128,6 +145,33 @@ class BaseHandler(webapp.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         self.response.out.write(text)
 
+    def send_mail(self, template_name, to, data=None, subject=None):
+        """Sends email to specified addresses.
+
+        Plain text and HTML parts are rendered by templates with
+        suffixes ".txt" and ".html" respectively.  Copies are sent to
+        the web site admin.
+        """
+        data = data or {}
+        data['email'] = to
+        data['base'] = self.getBaseURL()
+        data['user'] = users.get_current_user()
+
+        html = self.render(template_name + '.html', data, ret=True)
+        try: text = self.render(template_name + '.txt', data, ret=True)
+        except TemplateDoesNotExist: text = html
+
+        if not subject:
+            x = re.match('<h1>([^<]+)</h1>', html)
+            if x:
+                subject = x.group(1).strip()
+                html = html.replace(x.group(0), '')
+            elif data.has_key('subject'): subject = data['subject']
+            else: subject = 'No subject.'
+
+        logging.debug('Message body: %s' % text.strip())
+        mail.send_mail(sender=config.MAIL_FROM, to=to, bcc=config.MAIL_FROM, subject=subject, body=text.strip(), html=html.strip())
+
     def handle_exception(self, e, debug_mode):
         if type(e) != BreakRequestHandlingException:
             webapp.RequestHandler.handle_exception(self, e, debug_mode)
@@ -194,7 +238,19 @@ class BaseHandler(webapp.RequestHandler):
             else:
                 logging.debug('Cache HIT for "%s"' % cache_key)
                 # logging.debug(data)
+            data = self._tweak_cached_data(data)
             self.render(self.template, data)
+
+    def _tweak_cached_data(self, data):
+        """Lets handlers add data to what's read from the cache.
+        
+        One good example of use is if you want to enable administrative
+        functions depending on the contents (thus you're bound to the logged in
+        user) but still want to use the cache.  In this case you cache emails
+        of users with special access and in this method set some property to
+        True if the current user is within that list.
+        """
+        return data
 
     def post(self, *args):
         """
@@ -511,7 +567,7 @@ class IndexHandler(BaseHandler):
     def _get_data(self, *args):
         albums = [a.dict() for a in self._get_albums(*args)]
         data = { 'albums': albums, 'labels': get_labels_from_albums(albums), }
-        data.update(self._get_extra_data(*args))
+        data.update(self._get_extra_cached_data(*args))
         return data
 
     def _get_albums(self):
@@ -520,7 +576,7 @@ class IndexHandler(BaseHandler):
         """
         return model.SiteAlbum.all().order('-release_date').fetch(self.count)
 
-    def _get_extra_data(self, *args):
+    def _get_extra_cached_data(self, *args):
         return {
             'labels': get_all_labels(),
         }
@@ -538,11 +594,18 @@ class ArtistHandler(IndexHandler):
         artist_name = urllib.unquote(artist_name).decode('utf-8')
         return model.SiteAlbum.gql('WHERE artists = :1 ORDER BY release_date DESC', artist_name).fetch(100)
 
-    def _get_extra_data(self, artist_name):
+    def _get_extra_cached_data(self, artist_name):
         data = {'artist_name': urllib.unquote(artist_name).decode('utf-8')}
         artist = model.Artist.gql('WHERE name = :1', data['artist_name']).get()
         if artist:
             data['artist'] = artist.to_dict()
+            data['admins'] = artist.admins
+        return data
+
+    def _tweak_cached_data(self, data):
+        if data.has_key('admins'):
+            user = users.get_current_user()
+            data['is_artist_admin'] = user and user.email() in data['admins']
         return data
 
 
@@ -561,11 +624,18 @@ class EditArtistHandler(BaseHandler):
     def post(self, artist_name):
         destination = '/artist/' + artist_name
         artist = self.__get_artist(artist_name)
+
+        # Прописываем простые значения.
         for k in ('lastfm_name', 'twitter', 'homepage', 'vk'):
             v = self.request.get(k)
             logging.info('%s = %s' % (k, v))
             setattr(artist, k, v or None)
-        artist.related_artists = list(set(sorted([name.strip() for name in self.request.get('related_artists').split(',') if name.strip()])))
+
+        # Прописываем списки.
+        stl = lambda s: list(set(sorted([name.strip() for name in s.split(',') if name.strip()])))
+        artist.related_artists = stl(self.request.get('related_artists'))
+        artist.admins = stl(self.request.get('admins'))
+
         if self.request.get('delete'):
             artist.delete()
             destination = '/artists'
@@ -613,7 +683,6 @@ class ArtistsHandler(BaseHandler):
         }
 
     def __gen_artists(self):
-        import random
         artists = dict()
         for idx in range(random.randrange(50)):
             letter = chr(random.randrange(ord('A'), ord('Z') + 1))
@@ -709,7 +778,7 @@ class TagHandler(IndexHandler):
         tag = urllib.unquote(tag).decode('utf-8')
         return model.SiteAlbum.gql('WHERE labels = :1 ORDER BY release_date DESC', tag).fetch(100)
 
-    def _get_extra_data(self, tag):
+    def _get_extra_cached_data(self, tag):
         return {
             'tag': urllib.unquote(tag).decode('utf-8'),
         }
@@ -795,6 +864,122 @@ class ZzzHandler(BaseHandler):
         self.send_text('OK')
 
 
+class MLHandler(BaseHandler):
+    def get(self, name):
+        template_name = 'bare' in self.request.arguments() and 'artist-mail-list-bare.html' or 'artist-mail-list.html'
+        self.render(template_name, {
+            'mail_from': config.MAIL_FROM,
+            'mail_sent': self.request.get('status') == 'sent',
+            'activated': self.request.get('status') == 'activated',
+            'artist': get_artist(name),
+            'css': self.request.get('css'),
+            'back': self.request.get('back'),
+            })
+
+    def post(self, name):
+        data = {
+            'email': self.request.get('address'),
+            'artist': get_artist(name),
+            'seed': random.randrange(11111, 99999),
+            'back': self.request.get('back'),
+        }
+        if not data['email']:
+            raise Exception(u'You forgot to specify your email address.')
+        self.send_mail('mailing-list-confirmation', data['email'], data)
+        self.redirect('/artist/%s/mail?status=sent' % name)
+
+    def __get_artist(self, quoted_name):
+        name = urllib.unquote(quoted_name).strip().decode('utf-8')
+        artist = model.Artist.gql('WHERE name = :1', name).get()
+        if artist is None:
+            artist = model.Artist(name=name)
+        return artist
+
+
+class MLSendHandler(BaseHandler):
+    def get(self, name):
+        artist = get_artist(name)
+        if not users.is_current_user_admin():
+            raise Exception('No access for you.')
+        self.render('mail-list-editor.html', {
+            'artist': artist,
+            'status_sent': self.request.get('status') == 'sent',
+            'status_form': self.request.get('status') == '',
+            'show_wmd': True,
+            'recipient_count': model.MLSubscriber.gql('WHERE artist = :1', artist.name).count(),
+        })
+
+    def post(self, name):
+        artist = get_artist(name)
+        if not users.is_current_user_admin():
+            raise Exception('No access for you.')
+        user = users.get_current_user()
+        msg = model.MLMessage(artist=artist.name, sender=user.email(),
+            subject=self.request.get('subject'), text=self.request.get('text'), sent=False)
+        if not msg.text:
+            raise BadRequestException(u'Вы забыли ввести текст сообщения.')
+        logging.info('Sending a message to %s: %s' % (msg.artist, msg.text))
+        msg.put()
+
+        # Ставим в очередь задачу, которая отправит каждому подписчику по сообщению.
+        taskqueue.Task(url='/task/mail/check', params={
+            'artist_name': artist.name,
+        }).add()
+
+        self.redirect('/artist/%s/mail/send?status=sent' % name)
+
+
+class MLConfirmHandler(BaseHandler):
+    def get(self, name):
+        artist = get_artist(name)
+        email = self.request.get('address')
+        if not email:
+            raise Exception('Email address not specified.')
+        mls = model.MLSubscriber.gql('WHERE email = :1 AND artist = :2', email, artist.name).get()
+        if mls is None:
+            mls = model.MLSubscriber(email=email, artist=artist.name)
+            mls.put()
+            logging.info(u'%s subsribed to %s' % (email, artist.name))
+        self.redirect('/artist/%s/mail?status=activated&back=%s' % (name, self.request.get('back')))
+
+
+class MLCheckTask(BaseHandler):
+    """Проверяет, не пора ли отправить сообщение в рассылку.
+
+    Имя исполнителя передаётся параметром artist_name.  Загружает все
+    неотправленные сообщения и, если с момента написания прошло больше часа,
+    отправляет сообщения (через task/mail/send), затем выставляет флаг "sent".
+    """
+    def post(self):
+        artist_name = self.request.get('artist_name')
+        if not artist_name:
+            raise Exception('artist_name not given.')
+        messages = model.MLMessage.gql('WHERE artist = :1', artist_name).fetch(1000)
+        for message in messages:
+            if not message.sent:
+                subscribers = model.MLSubscriber.gql('WHERE artist = :1', artist_name).fetch(1000)
+                text = message.text # subscribers and markdown.Markdown(message.text)
+
+                for subscriber in subscribers:
+                    taskqueue.Task(url='/task/mail/send', params={
+                        'recipient': subscriber.email,
+                        'subject': message.subject,
+                        'text': text,
+                    }).add()
+
+                message.sent = True
+                message.put()
+
+
+class MLSendTask(BaseHandler):
+    def post(self):
+        recipient = self.request.get('recipient')
+        text = self.request.get('text').strip()
+        html = markdown.markdown(text).strip()
+        text += u'\n\n-- \nFree Music Hub\nhttp://www.freemusichub.net/\n'
+        mail.send_mail(sender=config.MAIL_FROM, to=recipient, bcc=config.MAIL_FROM, subject=self.request.get('subject'), body=text, html=html)
+
+
 if __name__ == '__main__':
     if config.DEBUG:
         logging.getLogger().setLevel(logging.DEBUG)
@@ -808,6 +993,9 @@ if __name__ == '__main__':
         ('/album/submit$', AlbumSubmitHandler),
         ('/artist/([^/]+)$', ArtistHandler),
         ('/artist/([^/]+)/edit$', EditArtistHandler),
+        ('/artist/([^/]+)/mail$', MLHandler),
+        ('/artist/([^/]+)/mail/confirm$', MLConfirmHandler),
+        ('/artist/([^/]+)/mail/send$', MLSendHandler),
         ('/artist/([^/]+)/rss$', ArtistFeedHandler),
         ('/artists', ArtistsHandler),
         ('/file/(\d+)/([^/]+)/(.+)$', FileServeHandler),
@@ -816,6 +1004,8 @@ if __name__ == '__main__':
         ('/sitemap.xml$', SiteMapHandler),
         ('/tag/([^/]+)$', TagHandler),
         ('/tag/([^/]+)/rss$', TagFeedHandler),
+        ('/task/mail/check', MLCheckTask),
+        ('/task/mail/send', MLSendTask),
         ('/upload', UploadHandler),
         ('/upload/callback', UploadCallbackHandler),
         ('/zzz', ZzzHandler),

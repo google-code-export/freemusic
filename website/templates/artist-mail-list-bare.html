@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>{{ artist.name }}: почтовая рассылка</title>
+{% if css %}<link rel="stylesheet" type="text/css" href="{{ css|escape }}"/>{% endif %}
+</head>
+<body>
+<h2>Почтовая рассылка группы «{{ artist.name }}»</h2>
+<p>Эта рассылка не даст вам пропустить важное для группы {{ artist.name }} событие.  Сообщения пишут лично музыканты, обычно не чаще раза в месяц.</p>
+<form method="post" action="/artist/{{ artist.name|uurlencode }}/mail">
+	<div class="input">
+		<label for="mail-address"><span>Адрес вашей электронной почты:</span></label>
+		<input id="mail-address" type="text" name="address" class="text" value="{{ user.email }}" class="required"/>
+	</div>
+	<div class="btn">
+		<input type="submit" value="Подписаться"/>
+	</div>
+</form>
+</body>
+</html>

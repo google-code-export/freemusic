@@ -1,0 +1,18 @@
+#MLSendHandler form {
+	margin-bottom: 2em;
+}
+#MLSendHandler .text {
+	width: 100%;
+}
+#MLSendHandler .subject {
+	font-size: 1.5em;
+	margin-bottom: 1em;
+}
+#MLSendHandler textarea {
+	height: 300px;
+}
+#MLSendHandler .wmd-preview {
+	background-color: #eee;
+	border: solid 1px #ccc;
+	padding: 10px;
+}
