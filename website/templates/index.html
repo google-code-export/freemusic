@@ -2,6 +2,7 @@
 {% block rss %}<link rel="alternate" type="application/rss+xml" title="Все альбомы" href="/rss"/>{% endblock %}
 {% block content %}
 <div id="albumlist" class="left">
+	<h1>{% block list_title %}Свежая свободная музыка{% endblock %}</h1>
 	{% block header %}{% endblock %}
 	{% for album in albums %}<div class="tile">
 		<a href="/album/{{ album.id }}" title="«{{ album.name|escape }}»{% if album.artists.1 %}{% else %}{% if album.artists.0 %} by {{ album.artists.0|escape }}{% endif %}{% endif %}">

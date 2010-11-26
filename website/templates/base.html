@@ -19,65 +19,33 @@
 		<link rel="shortcut icon" type="image/png" href="/static/favicon.ico"/>
     </head>
     <body id="{{ class_name }}">
-        <div id="header">
-            <div class="corsette">
-                <h1>
-                    <a href="/" class="wbg">
-                        <span>Free Music Hub</span>
-                    </a>
-                </h1>
-                <ul class="menu">
-                    <li class="wsub">
-                        <a href="/">Музыка</a>
-                        <ul class="submenu">
-                            <li><a href="/artists">Исполнители</a></li>
-							<!--
-                            <li><a href="/reviews">Рецензии</a></li>
-							-->
-							{% if is_admin %}<li><a href="/album/submit">Добавить альбом</a></li>{% endif %}
-                        </ul>
-                    </li>
-					<!--
-                    <li>
-                        <a href="/events">Афиша</a>
-					</li>
-                    <li>
-                        <a href="/chart">Рейтинг</a>
-                    </li>
-					-->
-					{% if user %}
-						<li class="wsub">
-							<a href="/my">Моё</a>
-							<ul class="submenu">
-								<li><a href="/mail">Почта</a></li>
-								<li><a href="{{ logout_uri|escape }}">Выйти</a></li>
-							</ul>
-						</li>
-					{% endif %}
-                </ul>
-				<!--
-                <form action="/search" method="get" class="search">
-                    <input type="text" name="q" class="text clearme" placeholder="Поиск по сайту"/>
-                    <button type="submit">
-                        <span>Найти</span>
-                    </button>
-                </form>
-				-->
-            </div>
-        </div>
         <div id="wrapper">
             <div id="content">{% block content %}{% endblock %}</div>
-            <div id="footer">{% block footer %}&copy; ebm.net.ru
-				&middot; <a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Об этом сайте</a>
-				&middot; <a href="http://code.google.com/p/freemusic/wiki/WhatsNew">Новости</a>
-				&middot; <a href="http://code.google.com/p/freemusic/wiki/Uploading">Добавить альбом</a>
-				<!--
-				&middot; <a href="http://code.google.com/p/freemusic/issues/list">Поддержка</a>
-				&middot; <a href="http://freemusichub.blogspot.com/">Наш блог</a> 
-				-->
-				{% if is_admin %}
-				&middot; <a href="https://appengine.google.com/dashboard?app_id=free-music">Admin Console</a>
-				{% endif %}
+            <div id="footer">{% block footer %}
+				<a href="http://www.freemusichub.net/"><img src="/static/logo.76x28.png" alt="logo"/></a>
+				<ul>
+					<li><a href="/">Музыка</a></li>
+					<li><a href="/artists">Исполнители</a></li>
+					<li><a href="http://code.google.com/p/freemusic/wiki/Uploading">Добавить альбом</a></li>
+				</ul>
+				<ul>
+					<li>Личное</li>
+					<!--
+					<li><a href="/mail">Почта</a></li>
+					-->
+					<li><a href="{{ logout_uri|escape }}">Выйти</a></li>
+				</ul>
+				<ul>
+					<li><a href="http://code.google.com/p/freemusic/wiki/AboutUs?tm=6">Об этом сайте</a></li>
+					<li><a href="http://code.google.com/p/freemusic/wiki/WhatsNew">Новости</a></li>
+					<li><a href="http://code.google.com/p/freemusic/issues/list">Сообщить об ошибке</a></li>
+					<!--
+					<li><a href="http://freemusichub.blogspot.com/">Наш блог</a></li>
+					-->
+					{% if is_admin %}
+						<li class="admin sep"><a href="https://appengine.google.com/dashboard?app_id=free-music">Admin Console</a></li>
+					{% endif %}
+				</ul>
 			{% endblock %}</div>
         </div>
     </body>

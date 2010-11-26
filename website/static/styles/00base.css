@@ -17,9 +17,18 @@ img {
 }
 
 
+h1 {
+	font: 22px/22px Ubuntu, sans-serif;
+}
+
+
 h3 small {
 	margin-left: 1em;
 }
 h3 small a {
 	color: green;
+}
+
+p.less {
+	color: gray;
 }

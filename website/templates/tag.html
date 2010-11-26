@@ -2,6 +2,4 @@
 {% block ueb %}<link rel="alternate" type="application/x-wiki" title="Редактировать метку" href="/tag/{{ tag|uurlencode }}/edit"/>{% endblock %}
 {% block title %}Метка «{{ tag|escape }}» на Free Music Hub{% endblock %}
 {% block rss %}<link rel="alternate" type="application/rss+xml" title="Альбомы с меткой «{{ tag|escape }}»" href="/tag/{{ tag|uurlencode }}/rss"/>{% endblock %}
-{% block header %}
-	<h2>Альбомы с меткой «{{ tag }}»</h2>
-{% endblock %}
+{% block list_title %}Альбомы с меткой «{{ tag }}»{% endblock %}

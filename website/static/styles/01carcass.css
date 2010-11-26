@@ -6,4 +6,5 @@
 
 #content {
 	position: relative;
+	min-height: 450px; /* чтобы подвал не наползал на новости */
 }
