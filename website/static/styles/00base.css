@@ -15,3 +15,11 @@ img {
 .hidden {
 	display: none;
 }
+
+
+h3 small {
+	margin-left: 1em;
+}
+h3 small a {
+	color: green;
+}

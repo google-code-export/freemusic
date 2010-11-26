@@ -16,9 +16,8 @@
 			<li><a href="/artist/{{ name|uurlencode }}">{{ name|escape }}</a></li>
 		{% endfor %}</ul>
 	{% endif %}
-	<h3>Почтовая рассылка</h3>
+	<h3>Почтовая рассылка{% if is_artist_admin %} <small><a href="/artist/{{ artist.name|uurlencode }}/mail/send">написать</a></small>{% endif %}</h3>
 	<p><a href="/artist/{{ artist_name|uurlencode }}/mail">Подпишитесь</a>, чтобы не пропустить что-нибудь важное, связанное с этим исполнителем.</p>
-	{% if is_artist_admin %}<p>Вы можете <a href="/artist/{{ artist.name|uurlencode }}/mail/send">отправить сообщение в рассылку</a>.</p>{% endif %}
 	<div id="artistLinks">
 		<h3>Другие ресурсы</h3>
 		<ul class="icons">
