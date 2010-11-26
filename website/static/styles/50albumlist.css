@@ -19,3 +19,6 @@
 	margin: 0;
 	padding: 0;
 }
+#albumlist h3 {
+	margin: 2em 0 .5em;
+}
