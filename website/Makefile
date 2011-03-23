@@ -1,8 +1,7 @@
 all: rebuild
 
 upload: all
-	hg push
-	gae-upload
+	appcfg.py update .
 
 clean:
 	rm -f dump bulkloader-* *.pyc
@@ -14,3 +13,9 @@ static/styles.css: static/styles/*.css
 
 static/scripts.js: static/scripts/*.js
 	cat static/scripts/*.js > static/scripts.js
+
+serve: .tmp/blobstore
+	dev_appserver.py --enable_sendmail --use_sqlite --blobstore_path=.tmp/blobstore --datastore_path=.tmp/datastore .
+
+.tmp/blobstore:
+	mkdir -p .tmp/blobstore
