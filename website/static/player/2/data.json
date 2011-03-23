@@ -1,0 +1,32 @@
+[
+	{
+		"name": "Mono",
+		"mp3": "http://files.umonkey.net/audio/dc/innit/01_mono.mp3",
+		"oga": "http://files.umonkey.net/audio/dc/innit/01_mono.oga",
+		"free": true
+	},
+	{
+		"name": "Move",
+		"mp3": "http://files.umonkey.net/audio/dc/innit/02_move.mp3",
+		"oga": "http://files.umonkey.net/audio/dc/innit/02_move.oga",
+		"free": true
+	},
+	{
+		"name": "Machine",
+		"mp3": "http://files.umonkey.net/audio/dc/innit/03_machine.mp3",
+		"oga": "http://files.umonkey.net/audio/dc/innit/03_machine.oga",
+		"free": true
+	},
+	{
+		"name": "Pulse",
+		"mp3": "http://files.umonkey.net/audio/dc/innit/04_pulse.mp3",
+		"oga": "http://files.umonkey.net/audio/dc/innit/04_pulse.oga",
+		"free": true
+	},
+	{
+		"name": "Sine",
+		"mp3": "http://files.umonkey.net/audio/dc/innit/05_sine.mp3",
+		"oga": "http://files.umonkey.net/audio/dc/innit/05_sine.oga",
+		"free": true
+	}
+]

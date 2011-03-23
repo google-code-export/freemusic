@@ -21,6 +21,9 @@ handlers:
 - url: /doc/
   static_dir: doc
 
+- url: /pages/.*
+  script: pages.py
+
 - url: .*
   script: handlers.py
 

@@ -1,0 +1,188 @@
+/**
+ * Simple skin for jPlayer.
+ *
+ * @author hex@umonkey.net (Justin Forest)
+ */
+
+div.jp-audio {
+
+	/* Edit the font-size to counteract inherited font sizing.
+	 * Eg. 1.25em = 1 / 0.8em
+	 */
+
+	font-size:1em; /* No parent CSS that can effect the size in these demos */
+
+	font-family:Verdana, Arial, sans-serif;
+	line-height:1.6;
+}
+div.jp-audio {
+	width: 220px;
+}
+div.jp-interface {
+	position: relative;
+	/* width:418px; */
+	width: 100%;
+}
+div.jp-audio div.jp-type-playlist div.jp-interface {
+	height: 36px;
+}
+div.jp-interface ul.jp-controls {
+	list-style-type:none;
+	padding:1;
+	margin: 0;
+}
+div.jp-interface ul.jp-controls li {
+	/* position: absolute; */
+	display:inline;
+}
+div.jp-interface ul.jp-controls a {
+	position: absolute;
+	overflow:hidden;
+	text-indent:-9999px;
+}
+a.jp-play,
+a.jp-pause {
+	width: 16px;
+	height: 16px;
+	z-index: 1;
+}
+div.jp-audio div.jp-type-playlist a.jp-play,
+div.jp-audio div.jp-type-playlist a.jp-pause {
+	top: 4px;
+	left: 4px;
+}
+a.jp-play {
+	background: url("pulsar.png") 0 0 no-repeat;
+}
+a.jp-play:hover {
+	background: url("pulsar.png") -16px 0 no-repeat;
+}
+a.jp-pause {
+	background: url("pulsar.png") 0 -16px no-repeat;
+	display: none;
+}
+a.jp-pause:hover {
+	background: url("pulsar.png") -16px -16px no-repeat;
+}
+div.jp-audio div.jp-type-playlist a.jp-stop {
+	top: 4px;
+	left: 24px;
+}
+a.jp-stop {
+	background: url("pulsar.png") 0 -32px no-repeat;
+	width: 16px;
+	height: 16px;
+	z-index: 1;
+}
+a.jp-stop:hover {
+	background: url("pulsar.png") -16px -32px no-repeat;
+}
+div.jp-progress {
+	position: absolute;
+	overflow: hidden;
+}
+div.jp-audio div.jp-type-playlist div.jp-progress {
+	top: 4px;
+	left: 44px;
+	width: 122px;
+	height: 15px;
+}
+div.jp-seek-bar {
+	background: url("pulsar.png") 0 -64px repeat-x;
+	width:0px;
+	/* height:15px; */
+	height:100%;
+	cursor: pointer;
+}
+div.jp-play-bar {
+	background: url("pulsar.png") 0 -48px repeat-x ;
+	width:0px;
+	/* height:15px; */
+	height:100%;
+}
+
+/* The seeking class is added/removed inside jPlayer */
+div.jp-seeking-bg {
+	background: url("pbar-ani.gif");
+}
+
+div.jp-volume-bar {
+	position: absolute;
+	overflow: hidden;
+	background: url("pulsar.png") 0 -64px repeat-x;
+	width: 46px;
+	height: 6px;
+	cursor: pointer;
+}
+div.jp-audio div.jp-type-playlist div.jp-volume-bar {
+	top: 8px;
+	left: 170px;
+}
+div.jp-volume-bar-value {
+	background: url("pulsar.png") 0 -48px repeat-x;
+	width: 0px;
+	height: 6px;
+}
+div.jp-current-time,
+div.jp-duration {
+	position: absolute;
+	font-size: .64em;
+	font-style: oblique;
+}
+div.jp-duration {
+	text-align: right;
+}
+div.jp-audio div.jp-type-playlist div.jp-current-time,
+div.jp-audio div.jp-type-playlist div.jp-duration {
+	top: 20px;
+	left: 48px;
+	width: 114px;
+}
+div.jp-playlist {
+	width:100%;
+}
+div.jp-playlist ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 4px 6px;
+	font-size: .72em;
+}
+
+
+div.jp-type-playlist div.jp-playlist li {
+	padding: 1px 0;
+	font-size: 8pt;
+}
+div.jp-type-playlist div.jp-playlist a {
+	text-decoration: underline;
+}
+div.jp-type-playlist div.jp-playlist div.jp-free-media {
+	display: inline;
+}
+
+div.jp-jplayer {
+	width:0px;
+	height:0px;
+}
+
+
+/*** WAS OUTSIDE ***/
+
+.jp-interface {
+	color: #ccc;
+	background-color: #444;
+}
+.jp-playlist-current a.title {
+	color: white;
+	font-style: italic;
+}
+.jp-free-media {
+	position: absolute;
+	left: 170px;
+}
+.jp-free-media a {
+	color: #303030;
+}
+.jp-playlist li:hover .jp-free-media a {
+	color: #ccc;
+}

@@ -12,3 +12,4 @@ website/local-images
 website/static/data.xml
 website/static/import.xml
 website/static/styles.css
+website/.tmp
