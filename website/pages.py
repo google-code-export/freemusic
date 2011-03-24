@@ -146,13 +146,13 @@ class PageHandler(webapp.RequestHandler):
         variables = {
             'page_uri': self.request.uri,
             'page_path': self.request.path,
-            'base_template': Template(DEFAULT_TEMPLATE),
+            'base_template': Template(DEFAULT_TEMPLATE.encode('utf-8')),
             'page': page,
         }
 
         variables.update(dict([[x.strip() for x in line.split(':', 1)] for line in page.data.split('\n') if ':' in line]))
 
-        t = Template(template).render(Context(variables))
+        t = Template(template.encode('utf-8')).render(Context(variables))
         return self.reply(t)
 
 if __name__ == '__main__':
