@@ -52,30 +52,30 @@ div.jp-audio div.jp-type-playlist a.jp-pause {
 	left: 4px;
 }
 a.jp-play {
-	background: url("pulsar.png") 0 0 no-repeat;
+	background: url("default.png") 0 0 no-repeat;
 }
 a.jp-play:hover {
-	background: url("pulsar.png") -16px 0 no-repeat;
+	background: url("default.png") -16px 0 no-repeat;
 }
 a.jp-pause {
-	background: url("pulsar.png") 0 -16px no-repeat;
+	background: url("default.png") 0 -16px no-repeat;
 	display: none;
 }
 a.jp-pause:hover {
-	background: url("pulsar.png") -16px -16px no-repeat;
+	background: url("default.png") -16px -16px no-repeat;
 }
 div.jp-audio div.jp-type-playlist a.jp-stop {
 	top: 4px;
 	left: 24px;
 }
 a.jp-stop {
-	background: url("pulsar.png") 0 -32px no-repeat;
+	background: url("default.png") 0 -32px no-repeat;
 	width: 16px;
 	height: 16px;
 	z-index: 1;
 }
 a.jp-stop:hover {
-	background: url("pulsar.png") -16px -32px no-repeat;
+	background: url("default.png") -16px -32px no-repeat;
 }
 div.jp-progress {
 	position: absolute;
@@ -88,14 +88,14 @@ div.jp-audio div.jp-type-playlist div.jp-progress {
 	height: 15px;
 }
 div.jp-seek-bar {
-	background: url("pulsar.png") 0 -64px repeat-x;
+	background: url("default.png") 0 -64px repeat-x;
 	width:0px;
 	/* height:15px; */
 	height:100%;
 	cursor: pointer;
 }
 div.jp-play-bar {
-	background: url("pulsar.png") 0 -48px repeat-x ;
+	background: url("default.png") 0 -48px repeat-x ;
 	width:0px;
 	/* height:15px; */
 	height:100%;
@@ -109,7 +109,7 @@ div.jp-seeking-bg {
 div.jp-volume-bar {
 	position: absolute;
 	overflow: hidden;
-	background: url("pulsar.png") 0 -64px repeat-x;
+	background: url("default.png") 0 -64px repeat-x;
 	width: 46px;
 	height: 6px;
 	cursor: pointer;
@@ -119,7 +119,7 @@ div.jp-audio div.jp-type-playlist div.jp-volume-bar {
 	left: 170px;
 }
 div.jp-volume-bar-value {
-	background: url("pulsar.png") 0 -48px repeat-x;
+	background: url("default.png") 0 -48px repeat-x;
 	width: 0px;
 	height: 6px;
 }
@@ -173,7 +173,6 @@ div.jp-jplayer {
 	background-color: #444;
 }
 .jp-playlist-current a.title {
-	color: white;
 	font-style: italic;
 }
 .jp-free-media {
