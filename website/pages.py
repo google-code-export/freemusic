@@ -1,4 +1,10 @@
 # vim: set fileencoding=utf-8:
+u"""Миниатюрные страницы для музыкальных альбомов.
+
+Источники вдохновения:
+
+- http://www.miaowmusic.com/
+"""
 
 # Python imports.
 import logging
