@@ -45,10 +45,11 @@ textarea { width: 100%; height: 200px; white-space: nowrap; overflow: auto }
 
 DEFAULT_TEMPLATE = u'''<html>
 <head>
-<title>Hello, world</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<title>{% block title %}{% if title %}{{ title }}{% else %}Untitled Page{% endif %}{% endblock %}</title>
 </head>
 <body>
-<h1>It Worked!</h1>
+<h1>{% block header %}It Worked!{% endblock %}</h1>
 </body>
 </html>'''
 
@@ -101,6 +102,7 @@ class PageHandler(webapp.RequestHandler):
         variables = {
             'page_uri': self.request.uri,
             'page_path': self.request.path,
+            'base_template': Template(DEFAULT_TEMPLATE),
             'page': page,
         }
 
