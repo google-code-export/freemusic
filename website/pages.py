@@ -4,6 +4,7 @@ u"""Миниатюрные страницы для музыкальных аль
 Источники вдохновения:
 
 - http://www.miaowmusic.com/
+- http://delerium.ca/
 """
 
 # Python imports.
