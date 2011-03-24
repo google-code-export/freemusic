@@ -46,6 +46,7 @@ textarea { width: 100%; height: 200px; white-space: nowrap; overflow: auto }
 DEFAULT_TEMPLATE = u'''<html>
 <head>
 <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<link rel="alternate" type="application/x-wiki" title="Править страницу" href="{{ page_uri|escape }}?edit"/>
 <title>{% block title %}{% if title %}{{ title }}{% else %}Untitled Page{% endif %}{% endblock %}</title>
 {% if favicon %}<link rel="shortcut icon" type="image/x-icon" href="{{ favicon|escape }}"/>{% endif %}
 {% block scripts %}
@@ -61,7 +62,7 @@ DEFAULT_TEMPLATE = u'''<html>
 <body>
 <div id="wrapper">
  <div id="header">
-  {% block header %}<h1>{% block welcome %}{{ page.name }}{% if page.artist_name %} by {{ page.artist_name }}{% endif %}{% endblock %}</h1>{% endblock %}
+  {% block header %}<h1>{% block welcome %}{{ title }}{% endblock %}</h1>{% endblock %}
  </div>
  <div id="body">
   <div id="column1">{% block column1 %}
@@ -77,9 +78,11 @@ DEFAULT_TEMPLATE = u'''<html>
    </div><!-- #player -->
     {% if download_link %}<div id="dlink">
      <h2>{% block download_title %}Скачать альбом{% endblock %}</h2>
-     <p>{% block download_link %}<a href="{{ download_link|escape }}">Нажмите сюда</a> чтобы скачать альбом.{% endblock %}</p>
+     <p>{% block download_link %}<a href="{{ download_link|escape }}">Нажмите сюда</a> чтобы скачать альбом целиком.&nbsp; Не забудьте раздать его друзьям.{% endblock %}</p>
+     {% if license %}<div id="license"><a title="Ознакомиться с текстом лицензии" class="external" href="http://creativecommons.org/licenses/{% if license %}{{ license|escape }}{% else %}by-sa{% endif %}/3.0/" class="external"><img src="http://i.creativecommons.org/l/{% if license %}{{ license|escape }}{% else %}by-sa{% endif %}/3.0/80x15.png" style="width:80px; height:15px" alt="Creative Commons License"/></a></div>{% endif %}
     </div>{% endif %}
   {% endblock %}</div><!-- #column2 -->
+  {% block morecolumns %}{% endblock %}
  </div>
  <div id="footer">{% block footer %}
   {% if welcome %}<p>{{ welcome }}</p>{% endif %}
@@ -91,7 +94,6 @@ DEFAULT_TEMPLATE = u'''<html>
       <input type="submit" value="Подписаться"/>
      </form>
     </div>{% endif %}<!-- #subscribe -->
-  <div id="license"><a title="Ознакомиться с текстом лицензии" class="external" href="http://creativecommons.org/licenses/{% if license %}{{ license|escape }}{% else %}by-sa{% endif %}/3.0/" class="external"><img src="http://i.creativecommons.org/l/{% if license %}{{ license|escape }}{% else %}by-sa{% endif %}/3.0/80x15.png" style="width:80px; height:15px" alt="Creative Commons License"/></a></div>
  {% endblock %}</div>
 </div>
 </body>
@@ -135,7 +137,7 @@ class PageHandler(webapp.RequestHandler):
         for key in page.fields().keys():
             setattr(page, key, self.request.get(key))
         page.put()
-        self.redirect(self.request.uri)
+        self.redirect(self.request.path)
 
     def reply(self, content, status=200, content_type='text/html'):
         self.response.set_status(status)
