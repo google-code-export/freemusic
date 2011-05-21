@@ -12,6 +12,7 @@
 			<head>
 				<title><xsl:value-of select=".//xhtml:title/text()"/> — Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/fmh-static/style.css"/>
+				<link rel="icon" type="image/x-icon" href="/fmh-static/favicon.ico"/>
 			</head>
 			<body>
 				<h1><xsl:value-of select=".//xhtml:title/text()"/></h1>
