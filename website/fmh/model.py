@@ -62,55 +62,50 @@ class CustomModel(db.Model):
                     setattr(self, k, val)
         return self
 
+
+class SiteAlbum(CustomModel):
+    id = db.IntegerProperty()
+    name = db.StringProperty()
+    text = db.TextProperty()
+    artists = db.StringListProperty()
+    release_date = db.DateProperty(auto_now_add=True)
+    homepage = db.LinkProperty()
+    download_link = db.LinkProperty()
+    rating = db.RatingProperty()
+    cover_id = db.StringProperty()
+    cover_large = db.LinkProperty()
+    cover_small = db.LinkProperty()
+    labels = db.StringListProperty()
+    owner = db.UserProperty()
+    rate = db.RatingProperty()
+
+    def put(self):
+        if not self.id:
+            last = SiteAlbum.all().order('-id').get()
+            if last is None:
+                self.id = 1
+            else:
+                self.id = last.id + 1
+        return CustomModel.put(self)
+
+    @classmethod
+    def get_by_id(cls, album_id):
+        return cls.gql('WHERE id = :1', album_id).get()
+
+
 class SiteUser(CustomModel):
     user = db.UserProperty(required=_REQUIRED)
     joined = db.DateTimeProperty(auto_now_add=True)
     weight = db.FloatProperty()
     nickname = db.StringProperty()
 
-class SiteAlbum(CustomModel):
-    id = db.IntegerProperty()
-    name = db.StringProperty()
-    text = db.TextProperty()
-    artists = db.StringListProperty() # all involved artists, updated automatically from tracks
-    release_date = db.DateProperty(auto_now_add=True)
-    homepage = db.LinkProperty()
-    rating = db.RatingProperty() # average album rate
-    cover_id = db.StringProperty() # blobstore key
-    cover_large = db.LinkProperty()
-    cover_small = db.LinkProperty()
-    labels = db.StringListProperty()
-    owner = db.UserProperty()
-    rate = db.RatingProperty() # средняя оценка альбома, обновляется в album.Review.post()
-
-    def put(self, quick=False):
-        if not self.id:
-            self.id = nextId(SiteAlbum)
-            logging.info('New album: %s (album/%u)' % (self.name, self.id))
-        return CustomModel.put(self)
-
-    def get_avg_rate(self):
-        rates = [r.rate_average for r in SiteAlbumReview.gql('WHERE album = :1', self).fetch(1000) if r.rate_average is not None]
-        if len(rates):
-            return sum(rates) / len(rates)
-
-    def dict(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'artists': self.artists,
-            'release_date': self.release_date,
-            'homepage': self.homepage,
-            'cover_small': self.cover_small,
-            'cover_large': self.cover_large,
-            'labels': self.labels,
-        }
 
 class SiteAlbumStar(CustomModel):
     "Хранит информацию о любимых альбомах пользователей."
     album = db.ReferenceProperty(SiteAlbum)
     user = db.UserProperty()
     added = db.DateTimeProperty(auto_now_add=True)
+
 
 class SiteAlbumReview(CustomModel):
     # рецензируемый альбом

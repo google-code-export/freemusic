@@ -1,0 +1,10 @@
+{% extends "../base.html" %}
+{% block pageid %}album-view{% endblock %}
+{% block body %}
+<h1 class="title">{{ title }}</h1>
+<p class="artist">An album by <span class="value">{{ artist_name }}</span></p>
+<p class="homepage">Home page: <a href="{{ homepage }}" class="value">{{ homepage }}</a></p>
+{% if download_link %}
+	<p class="download_link">Download link: <a href="{{ download_link }}" class="value">{{ download_link }}</a></p>
+{% endif %}
+{% endblock %}

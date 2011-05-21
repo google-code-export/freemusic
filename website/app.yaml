@@ -18,6 +18,8 @@ handlers:
   upload: static/google4c14bfd1bdbab0dd.html
 - url: /static/
   static_dir: static
+- url: /fmh-static/
+  static_dir: fmh/static
 - url: /doc/
   static_dir: doc
 
@@ -25,7 +27,7 @@ handlers:
   script: pages.py
 
 - url: .*
-  script: handlers.py
+  script: fmh/server.py
 
 builtins:
 - datastore_admin: on

@@ -10,7 +10,6 @@ import random
 import re
 import urllib
 import urlparse
-import wsgiref.handlers
 
 # GAE imports.
 from google.appengine.api import images
