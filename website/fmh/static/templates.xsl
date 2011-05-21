@@ -15,23 +15,27 @@
 				<link rel="icon" type="image/x-icon" href="/fmh-static/favicon.ico"/>
 			</head>
 			<body>
-				<h1><xsl:value-of select=".//xhtml:title/text()"/></h1>
-				<xsl:apply-templates select="xhtml:body"/>
+				<div id="wrapper">
+					<h1><xsl:value-of select=".//xhtml:title/text()"/></h1>
+					<xsl:apply-templates select="xhtml:body"/>
+				</div>
 			</body>
 		</html>
 	</xsl:template>
 
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
-		<p><xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/></p>
-		<ul class="links">
-			<li>
+		<div id="album-view">
+			<p class="artist">
+				<xsl:text>© </xsl:text>
+				<a class="external" href="{xhtml:p[@class='homepage']/xhtml:a/text()}">
+					<xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/>
+				</a>
+			</p>
+			<p class="download">
 				<a href="{xhtml:p[@class='download_link']/xhtml:a/text()}">Скачать альбом</a>
-			</li>
-			<li>
-				<a href="{xhtml:p[@class='homepage']/xhtml:a/text()}">Сайт исполнителя</a>
-			</li>
-		</ul>
+			</p>
+		</div>
 	</xsl:template>
 
 	<!-- Форма добавления альбома -->

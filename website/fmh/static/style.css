@@ -1,3 +1,30 @@
+body {
+	background-color: white;
+	color: black;
+	font: 12pt/16pt normal Ubuntu, sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+#wrapper {
+	width: 700px;
+	margin: 10px auto;
+}
+
+h1 {
+	font-size: 20pt;
+	font-weight: normal;
+	line-height: 1em;
+	margin: 0;
+}
+
+.artist {
+	font-size: 10pt;
+	margin: .5em 0;
+	color: gray;
+}
+
+
 form label {
 	display: block;
 }
