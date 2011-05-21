@@ -28,9 +28,16 @@ h1 {
 	color: gray;
 }
 
-.cover {
+#album-view .cover {
 	width: 200px;
 	height: 200px;
+	float: left;
+	border: solid 1px #ccc;
+	padding: 1px;
+}
+
+#album-view .info {
+	margin-left: 220px;
 }
 
 

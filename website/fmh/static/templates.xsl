@@ -8,16 +8,20 @@
 				indent="yes"/>
 
 	<xsl:template match="xhtml:html">
+		<xsl:variable name="title">
+			<xsl:value-of select="xhtml:head/xhtml:title/text()"/>
+		</xsl:variable>
 		<html>
 			<head>
-				<title><xsl:value-of select=".//xhtml:title/text()"/> — Free Music Hub</title>
+				<title><xsl:value-of select="$title"/> — Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/fmh-static/style.css"/>
 				<link rel="icon" type="image/x-icon" href="/fmh-static/favicon.ico"/>
 			</head>
 			<body>
 				<div id="wrapper">
-					<h1><xsl:value-of select=".//xhtml:title/text()"/></h1>
-					<xsl:apply-templates select="xhtml:body"/>
+					<xsl:apply-templates select="xhtml:body">
+						<xsl:with-param name="title" select="$title"/>
+					</xsl:apply-templates>
 				</div>
 			</body>
 		</html>
@@ -25,20 +29,24 @@
 
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
+		<xsl:param name="title"/>
+		<xsl:variable name="id">
+			<xsl:value-of select="*[@id='id']/@value"/>
+		</xsl:variable>
 		<div id="album-view">
-            <xsl:variable name="id">
-                <xsl:value-of select="*[@id='id']/@value"/>
-            </xsl:variable>
             <img class="cover" src="/album/{$id}/cover.jpg" alt="Обложка"/>
-			<p class="artist">
-				<xsl:text>© </xsl:text>
-				<a class="external" href="{xhtml:p[@class='homepage']/xhtml:a/text()}">
-					<xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/>
-				</a>
-			</p>
-			<p class="download">
-				<a href="/album/{$id}/download">Скачать альбом</a>
-			</p>
+			<div class="info">
+				<h1><xsl:value-of select="$title"/></h1>
+				<p class="artist">
+					<a class="external" href="{xhtml:p[@class='homepage']/xhtml:a/text()}">
+						<xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/>
+					</a>
+					<xsl:text> (1980)</xsl:text>
+				</p>
+				<p class="download">
+					<a href="/album/{$id}/download">Скачать альбом</a>
+				</p>
+			</div>
 		</div>
 	</xsl:template>
 
