@@ -64,6 +64,12 @@ class DownloadController(webapp.RequestHandler):
         self.redirect(album.download_link)
 
 
+class CoverController(webapp.RequestHandler):
+    def get(self, album_id):
+        # album = model.SiteAlbum.get_by_id(int(album_id))
+        self.redirect('http://lh4.ggpht.com/32j3lgf9wPBsGHUjgwtyJyEzObEyVF7RwSEz4WABdNV6YP-AjrDKmhxyWiMTyYuIUoBMOn8nRMIKS09oKA=s200-c')
+
+
 class View(view.Base):
     def render(self, album):
         data = {

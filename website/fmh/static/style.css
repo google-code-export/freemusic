@@ -6,6 +6,10 @@ body {
 	padding: 0;
 }
 
+img {
+	border: none;
+}
+
 #wrapper {
 	width: 700px;
 	margin: 10px auto;
@@ -22,6 +26,11 @@ h1 {
 	font-size: 10pt;
 	margin: .5em 0;
 	color: gray;
+}
+
+.cover {
+	width: 200px;
+	height: 200px;
 }
 
 

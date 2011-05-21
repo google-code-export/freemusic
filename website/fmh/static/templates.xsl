@@ -26,6 +26,10 @@
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
 		<div id="album-view">
+            <xsl:variable name="id">
+                <xsl:value-of select="*[@id='id']/@value"/>
+            </xsl:variable>
+            <img class="cover" src="/album/{$id}/cover.jpg" alt="Обложка"/>
 			<p class="artist">
 				<xsl:text>© </xsl:text>
 				<a class="external" href="{xhtml:p[@class='homepage']/xhtml:a/text()}">
@@ -33,7 +37,7 @@
 				</a>
 			</p>
 			<p class="download">
-				<a href="/album/{*[@id='id']/@value}/download">Скачать альбом</a>
+				<a href="/album/{$id}/download">Скачать альбом</a>
 			</p>
 		</div>
 	</xsl:template>
