@@ -61,6 +61,10 @@ class JSONController(webapp.RequestHandler):
 class DownloadController(webapp.RequestHandler):
     def get(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
+        if not album.download_count:
+            album.download_count = 0
+        album.download_count += 1
+        album.put()
         self.redirect(album.download_link)
 
 
@@ -79,5 +83,6 @@ class View(view.Base):
             'artist_name': album.artists[0],
             'homepage': album.homepage,
             'download_link': album.download_link,
+            'download_count': album.download_count,
         }
         super(View, self).render('albums/view.html', data)

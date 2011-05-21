@@ -45,10 +45,19 @@
 				</p>
 				<p class="download">
 					<a href="/album/{$id}/download">Скачать альбом</a>
+                    <xsl:apply-templates select="xhtml:p[@class='download_count']"/>
 				</p>
 			</div>
 		</div>
 	</xsl:template>
+
+        <xsl:template match="xhtml:p[@class='download_count']">
+            <span class="dlcount">
+                <xsl:text> (</xsl:text>
+                <xsl:value-of select="."/>
+                <xsl:text>)</xsl:text>
+            </span>
+        </xsl:template>
 
 	<!-- Форма добавления альбома -->
 	<xsl:template match="xhtml:body[@class='add-album']">

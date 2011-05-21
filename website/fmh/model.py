@@ -35,6 +35,7 @@ class SiteAlbum(CustomModel):
     release_date = db.DateProperty(auto_now_add=True)
     homepage = db.LinkProperty()
     download_link = db.LinkProperty()
+    download_count = db.IntegerProperty()
     rating = db.RatingProperty()
     cover_id = db.StringProperty()
     cover_large = db.LinkProperty()

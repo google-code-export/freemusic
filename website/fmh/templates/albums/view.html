@@ -8,5 +8,8 @@
 <p class="homepage">Home page: <a href="{{ homepage }}" class="value">{{ homepage|escape }}</a></p>
 {% if download_link %}
 	<p class="download_link">Download link: <a href="{{ download_link|escape }}" class="value">{{ download_link|escape }}</a></p>
+	{% if download_count %}
+		<p class="download_count">{{ download_count }}</p>
+	{% endif %}
 {% endif %}
 {% endblock %}

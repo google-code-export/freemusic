@@ -40,6 +40,11 @@ h1 {
 	margin-left: 220px;
 }
 
+.dlcount {
+	font-size: 10pt;
+	color: gray;
+}
+
 
 form label {
 	display: block;
