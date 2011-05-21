@@ -10,10 +10,11 @@
 	<xsl:template match="xhtml:html">
 		<html>
 			<head>
-				<title><xsl:value-of select=".//xhtml:title/text()"/></title>
+				<title><xsl:value-of select=".//xhtml:title/text()"/> — Free Music Hub</title>
 				<link rel="stylesheet" type="text/css" href="/fmh-static/style.css"/>
 			</head>
 			<body>
+				<h1><xsl:value-of select=".//xhtml:title/text()"/></h1>
 				<xsl:apply-templates select="xhtml:body"/>
 			</body>
 		</html>
@@ -35,7 +36,6 @@
 
 	<!-- Форма добавления альбома -->
 	<xsl:template match="xhtml:body[@class='add-album']">
-		<h1>Добавление альбома</h1>
 		<xsl:apply-templates select="xhtml:form"/>
 	</xsl:template>
 

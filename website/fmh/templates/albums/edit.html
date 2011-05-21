@@ -1,0 +1,14 @@
+{% extends "../base.html" %}
+{% block title %}Редактирование альбома{% endblock %}
+{% block pageid %}edit-album{% endblock %}
+{% block body %}
+<form method="post">
+	<input type="hidden" name="id" value="{{ album_id }}"/>
+	<input type="text" name="artist" value="{{ artist_name|escape }}" placeholder="Исполнитель"/>
+	<input type="text" name="title" value="{{ title|escape }}" placeholder="Название альбома"/>
+	<input type="text" name="release_date" value="{{ release_date|escape }}" placeholder="Дата выхода"/>
+	<input type="text" name="homepage" value="{{ homepage|escape }}" placeholder="Сайт исполнителя"/>
+	<input type="text" name="download_link" value="{{ download_link|escape }}" placeholder="Ссылка для скачивания"/>
+	<button>Сохранить изменения</button>
+</form>
+{% endblock %}
