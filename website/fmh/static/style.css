@@ -1,0 +1,8 @@
+form label {
+	display: block;
+}
+input, textarea {
+	width: 500px;
+	margin: .5em 0;
+	padding: 2px 4px;
+}
