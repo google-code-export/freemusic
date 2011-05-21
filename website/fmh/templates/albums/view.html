@@ -2,6 +2,7 @@
 {% block pageid %}album-view{% endblock %}
 {% block title %}{{ title|escape }}{% endblock %}
 {% block body %}
+<span id="id" value="{{ album_id }}"/>
 <h1 class="title">{{ title|escape }}</h1>
 <p class="artist">An album by <span class="value">{{ artist_name|escape }}</span></p>
 <p class="homepage">Home page: <a href="{{ homepage }}" class="value">{{ homepage|escape }}</a></p>

@@ -58,10 +58,16 @@ class JSONController(webapp.RequestHandler):
         json.dump(self.response, album)
 
 
+class DownloadController(webapp.RequestHandler):
+    def get(self, album_id):
+        album = model.SiteAlbum.get_by_id(int(album_id))
+        self.redirect(album.download_link)
+
+
 class View(view.Base):
     def render(self, album):
         data = {
-            'id': album.id,
+            'album_id': album.id,
             'key': album.key(),
             'title': album.name,
             'artist_name': album.artists[0],

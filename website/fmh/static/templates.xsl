@@ -33,7 +33,7 @@
 				</a>
 			</p>
 			<p class="download">
-				<a href="{xhtml:p[@class='download_link']/xhtml:a/text()}">Скачать альбом</a>
+				<a href="/album/{*[@id='id']/@value}/download">Скачать альбом</a>
 			</p>
 		</div>
 	</xsl:template>
