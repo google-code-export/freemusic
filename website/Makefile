@@ -4,7 +4,7 @@ upload: all
 	appcfg.py update .
 
 clean:
-	rm -f dump bulkloader-* *.pyc
+	find . -iregex '.*\.\(pyc\|orig\|rej\)$$' -delete
 
 rebuild: static/styles.css static/scripts.js
 
