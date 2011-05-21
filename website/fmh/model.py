@@ -5,7 +5,6 @@ import hashlib
 import logging
 import urllib
 
-from xml.sax.saxutils import escape
 from google.appengine.api import users
 from google.appengine.ext import db
 
@@ -24,43 +23,8 @@ def nextId(cls):
     return 1
 
 class CustomModel(db.Model):
-    JSON_TYPE_MAP = {
-        'SiteAlbum': lambda x: x.id,
-        'datetime': lambda x: x.strftime('%Y-%m-%d %H:%M:%S'),
-        'date': lambda x: x.strftime('%Y-%m-%d'),
-        'User': lambda x: x.email(),
-        'SiteUser': lambda x: x.user.email(),
-    }
-
-    def to_json(self):
-        result = {}
-        for k in self.fields():
-            try:
-                val = getattr(self, k)
-            except Exception, e:
-                logging.error(e)
-                val = None # ReferenceProperty скорее всего
-            if self.JSON_TYPE_MAP.has_key(val.__class__.__name__):
-                val = self.JSON_TYPE_MAP[val.__class__.__name__](val)
-            elif isinstance(val, CustomModel):
-                raise Exception(val)
-            result[k] = val
-        return result
-
-    def from_json(self, json):
-        converters = {
-            'IntegerProperty': int,
-        }
-
-        for k in json:
-            if k in self.fields():
-                if not json[k]:
-                    setattr(self, k, None)
-                else:
-                    cls = self.fields()[k].__class__.__name__
-                    val = cls in converters and converters[cls](json[k]) or json[k]
-                    setattr(self, k, val)
-        return self
+    def to_dict(self):
+        return dict([(k, getattr(self, k)) for k in self.fields()])
 
 
 class SiteAlbum(CustomModel):

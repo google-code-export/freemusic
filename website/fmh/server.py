@@ -13,6 +13,7 @@ import fmh.albums as albums
 
 handlers = [
     ('/album/(\d+)$', albums.ViewController),
+    ('/album/(\d+)/json$', albums.JSONController),
     ('/album/(\d+)/edit$', albums.EditController),
     ('/album/add$', albums.AddController),
 ]

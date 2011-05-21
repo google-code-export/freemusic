@@ -2,6 +2,7 @@
 
 from google.appengine.ext import webapp
 
+from fmh import json
 from fmh import model
 from fmh import view
 
@@ -49,6 +50,12 @@ class ViewController(webapp.RequestHandler):
     def get(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
         View(self).render(album)
+
+
+class JSONController(webapp.RequestHandler):
+    def get(self, album_id):
+        album = model.SiteAlbum.get_by_id(int(album_id))
+        json.dump(self.response, album)
 
 
 class View(view.Base):
