@@ -23,8 +23,7 @@
 
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
-		<h1><xsl:value-of select="xhtml:h1/text()"/></h1>
-		<p title="Автор"><xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/></p>
+		<p><xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/></p>
 		<ul class="links">
 			<li>
 				<a href="{xhtml:p[@class='download_link']/xhtml:a/text()}">Скачать альбом</a>
