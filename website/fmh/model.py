@@ -17,6 +17,9 @@ def get_current_user():
     return user
 
 
+class ObjectNotFound(Exception): pass
+
+
 class CustomModel(db.Model):
     def to_dict(self):
         return dict([(k, getattr(self, k)) for k in self.fields()])
@@ -33,7 +36,10 @@ class CustomModel(db.Model):
 
     @classmethod
     def get_by_key(cls, key):
-        return db.get(db.Key(key))
+        obj = db.get(db.Key(key))
+        if obj is None:
+            raise ObjectNotFound
+        return obj
 
 
 class Album(CustomModel):
@@ -268,10 +274,6 @@ class DownloadTicket(CustomModel):
     email = db.EmailProperty()
     album_id = db.IntegerProperty()
     file_id = db.IntegerProperty()
-
-    @classmethod
-    def get_by_key(cls, key):
-        return db.get(db.Key(key))
 
 
 class Artist(CustomModel):

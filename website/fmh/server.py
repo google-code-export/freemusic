@@ -8,7 +8,8 @@ import wsgiref.handlers
 
 from google.appengine.ext import webapp
 
-import fmh.albums as albums
+from fmh import albums
+from fmh import files
 
 
 handlers = [
@@ -23,6 +24,7 @@ handlers = [
     ('/album/search/best', albums.BestController),
     ('/album/search/new', albums.NewController),
     ('/album/upgrade', albums.UpgradeController),
+    ('/file/([^/]+)/.*', files.DownloadController),
 ]
 
 def run():
