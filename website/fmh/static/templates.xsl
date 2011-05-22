@@ -34,8 +34,9 @@
 		<xsl:variable name="album_title" select="xhtml:dl/xhtml:dd[@id='album_title']/text()"/>
 		<xsl:variable name="album_artist" select="xhtml:dl/xhtml:dd[@id='album_artist']/text()"/>
 		<xsl:variable name="homepage" select="xhtml:dl/xhtml:dd[@id='homepage']/text()"/>
+		<xsl:variable name="cover" select="xhtml:dl/xhtml:dd[@id='cover']/text()"/>
 		<div id="album-view">
-            <img class="cover" src="/album/{$album_id}/cover.jpg" alt="Обложка"/>
+            <img class="cover" src="{$cover}" alt="Обложка"/>
 			<div class="info">
 				<h1><xsl:value-of select="$album_title"/></h1>
 				<p class="artist">
