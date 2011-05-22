@@ -101,11 +101,12 @@ h2 {
 }
 #album-list li {
 	display: inline-block;
-	min-height: 75px;
-	width: 220px;
+	height: 79px;
+	width: 222px;
 	overflow: hidden;
 	margin: 0 10px 10px 0;
 	position: relative;
+	font-size: 10pt;
 }
 #album-list li a {
 	color: black;
@@ -113,9 +114,14 @@ h2 {
 #album-list .title {
 	font-weight: bold;
 }
+#album-list .artist a {
+	color: #444;
+}
 #album-list .cover {
 	width: 75px;
 	height: 75px;
+	border: solid 1px #ccc;
+	padding: 1px;
 }
 #album-list .info {
 	position: absolute;
@@ -123,7 +129,7 @@ h2 {
 	left: 85px;
 }
 #album-list p {
-	margin: 0 0 .25em;
+	margin: 0 0 .5em;
 	line-height: 1em;
 }
 

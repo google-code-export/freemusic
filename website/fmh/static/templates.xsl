@@ -42,6 +42,7 @@
 		<xsl:variable name="album_id" select="xhtml:dl/xhtml:dd[@id='album_id']/text()"/>
 		<xsl:variable name="album_title" select="xhtml:dl/xhtml:dd[@id='album_title']/text()"/>
 		<xsl:variable name="album_artist" select="xhtml:dl/xhtml:dd[@id='album_artist']/text()"/>
+		<xsl:variable name="download_link" select="xhtml:dl/xhtml:dd[@id='download_link']/text()"/>
 		<xsl:variable name="homepage" select="xhtml:dl/xhtml:dd[@id='homepage']/text()"/>
 		<xsl:variable name="cover" select="xhtml:dl/xhtml:dd[@id='cover']/text()"/>
 		<xsl:variable name="release_date" select="xhtml:dl/xhtml:dd[@id='release_date']/text()"/>
@@ -65,7 +66,17 @@
 					<p class="positive_reviews">Положительных отзывов: <xsl:value-of select="xhtml:p[@class='positive_reviews']/xhtml:span/text()"/></p>
 				</xsl:if>
 				<p class="download">
-					<a href="/album/{$album_id}/download">Скачать альбом</a>
+					<xsl:choose>
+						<xsl:when test="$download_link">
+							<a href="/album/{$album_id}/download">Скачать альбом</a>
+						</xsl:when>
+						<xsl:when test="$homepage">
+							<a href="{$homepage}">Скачать с сайта группы</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:text>Скачать нельзя</xsl:text>
+						</xsl:otherwise>
+					</xsl:choose>
 				</p>
 			</div>
 
@@ -135,10 +146,10 @@
 					<img class="cover" src="{xhtml:a/@cover}" alt="cover"/>
 				</a>
 				<div class="info">
-					<p><a class="title" href="{xhtml:a/@href}">
+					<p class="title"><a href="{xhtml:a/@href}">
 						<xsl:value-of select="xhtml:a/text()"/>
 					</a></p>
-					<p><a class="artist" href="#">
+					<p class="artist"><a href="#">
 						<xsl:value-of select="xhtml:a/@artist"/>
 					</a></p>
 				</div>
