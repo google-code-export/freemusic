@@ -1,7 +1,7 @@
 all: rebuild
 
 upload: all
-	appcfg.py update .
+	cat ../.hg/gaepass | appcfg.py -e "$(MAIL)" --passin update .
 
 clean:
 	find . -iregex '.*\.\(pyc\|orig\|rej\)$$' -delete
