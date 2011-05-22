@@ -1,5 +1,6 @@
 # vim: set fileencoding=utf-8:
 
+from google.appengine.api import users
 from google.appengine.ext import webapp
 
 from fmh import json
@@ -22,13 +23,14 @@ class EditController(webapp.RequestHandler):
         self.set_value(album, 'homepage')
         self.set_value(album, 'download_link')
         self.set_value(album, 'cover_small')
+        self.set_value(album, 'owner', cls=users.User)
         album.put()
         self.redirect('/album/%u' % album.id)
 
-    def set_value(self, album, k, k1=None):
+    def set_value(self, album, k, k1=None, cls=unicode):
         value = self.request.get(k)
         if value:
-            setattr(album, k1 or k, value)
+            setattr(album, k1 or k, cls(value))
 
 
 class EditView(view.Base):

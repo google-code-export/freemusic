@@ -10,6 +10,7 @@
 	<input type="text" name="homepage" value="{{ homepage|escape }}" placeholder="Сайт исполнителя"/>
 	<input type="text" name="download_link" value="{{ download_link|escape }}" placeholder="Ссылка для скачивания"/>
 	<input type="text" name="cover_small" value="{{ cover_small|escape }}" placeholder="Ссылка на обложку"/>
+	<input type="text" name="owner" value="{{ owner.email|escape }}" placeholder="Владелец"/>
 	<button>Сохранить изменения</button>
 </form>
 {% endblock %}
