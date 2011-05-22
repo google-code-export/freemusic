@@ -23,3 +23,9 @@ indexes:
   properties:
   - name: album
   - name: weight
+- kind: Review
+  properties:
+  - name: album
+  - name: validated
+  - name: date_added
+    direction: desc
