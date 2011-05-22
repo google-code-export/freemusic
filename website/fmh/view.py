@@ -3,6 +3,9 @@
 import logging
 import os
 
+from google.appengine.dist import use_library
+use_library('django', '0.96')
+
 from google.appengine.ext.webapp import template
 
 
