@@ -35,15 +35,22 @@
 		<xsl:variable name="album_artist" select="xhtml:dl/xhtml:dd[@id='album_artist']/text()"/>
 		<xsl:variable name="homepage" select="xhtml:dl/xhtml:dd[@id='homepage']/text()"/>
 		<xsl:variable name="cover" select="xhtml:dl/xhtml:dd[@id='cover']/text()"/>
+		<xsl:variable name="release_date" select="xhtml:dl/xhtml:dd[@id='release_date']/text()"/>
 		<div id="album-view">
             <img class="cover" src="{$cover}" alt="Обложка"/>
 			<div class="info">
-				<h1><xsl:value-of select="$album_title"/></h1>
+				<h1>
+					<xsl:value-of select="$album_title"/>
+				</h1>
 				<p class="artist">
+					<xsl:if test="$release_date">
+						<xsl:text>© </xsl:text>
+						<xsl:value-of select="$release_date"/>
+						<xsl:text> </xsl:text>
+					</xsl:if>
 					<a class="external" href="{$homepage}">
 						<xsl:value-of select="$album_artist"/>
 					</a>
-					<xsl:text> (1980)</xsl:text>
 				</p>
 				<xsl:if test="xhtml:p[@class='positive_reviews']">
 					<p class="positive_reviews">Положительных отзывов: <xsl:value-of select="xhtml:p[@class='positive_reviews']/xhtml:span/text()"/></p>
