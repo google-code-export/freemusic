@@ -30,16 +30,17 @@
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
 		<xsl:param name="title"/>
-		<xsl:variable name="id">
-			<xsl:value-of select="*[@id='id']/@value"/>
-		</xsl:variable>
+		<xsl:variable name="album_id" select="xhtml:dl/xhtml:dd[@id='album_id']/text()"/>
+		<xsl:variable name="album_title" select="xhtml:dl/xhtml:dd[@id='album_title']/text()"/>
+		<xsl:variable name="album_artist" select="xhtml:dl/xhtml:dd[@id='album_artist']/text()"/>
+		<xsl:variable name="homepage" select="xhtml:dl/xhtml:dd[@id='homepage']/text()"/>
 		<div id="album-view">
-            <img class="cover" src="/album/{$id}/cover.jpg" alt="Обложка"/>
+            <img class="cover" src="/album/{$album_id}/cover.jpg" alt="Обложка"/>
 			<div class="info">
-				<h1><xsl:value-of select="$title"/></h1>
+				<h1><xsl:value-of select="$album_title"/></h1>
 				<p class="artist">
-					<a class="external" href="{xhtml:p[@class='homepage']/xhtml:a/text()}">
-						<xsl:value-of select="xhtml:p[@class='artist']/xhtml:span/text()"/>
+					<a class="external" href="{$homepage}">
+						<xsl:value-of select="$album_artist"/>
 					</a>
 					<xsl:text> (1980)</xsl:text>
 				</p>
@@ -47,8 +48,7 @@
 					<p class="positive_reviews">Положительных отзывов: <xsl:value-of select="xhtml:p[@class='positive_reviews']/xhtml:span/text()"/></p>
 				</xsl:if>
 				<p class="download">
-					<a href="/album/{$id}/download">Скачать альбом</a>
-                    <xsl:apply-templates select="xhtml:p[@class='download_count']"/>
+					<a href="/album/{$album_id}/download">Скачать альбом</a>
 				</p>
 			</div>
 
@@ -56,7 +56,7 @@
 
             <div id="review">
                 <h2>Напишите рецензию</h2>
-                <form method="post" action="/album/{$id}/review">
+                <form method="post" action="/album/{$album_id}/review">
                     <div class="control check">
                         <label>
                             <input type="checkbox" name="likes" value="1" checked="checked"/>
@@ -76,14 +76,6 @@
             </div>
 		</div>
 	</xsl:template>
-
-        <xsl:template match="xhtml:p[@class='download_count']">
-            <span class="dlcount">
-                <xsl:text> (</xsl:text>
-                <xsl:value-of select="."/>
-                <xsl:text>)</xsl:text>
-            </span>
-        </xsl:template>
 
 		<xsl:template match="xhtml:ul[@id='reviews']">
 			<div id="reviews">

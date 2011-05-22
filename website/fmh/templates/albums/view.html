@@ -2,17 +2,19 @@
 {% block pageid %}album-view{% endblock %}
 {% block title %}{{ title|escape }}{% endblock %}
 {% block body %}
-<span id="id" value="{{ album_id }}"/>
-<h1 class="title">{{ title|escape }}</h1>
-<p class="artist">Автор: <span class="value">{{ artist_name|escape }}</span></p>
-<p class="homepage">Сайт автора: <a href="{{ homepage }}" class="value">{{ homepage|escape }}</a></p>
-{% if download_link %}
-	<p class="download_link">Скачать: <a href="{{ download_link|escape }}" class="value">{{ download_link|escape }}</a></p>
-	{% if download_count %}
-		<p class="download_count">{{ download_count }}</p>
-	{% endif %}
-{% endif %}
-<p class="positive_reviews">Положительных отзывов: <span>{% if positive_reviews %}{{ positive_reviews }}{% else %}нет{% endif %}</span></p>
+<h2>Описание альбома</h2>
+<dl id="album">
+	<dt>Название альбома:</dt>
+	<dd id="album_title">{{ title|escape }}</dd>
+	<dt>Исполнитель:</dt>
+	<dd id="album_artist">{{ artist_name|escape }}</dd>
+	<dt>Сайт автора</dt>
+	<dd id="homepage">{{ homepage|escape }}</dd>
+	<dt>Положительных отзывов:</dt>
+	<dd id="positive_reviews">{{ positive_reviews }}</dd>
+	<dt>Идентификатор альбома:</dt>
+	<dd id="album_id">{{ album_id }}</dd>
+</dl>
 
 {% if reviews %}
 <h2>Рецензии</h2>
