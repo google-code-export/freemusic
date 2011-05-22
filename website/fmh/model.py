@@ -104,7 +104,7 @@ class Review(CustomModel):
 
     @classmethod
     def find_by_album(cls, album):
-        reviews = cls.gql('WHERE album = :1', album).fetch(100)
+        reviews = cls.gql('WHERE album = :1 AND validated = :2', album, True).fetch(100)
         return reviews
 
 
