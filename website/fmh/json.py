@@ -13,8 +13,10 @@ class Encoder(simplejson.JSONEncoder):
             return o.strftime('%Y-%m-%d %H:%M:%S')
         if typ == datetime.date:
             return o.strftime('%Y-%m-%d')
+        """
         if typ == users.User:
             return o.email()
+        """
 
         return super(Encoder, self).default(o)
 

@@ -26,3 +26,10 @@ class Base(object):
         logging.debug('Rendering %s' % path)
 
         return template.render(path, data)
+
+
+class Error(Base):
+    def render(self, status):
+        super(Error, self).render('error.html', {
+            'status': status,
+        })

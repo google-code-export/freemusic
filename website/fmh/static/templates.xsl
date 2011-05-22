@@ -36,6 +36,12 @@
 		</html>
 	</xsl:template>
 
+	<!-- Сообщение об ошибке -->
+	<xsl:template match="xhtml:body[@class='error']">
+		<h1>Ошибка</h1>
+		<p>Извините, у нас что-то сломалось.  Попробуйте повторить запрос чуть позже.</p>
+	</xsl:template>
+
 	<!-- Страница альбома -->
 	<xsl:template match="xhtml:body[@class='album-view']">
 		<xsl:param name="title"/>

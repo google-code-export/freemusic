@@ -9,7 +9,14 @@ from fmh import model
 from fmh import view
 
 
-class EditController(webapp.RequestHandler):
+class RequestHandler(webapp.RequestHandler):
+    def handle_exception(self, exception, debug_mode):
+        if False and debug_mode:
+            super(RequestHandler, self).handle_exception(exception, debug_mode)
+        view.Error(self).render(500)
+
+
+class EditController(RequestHandler):
     def get(self, album_id):
         EditView(self).render(model.SiteAlbum.get_by_id(int(album_id)))
 
@@ -56,19 +63,19 @@ class AddController(EditController):
         self.process_form(album)
 
 
-class ViewController(webapp.RequestHandler):
+class ViewController(RequestHandler):
     def get(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
         View(self).render(album)
 
 
-class JSONController(webapp.RequestHandler):
+class JSONController(RequestHandler):
     def get(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
         json.dump(self.response, album)
 
 
-class DownloadController(webapp.RequestHandler):
+class DownloadController(RequestHandler):
     def get(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
         if not album.download_count:
@@ -78,13 +85,13 @@ class DownloadController(webapp.RequestHandler):
         self.redirect(album.download_link)
 
 
-class CoverController(webapp.RequestHandler):
+class CoverController(RequestHandler):
     def get(self, album_id):
         # album = model.SiteAlbum.get_by_id(int(album_id))
         self.redirect('http://lh4.ggpht.com/32j3lgf9wPBsGHUjgwtyJyEzObEyVF7RwSEz4WABdNV6YP-AjrDKmhxyWiMTyYuIUoBMOn8nRMIKS09oKA=s200-c')
 
 
-class ReviewController(webapp.RequestHandler):
+class ReviewController(RequestHandler):
     def post(self, album_id):
         album = model.SiteAlbum.get_by_id(int(album_id))
         review = album.add_review(self.request.get('email'),
@@ -110,7 +117,7 @@ class View(view.Base):
         super(View, self).render('albums/view.html', data)
 
 
-class ListController(webapp.RequestHandler):
+class ListController(RequestHandler):
     def get(self):
         albums = model.SiteAlbum.find()
         ListView(self).render(albums)
@@ -123,13 +130,13 @@ class ListView(view.Base):
         })
 
 
-class BestController(webapp.RequestHandler):
+class BestController(RequestHandler):
     def get(self):
         albums = model.SiteAlbum.find_best()
         ListView(self).render(albums, title=u'Лучшие альбомы')
 
 
-class NewController(webapp.RequestHandler):
+class NewController(RequestHandler):
     def get(self):
         albums = model.SiteAlbum.find_new()
         ListView(self).render(albums, title=u'Новые альбомы')
