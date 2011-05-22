@@ -17,13 +17,18 @@ class EditController(webapp.RequestHandler):
         self.process_form(album)
 
     def process_form(self, album):
-        album.name = self.request.get('title')
         album.artists = [ self.request.get('artist') ]
-        album.homepage = self.request.get('homepage')
-        album.download_link = self.request.get('download_link')
-        album.cover_small = self.request.get('cover_small')
+        self.set_value(album, 'title', 'name')
+        self.set_value(album, 'homepage')
+        self.set_value(album, 'download_link')
+        self.set_value(album, 'cover_small')
         album.put()
         self.redirect('/album/%u' % album.id)
+
+    def set_value(self, album, k, k1=None):
+        value = self.request.get(k)
+        if value:
+            setattr(album, k1 or k, value)
 
 
 class EditView(view.Base):
