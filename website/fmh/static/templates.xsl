@@ -19,9 +19,18 @@
 			</head>
 			<body>
 				<div id="wrapper">
-					<xsl:apply-templates select="xhtml:body">
-						<xsl:with-param name="title" select="$title"/>
-					</xsl:apply-templates>
+					<div id="contents">
+						<xsl:apply-templates select="xhtml:body">
+							<xsl:with-param name="title" select="$title"/>
+						</xsl:apply-templates>
+					</div>
+					<div id="header">
+						<a href="/"><img src="/fmh-static/logo.76x28.png" alt="logo"/></a>
+						<ul id="topnav">
+							<li><a href="/">Лучшие</a></li>
+							<li><a href="/">Новые</a></li>
+						</ul>
+					</div>
 				</div>
 			</body>
 		</html>

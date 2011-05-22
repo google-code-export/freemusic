@@ -21,10 +21,17 @@ a:hover {
 #wrapper {
 	width: 700px;
 	margin: 10px auto;
+	position: relative;
+}
+
+#contents {
+	position: absolute;
+	top: 50px;
+	padding-bottom: 10px;
 }
 
 h1 {
-	font-size: 20pt;
+	font-size: 16pt;
 	font-weight: normal;
 	line-height: 1em;
 	margin: 0;
@@ -145,4 +152,26 @@ form .check input {
 form .check span {
 	color: black;
 	margin-left: .5em;
+}
+
+
+
+#header {
+	position: absolute;
+	top: 0;
+}
+
+#topnav {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	top: 0px;
+	left: 100px;
+	font-size: 14px;
+	line-height: 1em;
+}
+#topnav li {
+	display: inline;
+	margin-right: 20px;
 }
