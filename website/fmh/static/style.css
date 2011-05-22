@@ -107,15 +107,14 @@ h2 {
 	margin: 0 10px 10px 0;
 	position: relative;
 	font-size: 10pt;
+	color: #444;
 }
 #album-list li a {
-	color: black;
-}
-#album-list .title {
-	font-weight: bold;
-}
-#album-list .artist a {
 	color: #444;
+}
+#album-list .title a {
+	font-weight: bold;
+	color: black;
 }
 #album-list .cover {
 	width: 75px;

@@ -77,6 +77,10 @@ class Album(CustomModel):
     def find_new(cls, limit=30):
         return cls.all().order('-date_released').fetch(limit)
 
+    @classmethod
+    def find_by_artist(cls, artist_name, limit=30):
+        return cls.gql('WHERE artist = :1', artist_name).fetch(limit)
+
 
 class SiteAlbum(CustomModel):
     id = db.IntegerProperty()

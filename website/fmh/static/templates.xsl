@@ -64,7 +64,7 @@
 						<xsl:value-of select="$release_date"/>
 						<xsl:text> </xsl:text>
 					</xsl:if>
-					<a class="external" href="{$homepage}">
+					<a class="external" href="/album/search?artist={$album_artist}">
 						<xsl:value-of select="$album_artist"/>
 					</a>
 				</p>
@@ -155,9 +155,13 @@
 					<p class="title"><a href="{xhtml:a/@href}">
 						<xsl:value-of select="xhtml:a/text()"/>
 					</a></p>
-					<p class="artist"><a href="#">
+					<p class="artist"><a href="/album/search?artist={xhtml:a/@artist}">
 						<xsl:value-of select="xhtml:a/@artist"/>
 					</a></p>
+					<p class="year">
+						<xsl:text>© </xsl:text>
+						<xsl:value-of select="xhtml:a/@year"/>
+					</p>
 				</div>
 			</li>
 		</xsl:template>

@@ -146,6 +146,17 @@ class NewController(RequestHandler):
         ListView(self).render(albums, title=u'Новые альбомы')
 
 
+class SearchController(RequestHandler):
+    def get(self):
+        if self.request.get('artist'):
+            artist_name = self.request.get('artist')
+            albums = model.Album.find_by_artist(artist_name)
+            title = u'Альбомы группы %s' % artist_name
+        else:
+            raise Exception('Search what?')
+        ListView(self).render(albums, title=title)
+
+
 class UpgradeController(RequestHandler):
     def get(self):
         for old in model.SiteAlbum.find_all():

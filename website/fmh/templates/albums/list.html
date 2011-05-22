@@ -6,7 +6,7 @@
 <ul>
 {% for album in albums %}
 <li>
-<a artist="{{ album.artist|escape }}" cover="{% if album.cover %}{{ album.cover|escape }}=s75-c{% else %}/fmh-static/default-cover.png{% endif %}" year="{{ album.release_date|date:"Y" }}" href="/album/{{ album.id }}">{{ album.title|escape }}</a>
+<a artist="{{ album.artist|escape }}" cover="{% if album.cover %}{{ album.cover|escape }}=s75-c{% else %}/fmh-static/default-cover.png{% endif %}" year="{{ album.date_released|date:"Y" }}" href="/album/{{ album.id }}">{{ album.title|escape }}</a>
 </li>
 {% endfor %}
 </ul>
