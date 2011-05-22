@@ -13,6 +13,8 @@ class Base(object):
     def render(self, template_name, data=None, content_type='application/xhtml+xml', ret=False):
         if self.response is None:
             raise Exception('Bad view: response not set.')
+        if os.environ.get('QUERY_STRING').endswith('html'):
+            content_type = 'text/html'
         self.response.headers['Content-Type'] = content_type + '; charset=utf-8'
         self.response.out.write(self.render_template(template_name, data))
 
