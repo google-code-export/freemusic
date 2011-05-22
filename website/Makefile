@@ -1,6 +1,6 @@
 all: rebuild
 
-upload: all
+upload: clean all
 	cat ../.hg/gaepass | appcfg.py -e "$(MAIL)" --passin update .
 
 clean:

@@ -12,16 +12,17 @@ import fmh.albums as albums
 
 
 handlers = [
-    ('/$', albums.BestController),
-    ('/album/(\d+)$', albums.ViewController),
-    ('/album/(\d+)/cover\.jpg$', albums.CoverController),
-    ('/album/(\d+)/download$', albums.DownloadController),
-    ('/album/(\d+)/edit$', albums.EditController),
-    ('/album/(\d+)/json$', albums.JSONController),
-    ('/album/(\d+)/review$', albums.ReviewController),
+    ('/', albums.BestController),
+    ('/album/(\d+)', albums.ViewController),
+    ('/album/(\d+)/cover\.jpg', albums.CoverController),
+    ('/album/(\d+)/download', albums.DownloadController),
+    ('/album/(\d+)/edit', albums.EditController),
+    ('/album/(\d+)/json', albums.JSONController),
+    ('/album/(\d+)/review', albums.ReviewController),
     ('/album/add$', albums.AddController),
     ('/album/search/best', albums.BestController),
     ('/album/search/new', albums.NewController),
+    ('/album/upgrade', albums.UpgradeController),
 ]
 
 def run():

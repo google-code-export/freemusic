@@ -16,29 +16,69 @@ def get_current_user():
     user = SiteUser.gql('WHERE user = :1', users.get_current_user()).get()
     return user
 
-def nextId(cls):
-    last = cls.gql('ORDER BY id DESC').get()
-    if last:
-        return last.id + 1
-    return 1
 
 class CustomModel(db.Model):
     def to_dict(self):
         return dict([(k, getattr(self, k)) for k in self.fields()])
+
+    def put(self):
+        if not self.is_saved() and hasattr(self, 'id'):
+            if not self.id:
+                last = self.all().order('-id').get()
+                if last is None:
+                    self.id = 1
+                else:
+                    self.id = last.id + 1
+        return super(CustomModel, self).put()
 
     @classmethod
     def get_by_key(cls, key):
         return db.get(db.Key(key))
 
 
+class Album(CustomModel):
+    id = db.IntegerProperty()
+    title = db.StringProperty()
+    artist = db.StringProperty()
+    description = db.TextProperty()
+    date_submitted = db.DateTimeProperty(auto_now_add=True)
+    date_released = db.DateProperty(auto_now_add=True)
+    homepage = db.StringProperty()
+    download_link = db.StringProperty()
+    download_count = db.IntegerProperty()
+    cover = db.StringProperty()
+    labels = db.StringListProperty()
+    owner = db.UserProperty()
+    positive_reviews = db.IntegerProperty()
+
+    @classmethod
+    def get_by_id(cls, album_id):
+        return cls.gql('WHERE id = :1', album_id).get()
+
+    @classmethod
+    def find(cls, limit=30):
+        return cls.all().order('-id').fetch(limit)
+
+    @classmethod
+    def find_all(cls):
+        return cls.all().order('id')
+
+    @classmethod
+    def find_best(cls, limit=30):
+        return cls.all().order('-positive_reviews').fetch(limit)
+
+    @classmethod
+    def find_new(cls, limit=30):
+        return cls.all().order('-date_released').fetch(limit)
+
+
 class SiteAlbum(CustomModel):
     id = db.IntegerProperty()
     name = db.StringProperty()
     text = db.TextProperty()
-    artists = db.StringListProperty()
     release_date = db.DateProperty(auto_now_add=True)
     homepage = db.LinkProperty()
-    download_link = db.LinkProperty()
+    download_link = db.StringProperty()
     download_count = db.IntegerProperty()
     rating = db.RatingProperty()
     cover_id = db.StringProperty()
@@ -48,6 +88,9 @@ class SiteAlbum(CustomModel):
     owner = db.UserProperty()
     rate = db.RatingProperty()
     positive_reviews = db.IntegerProperty()
+
+    # FIXME: delete these.
+    artists = db.StringListProperty()
 
     def put(self):
         if not self.id:
@@ -68,6 +111,12 @@ class SiteAlbum(CustomModel):
         review.put()
         return review
 
+    def find_files(self, content_type=None):
+        files = File.find_by_album(self)
+        if content_type is not None:
+            files = [f for f in files if f.content_type.startswith(content_type)]
+        return files
+
     @classmethod
     def get_by_id(cls, album_id):
         return cls.gql('WHERE id = :1', album_id).get()
@@ -75,6 +124,10 @@ class SiteAlbum(CustomModel):
     @classmethod
     def find(cls, limit=30):
         return cls.all().order('-id').fetch(limit)
+
+    @classmethod
+    def find_all(cls):
+        return cls.all().order('id')
 
     @classmethod
     def find_best(cls, limit=30):
@@ -194,9 +247,6 @@ class File(CustomModel):
     download_bytes = db.IntegerProperty()
 
     def put(self):
-        if not self.id:
-            self.id = self.weight = nextId(File)
-            logging.info('New file: %s (file/serve?id=%u)' % (self.filename, self.id))
         if not self.content_type:
             self.content_type = 'application/octet-stream'
         # Обновление списка исполнителей, для более простого поиска.
@@ -206,6 +256,10 @@ class File(CustomModel):
         if self.remixer and self.remixer not in self.all_artists:
             self.all_artists.append(self.remixer)
         return CustomModel.put(self)
+
+    @classmethod
+    def find_by_album(cls, album):
+        return list(cls.gql('WHERE album = :1', album))
 
 
 class DownloadTicket(CustomModel):
