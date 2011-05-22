@@ -12,6 +12,7 @@
 		<p class="download_count">{{ download_count }}</p>
 	{% endif %}
 {% endif %}
+<p class="positive_reviews">Положительных отзывов: <span>{% if positive_reviews %}{{ positive_reviews }}{% else %}нет{% endif %}</span></p>
 
 {% if reviews %}
 <h2>Рецензии</h2>

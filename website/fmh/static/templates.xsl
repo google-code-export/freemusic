@@ -43,6 +43,9 @@
 					</a>
 					<xsl:text> (1980)</xsl:text>
 				</p>
+				<xsl:if test="xhtml:p[@class='positive_reviews']">
+					<p class="positive_reviews">Положительных отзывов: <xsl:value-of select="xhtml:p[@class='positive_reviews']/xhtml:span/text()"/></p>
+				</xsl:if>
 				<p class="download">
 					<a href="/album/{$id}/download">Скачать альбом</a>
                     <xsl:apply-templates select="xhtml:p[@class='download_count']"/>

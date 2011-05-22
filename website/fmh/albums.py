@@ -102,6 +102,7 @@ class View(view.Base):
             'homepage': album.homepage,
             'download_link': album.download_link,
             'download_count': album.download_count,
+            'positive_reviews': album.positive_reviews,
             'reviews': model.Review.find_by_album(album),
         }
         super(View, self).render('albums/view.html', data)

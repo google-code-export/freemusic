@@ -65,10 +65,6 @@ class SiteAlbum(CustomModel):
         review.validated = False
         review.likes = likes and True or False
         review.comment = comment
-        if review.likes:
-            if not self.positive_reviews:
-                self.positive_reviews = 0
-            self.positive_reviews += 1
         review.put()
         return review
 
@@ -102,6 +98,10 @@ class Review(CustomModel):
 
     def set_valid(self):
         self.validated = True
+        if self.likes:
+            tmp = self.album.positive_reviews or 0
+            self.album.positive_reviews = tmp + 1
+            self.album.put()
         self.put()
 
     def avatar(self):
