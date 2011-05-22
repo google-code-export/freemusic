@@ -51,6 +51,27 @@ h2 {
 	color: gray;
 }
 
+#reviews ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+#reviews li {
+	min-height: 60px;
+}
+#reviews .avatar {
+	float: left;
+	margin: 0 10px 0 0;
+}
+#reviews .meta {
+	font-size: 10pt;
+	color: gray;
+}
+#reviews p {
+	margin: 0 0 .5em;
+}
+
 
 form label {
 	display: block;

@@ -88,7 +88,15 @@
 				<ul>
 					<xsl:for-each select="xhtml:li">
 						<li>
-							<xsl:value-of select="text()"/>
+							<img class="avatar" src="{@avatar}?s=50"/>
+							<p class="comment"><xsl:value-of select="text()"/></p>
+							<p class="meta">
+								<xsl:value-of select="@date"/>
+								<xsl:if test="@likes">
+									<xsl:text> </xsl:text>
+									<span>нравится</span>
+								</xsl:if>
+							</p>
 						</li>
 					</xsl:for-each>
 				</ul>

@@ -98,6 +98,10 @@ class Review(CustomModel):
         self.validated = True
         self.put()
 
+    def avatar(self):
+        md5 = hashlib.md5(self.author.email()).hexdigest()
+        return 'http://gravatar.com/avatar/%s' % md5
+
     @classmethod
     def find_by_album(cls, album):
         reviews = cls.gql('WHERE album = :1', album).fetch(100)
