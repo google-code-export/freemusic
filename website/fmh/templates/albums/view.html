@@ -5,15 +5,19 @@
 <h2>Описание альбома</h2>
 <dl id="album">
 	<dt>Название альбома:</dt>
-	<dd id="album_title">{{ title|escape }}</dd>
+	<dd id="album_title">{{ album.name|escape }}</dd>
 	<dt>Исполнитель:</dt>
-	<dd id="album_artist">{{ artist_name|escape }}</dd>
-	<dt>Сайт автора</dt>
-	<dd id="homepage">{{ homepage|escape }}</dd>
-	<dt>Положительных отзывов:</dt>
-	<dd id="positive_reviews">{{ positive_reviews }}</dd>
+	<dd id="album_artist">{{ album.artists.0|escape }}</dd>
+	<dt>Год выпуска</dt>
+	<dd id="release_date">{{ album.release_date|date:"Y" }}</dd>
+	<dt>Сайт автора:</dt>
+	<dd id="homepage">{{ album.homepage|escape }}</dd>
+	{% if album.cover_small %}<dt>Обложка</dt>
+	<dd id="cover">{{ album.cover_small|escape }}</dd>
+	{% endif %}<dt>Положительных отзывов:</dt>
+	<dd id="positive_reviews">{{ album.positive_reviews }}</dd>
 	<dt>Идентификатор альбома:</dt>
-	<dd id="album_id">{{ album_id }}</dd>
+	<dd id="album_id">{{ album.id }}</dd>
 </dl>
 
 {% if reviews %}

@@ -95,14 +95,7 @@ class ReviewController(webapp.RequestHandler):
 class View(view.Base):
     def render(self, album):
         data = {
-            'album_id': album.id,
-            'key': album.key(),
-            'title': album.name,
-            'artist_name': album.artists[0],
-            'homepage': album.homepage,
-            'download_link': album.download_link,
-            'download_count': album.download_count,
-            'positive_reviews': album.positive_reviews,
+            'album': album,
             'reviews': model.Review.find_by_album(album),
         }
         super(View, self).render('albums/view.html', data)
