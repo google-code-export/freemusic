@@ -63,6 +63,7 @@ h2 {
 	margin: 0;
 	padding: 0;
 	list-style-type: none;
+	font-size: 10pt;
 }
 
 #reviews li {
@@ -73,11 +74,16 @@ h2 {
 	margin: 0 10px 0 0;
 }
 #reviews .meta {
-	font-size: 10pt;
 	color: gray;
 }
+#reviews .meta span {
+	margin-right: 1em;
+}
+#reviews .comment {
+	margin: 0 0 1em;
+}
 #reviews p {
-	margin: 0 0 .5em;
+	margin: 0;
 }
 
 

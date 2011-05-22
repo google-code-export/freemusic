@@ -24,7 +24,7 @@
 <h2>Рецензии</h2>
 <ul id="reviews">
 {% for review in reviews %}
-<li author="{{ review.author|escape }}" avatar="{{ review.avatar }}" date="{{ review.date_added|date:"d.m.y" }}"{% if review.likes %} likes="likes"{% endif %}>{{ review.comment|escape }}</li>
+<li author="{{ review.author.email|escape }}" avatar="{{ review.avatar }}" date="{{ review.date_added|date:"d.m.y" }}"{% if review.likes %} likes="likes"{% endif %}>{{ review.comment|escape }}</li>
 {% endfor %}
 </ul>
 {% endif %}
