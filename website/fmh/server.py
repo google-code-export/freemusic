@@ -12,6 +12,7 @@ import fmh.albums as albums
 
 
 handlers = [
+    ('/$', albums.ListController),
     ('/album/(\d+)$', albums.ViewController),
     ('/album/(\d+)/cover\.jpg$', albums.CoverController),
     ('/album/(\d+)/download$', albums.DownloadController),

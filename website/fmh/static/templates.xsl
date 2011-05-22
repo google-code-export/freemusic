@@ -109,6 +109,33 @@
 			</div>
 		</xsl:template>
 
+	<!-- Список альбомов -->
+	<xsl:template match="xhtml:body[@class='album-list']">
+		<xsl:param name="title"/>
+		<div id="album-list">
+			<h1><xsl:value-of select="$title"/></h1>
+			<ul>
+				<xsl:apply-templates select="xhtml:ul/xhtml:li" mode="album-list"/>
+			</ul>
+		</div>
+	</xsl:template>
+
+		<xsl:template match="xhtml:li" mode="album-list">
+			<li>
+				<a href="{xhtml:a/@href}">
+					<img class="cover" src="{xhtml:a/@cover}" alt="cover"/>
+				</a>
+				<div class="info">
+					<p><a class="title" href="{xhtml:a/@href}">
+						<xsl:value-of select="xhtml:a/text()"/>
+					</a></p>
+					<p><a class="artist" href="#">
+						<xsl:value-of select="xhtml:a/@artist"/>
+					</a></p>
+				</div>
+			</li>
+		</xsl:template>
+
 	<!-- Форма добавления альбома -->
 	<xsl:template match="xhtml:body[@class='add-album']">
 		<xsl:apply-templates select="xhtml:form"/>

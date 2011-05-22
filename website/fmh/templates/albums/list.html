@@ -1,0 +1,13 @@
+{% extends "../base.html" %}
+{% block pageid %}album-list{% endblock %}
+{% block title %}Список альбомов{% endblock %}
+{% block body %}
+<h2>Список альбомов</h2>
+<ul>
+{% for album in albums %}
+<li>
+<a artist="{{ album.artists.0|escape }}" cover="{% if album.cover_small %}{{ album.cover_small|escape }}{% else %}/fmh-static/default-cover.png{% endif %}" year="{{ album.release_date|date:"Y" }}" href="/album/{{ album.id }}">{{ album.name|escape }}</a>
+</li>
+{% endfor %}
+</ul>
+{% endblock %}

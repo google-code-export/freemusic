@@ -72,6 +72,10 @@ class SiteAlbum(CustomModel):
     def get_by_id(cls, album_id):
         return cls.gql('WHERE id = :1', album_id).get()
 
+    @classmethod
+    def find(cls, limit=20):
+        return cls.all().order('-id').fetch(limit)
+
 
 class SiteUser(CustomModel):
     user = db.UserProperty(required=_REQUIRED)

@@ -101,3 +101,15 @@ class View(view.Base):
             'reviews': model.Review.find_by_album(album),
         }
         super(View, self).render('albums/view.html', data)
+
+
+class ListController(webapp.RequestHandler):
+    def get(self):
+        albums = model.SiteAlbum.find()
+        ListView(self).render(albums)
+
+class ListView(view.Base):
+    def render(self, albums):
+        super(ListView, self).render('albums/list.html', {
+            'albums': albums,
+        })

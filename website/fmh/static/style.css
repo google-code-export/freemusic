@@ -87,6 +87,37 @@ h2 {
 }
 
 
+#album-list ul {
+	list-style-type: none;
+	margin: 10px 0;
+	padding: 0;
+}
+#album-list li {
+	display: inline-block;
+	min-height: 75px;
+	width: 220px;
+	overflow: hidden;
+	margin: 0 10px 10px 0;
+	position: relative;
+}
+#album-list li a {
+	color: black;
+}
+#album-list .cover {
+	width: 75px;
+	height: 75px;
+}
+#album-list .info {
+	position: absolute;
+	top: 0;
+	left: 85px;
+}
+#album-list p {
+	margin: 0 0 .25em;
+	line-height: 1em;
+}
+
+
 form label {
 	display: block;
 	color: gray;
