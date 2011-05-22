@@ -89,7 +89,7 @@ h2 {
 
 #album-list ul {
 	list-style-type: none;
-	margin: 10px 0;
+	margin: 20px 0;
 	padding: 0;
 }
 #album-list li {
@@ -102,6 +102,9 @@ h2 {
 }
 #album-list li a {
 	color: black;
+}
+#album-list .title {
+	font-weight: bold;
 }
 #album-list .cover {
 	width: 75px;
