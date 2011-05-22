@@ -20,6 +20,8 @@ handlers = [
     ('/album/(\d+)/json$', albums.JSONController),
     ('/album/(\d+)/review$', albums.ReviewController),
     ('/album/add$', albums.AddController),
+    ('/album/search/best', albums.BestController),
+    ('/album/search/new', albums.NewController),
 ]
 
 def run():

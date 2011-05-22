@@ -1,8 +1,8 @@
 {% extends "../base.html" %}
 {% block pageid %}album-list{% endblock %}
-{% block title %}Список альбомов{% endblock %}
+{% block title %}{{ title|escape }}{% endblock %}
 {% block body %}
-<h2>Список альбомов</h2>
+<h2>{{ title|escape }}</h2>
 <ul>
 {% for album in albums %}
 <li>

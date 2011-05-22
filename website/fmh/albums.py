@@ -109,7 +109,20 @@ class ListController(webapp.RequestHandler):
         ListView(self).render(albums)
 
 class ListView(view.Base):
-    def render(self, albums):
+    def render(self, albums, title=None):
         super(ListView, self).render('albums/list.html', {
             'albums': albums,
+            'title': title,
         })
+
+
+class BestController(webapp.RequestHandler):
+    def get(self):
+        albums = model.SiteAlbum.find_best()
+        ListView(self).render(albums, title=u'Лучшие альбомы')
+
+
+class NewController(webapp.RequestHandler):
+    def get(self):
+        albums = model.SiteAlbum.find_new()
+        ListView(self).render(albums, title=u'Новые альбомы')

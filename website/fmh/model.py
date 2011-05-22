@@ -76,6 +76,14 @@ class SiteAlbum(CustomModel):
     def find(cls, limit=20):
         return cls.all().order('-id').fetch(limit)
 
+    @classmethod
+    def find_best(cls, limit=20):
+        return cls.all().order('-positive_reviews').fetch(limit)
+
+    @classmethod
+    def find_new(cls, limit=20):
+        return cls.all().order('-release_date').fetch(limit)
+
 
 class SiteUser(CustomModel):
     user = db.UserProperty(required=_REQUIRED)

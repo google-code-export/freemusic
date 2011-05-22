@@ -27,8 +27,8 @@
 					<div id="header">
 						<a href="/"><img src="/fmh-static/logo.76x28.png" alt="logo"/></a>
 						<ul id="topnav">
-							<li><a href="/">Лучшие</a></li>
-							<li><a href="/">Новые</a></li>
+							<li><a href="/album/search/best">Лучшие</a></li>
+							<li><a href="/album/search/new">Новые</a></li>
 						</ul>
 					</div>
 				</div>
