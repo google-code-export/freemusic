@@ -73,15 +73,15 @@ class SiteAlbum(CustomModel):
         return cls.gql('WHERE id = :1', album_id).get()
 
     @classmethod
-    def find(cls, limit=20):
+    def find(cls, limit=30):
         return cls.all().order('-id').fetch(limit)
 
     @classmethod
-    def find_best(cls, limit=20):
+    def find_best(cls, limit=30):
         return cls.all().order('-positive_reviews').fetch(limit)
 
     @classmethod
-    def find_new(cls, limit=20):
+    def find_new(cls, limit=30):
         return cls.all().order('-release_date').fetch(limit)
 
 
