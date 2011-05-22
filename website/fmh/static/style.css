@@ -22,6 +22,11 @@ h1 {
 	margin: 0;
 }
 
+h2 {
+	font-size: 16pt;
+	font-weight: normal;
+}
+
 .artist {
 	font-size: 10pt;
 	margin: .5em 0;
@@ -38,6 +43,7 @@ h1 {
 
 #album-view .info {
 	margin-left: 220px;
+	min-height: 220px;
 }
 
 .dlcount {
@@ -48,9 +54,26 @@ h1 {
 
 form label {
 	display: block;
+	color: gray;
 }
 input, textarea {
 	width: 500px;
 	margin: .5em 0;
 	padding: 2px 4px;
+}
+
+form .control {
+	margin: .5em 0;
+}
+
+form textarea {
+	height: 50px;
+}
+
+form .check input {
+	width: auto;
+}
+form .check span {
+	color: black;
+	margin-left: .5em;
 }

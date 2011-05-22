@@ -48,6 +48,29 @@
                     <xsl:apply-templates select="xhtml:p[@class='download_count']"/>
 				</p>
 			</div>
+
+			<xsl:apply-templates select="xhtml:ul[@id='reviews']"/>
+
+            <div id="review">
+                <h2>Напишите рецензию</h2>
+                <form method="post" action="/album/{$id}/review">
+                    <div class="control check">
+                        <label>
+                            <input type="checkbox" name="likes" value="1" checked="checked"/>
+                            <span>нравится</span>
+                        </label>
+                    </div>
+                    <div class="control">
+						<label>Комментарий:</label>
+                        <textarea name="comment"></textarea>
+                    </div>
+					<div class="control">
+						<label>Ваш email:</label>
+						<input type="text" name="email"/>
+					</div>
+					<button>Отправить</button>
+                </form>
+            </div>
 		</div>
 	</xsl:template>
 
@@ -58,6 +81,19 @@
                 <xsl:text>)</xsl:text>
             </span>
         </xsl:template>
+
+		<xsl:template match="xhtml:ul[@id='reviews']">
+			<div id="reviews">
+				<h2>Отзывы</h2>
+				<ul>
+					<xsl:for-each select="xhtml:li">
+						<li>
+							<xsl:value-of select="text()"/>
+						</li>
+					</xsl:for-each>
+				</ul>
+			</div>
+		</xsl:template>
 
 	<!-- Форма добавления альбома -->
 	<xsl:template match="xhtml:body[@class='add-album']">

@@ -12,4 +12,14 @@
 		<p class="download_count">{{ download_count }}</p>
 	{% endif %}
 {% endif %}
+
+{% if reviews %}
+<h2>Рецензии</h2>
+<ul id="reviews">
+{% for review in reviews %}
+<li author="{{ review.author|escape }}" date="{{ review.date_added|date:"d.m.y" }}"{% if review.likes %} likes="likes"{% endif %}>{{ review.comment|escape }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+
 {% endblock %}

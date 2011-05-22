@@ -26,6 +26,10 @@ class CustomModel(db.Model):
     def to_dict(self):
         return dict([(k, getattr(self, k)) for k in self.fields()])
 
+    @classmethod
+    def get_by_key(cls, key):
+        return db.get(db.Key(key))
+
 
 class SiteAlbum(CustomModel):
     id = db.IntegerProperty()
@@ -53,6 +57,16 @@ class SiteAlbum(CustomModel):
                 self.id = last.id + 1
         return CustomModel.put(self)
 
+    def add_review(self, author, comment, likes):
+        """Adds a review, returns it."""
+        review = Review(album=self)
+        review.author = users.User(author)
+        review.validated = False
+        review.likes = likes and True or False
+        review.comment = comment
+        review.put()
+        return review
+
     @classmethod
     def get_by_id(cls, album_id):
         return cls.gql('WHERE id = :1', album_id).get()
@@ -70,6 +84,24 @@ class SiteAlbumStar(CustomModel):
     album = db.ReferenceProperty(SiteAlbum)
     user = db.UserProperty()
     added = db.DateTimeProperty(auto_now_add=True)
+
+
+class Review(CustomModel):
+    album = db.ReferenceProperty(SiteAlbum)
+    author = db.UserProperty()
+    date_added = db.DateTimeProperty(auto_now_add=True)
+    validated = db.BooleanProperty()
+    likes = db.BooleanProperty()
+    comment = db.TextProperty()
+
+    def set_valid(self):
+        self.validated = True
+        self.put()
+
+    @classmethod
+    def find_by_album(cls, album):
+        reviews = cls.gql('WHERE album = :1', album).fetch(100)
+        return reviews
 
 
 class SiteAlbumReview(CustomModel):

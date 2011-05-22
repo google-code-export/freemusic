@@ -1,0 +1,12 @@
+<html>
+<body>
+<h1>Подтвердите рецензию</h1>
+<p>От вашего имени на сайте Free Music Hub оставлена рецензия на альбом «{{ review.album.name|escape }}» группы {{ review.album.artists.0|escape }}.</p>
+{% if review.comment %}
+<p>Текст рецензии:</p>
+<blockquote>{{ review.comment|escape }}</blockquote>
+{% endif %}
+<p>Чтобы подтвердить публикацию рецензии, пройдите по ссылке:</p>
+<p>{{ base_url }}/album/{{ review.album.id }}/review?confirm={{ review.key }}</p>
+</body>
+</html>

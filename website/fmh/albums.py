@@ -3,6 +3,7 @@
 from google.appengine.ext import webapp
 
 from fmh import json
+from fmh import mail
 from fmh import model
 from fmh import view
 
@@ -74,6 +75,23 @@ class CoverController(webapp.RequestHandler):
         self.redirect('http://lh4.ggpht.com/32j3lgf9wPBsGHUjgwtyJyEzObEyVF7RwSEz4WABdNV6YP-AjrDKmhxyWiMTyYuIUoBMOn8nRMIKS09oKA=s200-c')
 
 
+class ReviewController(webapp.RequestHandler):
+    def post(self, album_id):
+        album = model.SiteAlbum.get_by_id(int(album_id))
+        review = album.add_review(self.request.get('email'),
+            self.request.get('comment'),
+            self.request.get('likes'))
+        mail.send(review.author.email(), 'albums/review-confirm.html', {
+            'review': review,
+        })
+        self.redirect('/album/%u' % album.id)
+
+    def get(self, album_id):
+        review = model.Review.get_by_key(self.request.get('confirm'))
+        review.set_valid()
+        self.redirect('/album/%u' % review.album.id)
+
+
 class View(view.Base):
     def render(self, album):
         data = {
@@ -84,5 +102,6 @@ class View(view.Base):
             'homepage': album.homepage,
             'download_link': album.download_link,
             'download_count': album.download_count,
+            'reviews': model.Review.find_by_album(album),
         }
         super(View, self).render('albums/view.html', data)
