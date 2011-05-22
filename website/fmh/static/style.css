@@ -10,6 +10,14 @@ img {
 	border: none;
 }
 
+a {
+	color: #0187c5;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
 #wrapper {
 	width: 700px;
 	margin: 10px auto;
