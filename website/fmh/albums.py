@@ -21,6 +21,7 @@ class EditController(webapp.RequestHandler):
         album.artists = [ self.request.get('artist') ]
         album.homepage = self.request.get('homepage')
         album.download_link = self.request.get('download_link')
+        album.cover_small = self.request.get('cover_small')
         album.put()
         self.redirect('/album/%u' % album.id)
 
@@ -34,6 +35,7 @@ class EditView(view.Base):
             'artist_name': album.artists[0],
             'homepage': album.homepage,
             'download_link': album.download_link,
+            'cover_small': album.cover_small,
         }
         super(EditView, self).render('albums/edit.html', data)
 
