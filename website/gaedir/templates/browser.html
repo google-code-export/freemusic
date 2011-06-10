@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %} ({{ cat.get_item_count }})</h1>
+
+{% if children %}
+	<h2>Subcategories</h2>
+	<ul id="see_also">
+	{% for child in children %}
+		<li><a href="{{ path_prefix }}/{{ child.name }}">{{ child.get_name }}</a> ({{ child.get_item_count }})</li>
+	{% endfor %}
+	</ul>
+{% endif %}
+
+{% if items %}
+	<h2>Items in this category</h2>
+	<ul id="items">
+		{% for item in items %}
+			<li><a href="{{ path_prefix }}/v/{{ item.name|escape }}">{{ item.name }}</a></li>
+		{% endfor %}
+	</ul>
+{% endif %}
+
+<div id="nav">
+	<h2>Navigation links</h2>
+	<ul>
+		<li><a href="{{ path_prefix }}/submit/category">Submit a category</a></li>
+		<li><a href="{{ path_prefix }}/submit?cat={{ cat.name|escape }}">Submit a link to this category</a></li>
+	</ul>
+</div>
+
+{% endblock %}

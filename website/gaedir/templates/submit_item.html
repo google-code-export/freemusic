@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Submit an artist</h1>
+<form method="post" action="{{ path }}">
+	<input type="text" name="name" placeholder="Artist name"/>
+	<input type="text" name="cat" value="{{ category_name|escape }}" placeholder="Category name"/>
+	<input type="text" name="links" placeholder="Links"/>
+	<button>Submit</button>
+</form>
+{% endblock %}
