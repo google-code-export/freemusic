@@ -128,7 +128,7 @@ class BrowserController(webapp.RequestHandler):
         }).reply(self)
 
 class BrowserView(View):
-    template_name = 'browser.html'
+    template_name = 'show_category.html'
 
 
 class SubmitCategoryController(webapp.RequestHandler):
