@@ -90,6 +90,10 @@ class CatItem(db.Model):
             cat.item_count += 1
             cat.put()
 
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.gql('WHERE name = :1', name).get()
+
 
 class View:
     template_name = 'missing.html'
@@ -166,6 +170,17 @@ class SubmitItemView(View):
     template_name = 'submit_item.html'
 
 
+class ShowItemController(webapp.RequestHandler):
+    def get(self, name):
+        item = CatItem.get_by_name(name)
+        ShowItemView({
+            'item': item,
+        }).reply(self)
+
+class ShowItemView(View):
+    template_name = 'show_item.html'
+
+
 def serve(prefix=''):
     debug = True
     if debug:
@@ -174,6 +189,7 @@ def serve(prefix=''):
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         (prefix + '/submit', SubmitItemController),
         (prefix + '/submit/category', SubmitCategoryController),
+        (prefix + '/v/(.*)', ShowItemController),
         (prefix + '/(.*)', BrowserController),
     ], debug=debug))
 

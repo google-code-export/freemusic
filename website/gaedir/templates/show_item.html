@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>{{ item.name|escape }}</h1>
+
+{% if item.categories %}
+<h2>Categories</h2>
+<ul>{% for cat in item.categories %}
+<li><a href="{{ path_prefix }}/{{ cat }}">{{ cat }}</a></li>
+{% endfor %}</ul>
+{% endif %}
+
+{% if item.links %}
+<h2>Links</h2>
+<ul>{% for link in item.links %}
+	<li><a href="{{ link|escape }}">{{ link|escape }}</a></li>
+{% endfor %}</ul>
+{% endif %}
+
+{% endblock %}
