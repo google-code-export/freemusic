@@ -97,6 +97,9 @@ class CatItem(db.Model):
             cat.item_count += 1
             cat.put()
 
+    def get_categories(self):
+        return sorted(self.categories, key=lambda n: n.lower())
+
     @classmethod
     def get_by_name(cls, name):
         return cls.gql('WHERE name = :1', name).get()

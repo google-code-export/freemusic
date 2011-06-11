@@ -4,7 +4,7 @@
 
 {% if item.categories %}
 <h2>Categories</h2>
-<ul>{% for cat in item.categories %}
+<ul>{% for cat in item.get_categories %}
 <li>{{ cat|catlink }}</li>
 {% endfor %}</ul>
 {% endif %}
