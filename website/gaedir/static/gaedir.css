@@ -1,0 +1,9 @@
+input[type=text], textarea {
+	width: 500px;
+	display: block;
+	margin-bottom: .5em;
+	padding: 2px 4px;
+}
+textarea {
+	height: 100px;
+}

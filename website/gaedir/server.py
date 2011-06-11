@@ -127,6 +127,7 @@ class View:
 
     def reply(self, request):
         self.data['path'] = request.request.path
+        self.data['base'] = os.environ.get('CAT_URL_PREFIX')
 
         path = os.path.join(os.path.dirname(__file__), 'templates', self.template_name)
         content = template.render(path, self.data)
