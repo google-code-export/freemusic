@@ -18,3 +18,8 @@ def catlink(name):
     if len(parts) > 1:
         result = catlink(u'/'.join(parts[:-1])) + u': ' + result
     return result
+
+
+@register.filter
+def listarea(values):
+    return u'\n'.join(values)

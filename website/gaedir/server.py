@@ -20,6 +20,10 @@ class NotFound(Exception): pass
 def split(value, sep=' '):
     return [ p.strip() for p in value.split(sep) ]
 
+def url_unquote(value):
+    value = urllib.unquote(value).replace('_', ' ')
+    return value.decode('utf-8')
+
 
 class Category(db.Model):
     name = db.StringProperty()
@@ -105,6 +109,13 @@ class CatItem(db.Model):
         return cls.gql('WHERE name = :1', name).get()
 
 
+class Controller(webapp.RequestHandler):
+    def redirect(self, path):
+        path = os.environ.get('CAT_URL_PREFIX') + path
+        path = path.replace(' ', '_').encode('utf-8')
+        return webapp.RequestHandler.redirect(self, path)
+
+
 class View:
     template_name = 'missing.html'
     content_type = 'text/html'
@@ -128,7 +139,7 @@ class View:
 
 class BrowserController(webapp.RequestHandler):
     def get(self, path):
-        cat = Category.get_by_name(urllib.unquote(path).replace('_', ' '))
+        cat = Category.get_by_name(url_unquote(path))
         if not cat:
             raise NotFound
         BrowserView({
@@ -180,17 +191,34 @@ class SubmitItemView(View):
     template_name = 'submit_item.html'
 
 
-class ShowItemController(webapp.RequestHandler):
+class ShowItemController(Controller):
     def get(self, name):
-        item = CatItem.get_by_name(name)
+        item = CatItem.get_by_name(url_unquote(name))
         if not item:
             raise NotFound
-        ShowItemView({
+        if 'edit' in self.request.arguments():
+            cls = EditItemView
+        else:
+            cls = ShowItemView
+        cls({
             'item': item,
         }).reply(self)
 
+    def post(self, name):
+        item = CatItem.get_by_name(url_unquote(name))
+        if not item:
+            raise NotFound
+        item.name = self.request.get('name')
+        item.categories = split(self.request.get('categories'), '\n')
+        item.links = split(self.request.get('links'), '\n')
+        item.put()
+        self.redirect(u'/v/' + item.name)
+
 class ShowItemView(View):
     template_name = 'show_item.html'
+
+class EditItemView(View):
+    template_name = 'edit_item.html'
 
 
 class IndexController(webapp.RequestHandler):

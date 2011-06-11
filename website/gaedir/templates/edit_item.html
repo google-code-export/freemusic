@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>{{ item.name|escape }}</h1>
+<form method="post" action="{{ path }}">
+	<input type="text" name="name" value="{{ item.name|escape }}"/>
+	<textarea name="categories">{{ item.categories|listarea }}</textarea>
+	<textarea name="links">{{ item.links|listarea }}</textarea>
+	<button>Save</button>
+</form>
+{% endblock %}
