@@ -5,7 +5,7 @@
 {% if item.categories %}
 <h2>Categories</h2>
 <ul>{% for cat in item.categories %}
-<li><a href="{{ path_prefix }}/{{ cat }}">{{ cat }}</a></li>
+<li>{{ cat|catlink }}</li>
 {% endfor %}</ul>
 {% endif %}
 

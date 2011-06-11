@@ -15,6 +15,8 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 
 
+class NotFound(Exception): pass
+
 def split(value, sep=' '):
     return [ p.strip() for p in value.split(sep) ]
 
@@ -25,6 +27,7 @@ class Category(db.Model):
     date_added = db.DateTimeProperty(auto_now_add=True)
     author = db.UserProperty()
     item_count = db.IntegerProperty()
+    depth = db.IntegerProperty()
 
     def put(self):
         if '/' in self.name:
@@ -61,6 +64,10 @@ class Category(db.Model):
     def get_by_name(cls, name):
         cat = cls.gql('WHERE name = :1', name).get()
         return cat
+
+    @classmethod
+    def get_toc(cls):
+        return sorted(cls.all().fetch(100), key=lambda c: c.name.lower())
 
 
 class CatItem(db.Model):
@@ -118,9 +125,9 @@ class View:
 
 class BrowserController(webapp.RequestHandler):
     def get(self, path):
-        cat = Category.get_by_name(urllib.unquote(path))
+        cat = Category.get_by_name(urllib.unquote(path).replace('_', ' '))
         if not cat:
-            raise Exception('Not found.')
+            raise NotFound
         BrowserView({
             'cat': cat,
             'children': sorted(cat.get_children(), key=lambda c: c.name.lower()),
@@ -173,6 +180,8 @@ class SubmitItemView(View):
 class ShowItemController(webapp.RequestHandler):
     def get(self, name):
         item = CatItem.get_by_name(name)
+        if not item:
+            raise NotFound
         ShowItemView({
             'item': item,
         }).reply(self)
@@ -181,12 +190,24 @@ class ShowItemView(View):
     template_name = 'show_item.html'
 
 
+class IndexController(webapp.RequestHandler):
+    def get(self):
+        IndexView({
+            'categories': Category.get_toc(),
+        }).reply(self)
+
+class IndexView(View):
+    template_name = 'index.html'
+
+
 def serve(prefix=''):
     debug = True
     if debug:
         logging.getLogger().setLevel(logging.DEBUG)
     os.environ['CAT_URL_PREFIX'] = prefix
+    webapp.template.register_template_library('gaedir.filters')
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
+        (prefix + '/', IndexController),
         (prefix + '/submit', SubmitItemController),
         (prefix + '/submit/category', SubmitCategoryController),
         (prefix + '/v/(.*)', ShowItemController),

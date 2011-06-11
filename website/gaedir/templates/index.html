@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Categories</h1>
+<ul>
+{% for cat in categories %}<li>
+	{{ cat.name|catlink }}
+</li>{% endfor %}
+</ul>
+{% endblock %}
