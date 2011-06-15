@@ -7,6 +7,9 @@
 	{% if item.picture %}
 		<img src="{{ item.picture|escape }}" alt="picture"/>
 	{% endif %}
+	{% if item.description %}
+		<div id="description">{{ item.description|escape }}</div>
+	{% endif %}
 </div>
 
 {% if item.categories %}

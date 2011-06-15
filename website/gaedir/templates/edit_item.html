@@ -9,6 +9,10 @@
 				<td><input type="text" name="name" value="{{ item.name|escape }}"/></td>
 			</tr>
 			<tr>
+				<th>Description:</th>
+				<td><textarea name="description">{% if item.description %}{{ item.description|escape }}{% endif %}</textarea></td>
+			</tr>
+			<tr>
 				<th>Categories:</th>
 				<td><textarea name="categories">{{ item.categories|listarea }}</textarea></td>
 			</tr>

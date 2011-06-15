@@ -2,9 +2,33 @@
 {% block body %}
 <h1>Submit an item</h1>
 <form method="post" action="{{ path }}">
-	<input type="text" name="name" placeholder="Item name"/>
-	<textarea name="cat">{{ category_name|escape }}</textarea>
-	<textarea name="links"></textarea>
-	<button>Submit</button>
+	<table>
+		<tbody>
+			<tr>
+				<th>Name:</th>
+				<td><input type="text" name="name" value="{{ item.name|escape }}"/></td>
+			</tr>
+			<tr>
+				<th>Description:</th>
+				<td><textarea name="description">{% if item.description %}{{ item.description|escape }}{% endif %}</textarea></td>
+			</tr>
+			<tr>
+				<th>Categories:</th>
+				<td><textarea name="categories">{{ category_name|escape }}</textarea></td>
+			</tr>
+			<tr>
+				<th>Links:</th>
+				<td><textarea name="links">{{ item.links|listarea }}</textarea></td>
+			</tr>
+			<tr>
+				<th>Picture URL:</th>
+				<td><input type="text" name="picture" value="{% if item.picture %}{{ item.picture|escape }}{% endif %}"/></td>
+			</tr>
+			<tr>
+				<th/>
+				<td><button>Submit</button> or <a href="{{ path_prefix }}/{{ category_name|escape }}">cancel</a></td>
+			</tr>
+		</tbody>
+	</table>
 </form>
 {% endblock %}

@@ -99,6 +99,7 @@ class CatItem(Model):
     categories = db.StringListProperty()
     links = db.StringListProperty()
     picture = db.LinkProperty()
+    description = db.TextProperty()
 
     # This includes implicitly added parent categories.
     all_categories = db.StringListProperty()
@@ -246,6 +247,7 @@ class ShowItemController(Controller):
             'categories': split(self.request.get('categories'), '\n'),
             'links': split(self.request.get('links'), '\n'),
             'picture': self.request.get('picture'),
+            'description': self.request.get('description'),
         })
         item.put()
         self.redirect(u'/v/' + item.name)
