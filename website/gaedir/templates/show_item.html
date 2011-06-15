@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 
@@ -15,5 +16,12 @@
 	<li><a href="{{ link|escape }}">{{ link|escape }}</a></li>
 {% endfor %}</ul>
 {% endif %}
+
+<div id="nav">
+	<h2>Toolbox</h2>
+	<ul>
+		<a href="{{ path_prefix }}/v/{{ item.name|escape }}?edit">Edit this item</a>
+	</ul>
+</div>
 
 {% endblock %}
