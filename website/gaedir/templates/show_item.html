@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{ item.name|escape }}{% endblock %}
+
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 

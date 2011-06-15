@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% block title %}{{ cat.name|escape }}{% endblock %}
+
 {% block body %}
 <h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %} <span class="count">({{ cat.get_item_count }})</span></h1>
 

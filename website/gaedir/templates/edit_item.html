@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+
+{% block title %}{{ item.name|escape }} (edit){% endblock %}
+
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 <form method="post" action="{{ path }}">
