@@ -112,7 +112,7 @@ class GAEDirCategory(Model):
                     'children': sub_categories,
                 })
 
-        return toc
+        return sorted(toc, key=lambda x: x['name'].lower())
 
 
 class GAEDirEntry(Model):
@@ -169,7 +169,7 @@ class GAEDirEntry(Model):
 class Controller(webapp.RequestHandler):
     def redirect(self, path):
         path = os.environ.get('CAT_URL_PREFIX') + path
-        path = path.replace(' ', '_').encode('utf-8')
+        path = path.replace(' ', '_')
         return webapp.RequestHandler.redirect(self, path)
 
 
@@ -229,7 +229,7 @@ class EditCategoryController(webapp.RequestHandler):
             'link': self.request.get('link'),
         })
         cat.put()
-        self.redirect(os.environ['CAT_URL_PREFIX'] + '/' + cat.name)
+        self.redirect(os.environ['CAT_URL_PREFIX'] + '/' + cat.name.encode('utf-8'))
 
 class EditCategoryView(View):
     template_name = 'edit_category.html'
@@ -280,7 +280,7 @@ class ShowItemController(Controller):
             'description': self.request.get('description'),
         })
         item.put()
-        self.redirect(u'/v/' + item.name)
+        self.redirect('/v/' + item.name.encode('utf-8'))
 
 class ShowItemView(View):
     template_name = 'show_item.html'

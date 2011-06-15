@@ -12,6 +12,11 @@ def catname(name):
 
 
 @register.filter
+def uurlencode(url):
+    return urllib.quote(url.replace(' ', '_').encode('utf-8'))
+
+
+@register.filter
 def catlink(name):
     parts = name.split(u'/')
     result = u'<a href="%s/%s">%s</a>' % (os.environ['CAT_URL_PREFIX'], name.replace(' ', '_'), parts[-1])

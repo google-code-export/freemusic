@@ -31,7 +31,7 @@
 <div id="nav">
 	<h2>Menu</h2>
 	<ul>
-		<li><a href="{{ path_prefix }}/v/{{ item.name|escape }}?edit">Edit this entry</a></li>
+		<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}?edit">Edit this entry</a></li>
 		<li><a href="{{ path_prefix }}/submit">Submit entry</a></li>
 	</ul>
 </div>
