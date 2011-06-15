@@ -24,6 +24,18 @@ def url_unquote(value):
     value = urllib.unquote(value).replace('_', ' ')
     return value.decode('utf-8')
 
+def add_parents(categories):
+    """Returns a list of categories with their parents added."""
+    names = []
+    for cat in categories:
+        parts = cat.split(u'/')
+        while parts:
+            name = u'/'.join(parts)
+            if name not in names:
+                names.append(name)
+            del parts[-1]
+    return sorted(names)
+
 
 class Category(db.Model):
     name = db.StringProperty()
@@ -45,7 +57,8 @@ class Category(db.Model):
         return children
 
     def get_items(self):
-        return CatItem.gql('WHERE categories = :1', self.name).fetch(100)
+        """Returns all items in this category."""
+        return CatItem.gql('WHERE all_categories = :1', self.name).fetch(100)
 
     def get_path(self):
         result = []
@@ -79,10 +92,21 @@ class CatItem(db.Model):
     categories = db.StringListProperty()
     links = db.StringListProperty()
 
+    # This includes implicitly added parent categories.
+    all_categories = db.StringListProperty()
+
     def put(self):
-        if not self.is_saved():
-            self.update_counts()
+        self.update_all_categories()
+        # self.update_counts()
         return db.Model.put(self)
+
+    def update_all_categories(self):
+        """Fills self.all_categories with parent names, adds missing categories
+        to the database."""
+        self.all_categories = add_parents(self.categories)
+        for cat_name in self.all_categories:
+            if Category.get_by_name(cat_name) is None:
+                Category(name=cat_name).put()
 
     def update_counts(self):
         names = []
@@ -183,7 +207,7 @@ class SubmitItemController(webapp.RequestHandler):
     def post(self):
         item = CatItem()
         item.name = self.request.get('name')
-        item.categories = split(self.request.get('cat'), ',')
+        item.categories = split(self.request.get('cat'), '\n')
         item.links = split(self.request.get('links'))
         item.put()
         self.redirect(item.categories[0])
