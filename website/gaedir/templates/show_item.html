@@ -31,8 +31,15 @@
 <div id="nav">
 	<h2>Menu</h2>
 	<ul>
-		<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}?edit">Edit this entry</a></li>
-		<li><a href="{{ path_prefix }}/submit">Submit entry</a></li>
+		{% if user %}
+			{% if is_admin %}
+				<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}?edit">Edit this entry</a></li>
+				<li><a href="{{ path_prefix }}/submit">Submit entry</a></li>
+			{% endif %}
+			<li><a href="{{ log_out_url }}">Log out</a></li>
+		{% else %}
+			<li><a href="{{ log_in_url }}">Editor log in</a></li>
+		{% endif %}
 	</ul>
 </div>
 

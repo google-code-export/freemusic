@@ -181,10 +181,16 @@ class View:
         self.data = data or {}
         self.data['class_name'] = self.__class__.__name__
         self.data['path_prefix'] = os.environ['CAT_URL_PREFIX']
+        self.data['user'] = users.get_current_user()
+        self.data['is_admin'] = users.is_current_user_admin()
 
     def reply(self, request):
         self.data['path'] = request.request.path
         self.data['base'] = os.environ.get('CAT_URL_PREFIX')
+        if self.data['user']:
+            self.data['log_out_url'] = users.create_logout_url(os.environ['PATH_INFO'])
+        else:
+            self.data['log_in_url'] = users.create_login_url(os.environ['PATH_INFO'])
 
         path = os.path.join(os.path.dirname(__file__), 'templates', self.template_name)
         content = template.render(path, self.data)
