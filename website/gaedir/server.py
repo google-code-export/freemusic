@@ -16,6 +16,7 @@ from google.appengine.ext.webapp import template
 
 
 class NotFound(Exception): pass
+class Forbidden(Exception): pass
 
 def split(value, sep='\n'):
     return [ p.strip() for p in value.split(sep) if p.strip() ]
@@ -222,6 +223,8 @@ class EditCategoryController(webapp.RequestHandler):
         cat = GAEDirCategory.get_by_key(self.request.get('key'))
         if not cat:
             raise NotFound
+        if not users.is_current_user_admin():
+            raise Forbidden
         EditCategoryView({
             'cat': cat,
         }).reply(self)
@@ -230,6 +233,8 @@ class EditCategoryController(webapp.RequestHandler):
         cat = GAEDirCategory.get_by_key(self.request.get('key'))
         if not cat:
             raise NotFound
+        if not users.is_current_user_admin():
+            raise Forbidden
         cat.update({
             'name': self.request.get('name'),
             'link': self.request.get('link'),
@@ -243,11 +248,15 @@ class EditCategoryView(View):
 
 class SubmitEntryController(Controller):
     def get(self):  
+        if not users.is_current_user_admin():
+            raise Forbidden
         SubmitEntryView({
             'category_name': self.request.get('cat'),
         }).reply(self)
 
     def post(self):
+        if not users.is_current_user_admin():
+            raise Forbidden
         item = GAEDirEntry()
         item.update({
             'name': self.request.get('name'),
@@ -266,18 +275,31 @@ class ShowItemController(Controller):
         item = GAEDirEntry.get_by_name(url_unquote(name))
         if not item:
             raise NotFound
-        if 'edit' in self.request.arguments():
-            cls = EditItemView
-        else:
-            cls = ShowItemView
-        cls({
+        ShowItemView({
             'item': item,
         }).reply(self)
 
-    def post(self, name):
-        item = GAEDirEntry.get_by_name(url_unquote(name))
+class ShowItemView(View):
+    template_name = 'show_item.html'
+
+
+class EditEntryController(Controller):
+    def get(self):
+        item = GAEDirEntry.get_by_key(self.request.get('key'))
         if not item:
             raise NotFound
+        if not users.is_current_user_admin():
+            raise Forbidden
+        EditEntryView({
+            'item': item,
+        }).reply(self)
+
+    def post(self):
+        item = GAEDirEntry.get_by_key(self.request.get('key'))
+        if not item:
+            raise NotFound
+        if not users.is_current_user_admin():
+            raise Forbidden
         item.update({
             'name': self.request.get('name'),
             'categories': split(self.request.get('categories'), '\n'),
@@ -288,10 +310,7 @@ class ShowItemController(Controller):
         item.put()
         self.redirect('/v/' + item.name.encode('utf-8'))
 
-class ShowItemView(View):
-    template_name = 'show_item.html'
-
-class EditItemView(View):
+class EditEntryView(View):
     template_name = 'edit_item.html'
 
 
@@ -314,6 +333,7 @@ def serve(prefix=''):
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         (prefix + '/', IndexController),
         (prefix + '/submit', SubmitEntryController),
+        (prefix + '/edit/entry', EditEntryController),
         (prefix + '/edit/category', EditCategoryController),
         (prefix + '/v/(.*)', ShowItemController),
         (prefix + '/(.*)', ShowCategoryController),

@@ -5,6 +5,7 @@
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 <form method="post" action="{{ path }}">
+	<input type="hidden" name="key" value="{{ item.key|escape }}"/>
 	<table>
 		<tbody>
 			<tr>
