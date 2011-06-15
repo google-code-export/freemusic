@@ -17,8 +17,8 @@ from google.appengine.ext.webapp import template
 
 class NotFound(Exception): pass
 
-def split(value, sep=' '):
-    return [ p.strip() for p in value.split(sep) ]
+def split(value, sep='\n'):
+    return [ p.strip() for p in value.split(sep) if p.strip() ]
 
 def url_unquote(value):
     value = urllib.unquote(value).replace('_', ' ')
@@ -49,7 +49,7 @@ class Model(db.Model):
         return obj
 
 
-class Category(Model):
+class GAEDirCategory(Model):
     name = db.StringProperty()
     parents = db.StringListProperty()
     date_added = db.DateTimeProperty(auto_now_add=True)
@@ -72,7 +72,7 @@ class Category(Model):
 
     def get_items(self):
         """Returns all items in this category."""
-        return CatItem.gql('WHERE all_categories = :1', self.name).fetch(100)
+        return GAEDirEntry.gql('WHERE all_categories = :1', self.name).fetch(100)
 
     def get_path(self):
         result = []
@@ -89,7 +89,7 @@ class Category(Model):
         return self.item_count or 0
 
     def update_item_count(self):
-        self.item_count = CatItem.gql('WHERE categories = :1', self.name).count()
+        self.item_count = GAEDirEntry.gql('WHERE categories = :1', self.name).count()
 
     @classmethod
     def get_by_name(cls, name):
@@ -115,7 +115,7 @@ class Category(Model):
         return toc
 
 
-class CatItem(Model):
+class GAEDirEntry(Model):
     name = db.StringProperty()
     categories = db.StringListProperty()
     links = db.StringListProperty()
@@ -138,8 +138,8 @@ class CatItem(Model):
         to the database."""
         self.all_categories = add_parents(self.categories)
         for cat_name in self.all_categories:
-            if Category.get_by_name(cat_name) is None:
-                Category(name=cat_name).put()
+            if GAEDirCategory.get_by_name(cat_name) is None:
+                GAEDirCategory(name=cat_name).put()
 
     def update_counts(self):
         names = []
@@ -152,9 +152,9 @@ class CatItem(Model):
                 del parts[-1]
 
         for name in names:
-            cat = Category.get_by_name(name)
+            cat = GAEDirCategory.get_by_name(name)
             if cat is None:
-                cat = Category(name=name, item_count=0)
+                cat = GAEDirCategory(name=name, item_count=0)
             cat.item_count += 1
             cat.put()
 
@@ -197,7 +197,7 @@ class View:
 
 class ShowCategoryController(webapp.RequestHandler):
     def get(self, path):
-        cat = Category.get_by_name(url_unquote(path))
+        cat = GAEDirCategory.get_by_name(url_unquote(path))
         if not cat:
             raise NotFound
         ShowCategoryView({
@@ -213,7 +213,7 @@ class ShowCategoryView(View):
 class EditCategoryController(webapp.RequestHandler):
     """Category editor."""
     def get(self):
-        cat = Category.get_by_key(self.request.get('key'))
+        cat = GAEDirCategory.get_by_key(self.request.get('key'))
         if not cat:
             raise NotFound
         EditCategoryView({
@@ -221,7 +221,7 @@ class EditCategoryController(webapp.RequestHandler):
         }).reply(self)
 
     def post(self):
-        cat = Category.get_by_key(self.request.get('key'))
+        cat = GAEDirCategory.get_by_key(self.request.get('key'))
         if not cat:
             raise NotFound
         cat.update({
@@ -235,27 +235,29 @@ class EditCategoryView(View):
     template_name = 'edit_category.html'
 
 
-class SubmitItemController(webapp.RequestHandler):
+class SubmitEntryController(Controller):
     def get(self):  
-        SubmitItemView({
+        SubmitEntryView({
             'category_name': self.request.get('cat'),
         }).reply(self)
 
     def post(self):
-        item = CatItem()
-        item.name = self.request.get('name')
-        item.categories = split(self.request.get('cat'), '\n')
-        item.links = split(self.request.get('links'))
+        item = GAEDirEntry()
+        item.update({
+            'name': self.request.get('name'),
+            'categories': split(self.request.get('cat')),
+            'links': split(self.request.get('links')),
+        })
         item.put()
-        self.redirect(item.categories[0])
+        self.redirect('/v/' + item.name.encode('utf-8'))
 
-class SubmitItemView(View):
+class SubmitEntryView(View):
     template_name = 'submit_item.html'
 
 
 class ShowItemController(Controller):
     def get(self, name):
-        item = CatItem.get_by_name(url_unquote(name))
+        item = GAEDirEntry.get_by_name(url_unquote(name))
         if not item:
             raise NotFound
         if 'edit' in self.request.arguments():
@@ -267,7 +269,7 @@ class ShowItemController(Controller):
         }).reply(self)
 
     def post(self, name):
-        item = CatItem.get_by_name(url_unquote(name))
+        item = GAEDirEntry.get_by_name(url_unquote(name))
         if not item:
             raise NotFound
         item.update({
@@ -290,7 +292,7 @@ class EditItemView(View):
 class IndexController(webapp.RequestHandler):
     def get(self):
         IndexView({
-            'toc': Category.get_toc(),
+            'toc': GAEDirCategory.get_toc(),
         }).reply(self)
 
 class IndexView(View):
@@ -305,7 +307,7 @@ def serve(prefix=''):
     webapp.template.register_template_library('gaedir.filters')
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         (prefix + '/', IndexController),
-        (prefix + '/submit', SubmitItemController),
+        (prefix + '/submit', SubmitEntryController),
         (prefix + '/edit/category', EditCategoryController),
         (prefix + '/v/(.*)', ShowItemController),
         (prefix + '/(.*)', ShowCategoryController),
