@@ -17,6 +17,10 @@
 				<td><textarea name="links">{{ item.links|listarea }}</textarea></td>
 			</tr>
 			<tr>
+				<th>Picture URL:</th>
+				<td><input type="text" name="picture" value="{% if item.picture %}{{ item.picture|escape }}{% endif %}"/></td>
+			</tr>
+			<tr>
 				<th/>
 				<td><button>Save</button> or <a href="{{ path_prefix }}/v/{{ item.name|escape }}">cancel</a></td>
 			</tr>

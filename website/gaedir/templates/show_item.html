@@ -3,6 +3,12 @@
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 
+<div id="iteminfo">
+	{% if item.picture %}
+		<img src="{{ item.picture|escape }}" alt="picture"/>
+	{% endif %}
+</div>
+
 {% if item.categories %}
 <h2>Categories</h2>
 <ul>{% for cat in item.get_categories %}

@@ -37,7 +37,14 @@ def add_parents(categories):
     return sorted(names)
 
 
-class Category(db.Model):
+class Model(db.Model):
+    def update(self, data):
+        for k, v in data.items():
+            if v:
+                setattr(self, k, v)
+
+
+class Category(Model):
     name = db.StringProperty()
     parents = db.StringListProperty()
     date_added = db.DateTimeProperty(auto_now_add=True)
@@ -87,10 +94,11 @@ class Category(db.Model):
         return sorted(cls.all().fetch(100), key=lambda c: c.name.lower())
 
 
-class CatItem(db.Model):
+class CatItem(Model):
     name = db.StringProperty()
     categories = db.StringListProperty()
     links = db.StringListProperty()
+    picture = db.LinkProperty()
 
     # This includes implicitly added parent categories.
     all_categories = db.StringListProperty()
@@ -233,9 +241,12 @@ class ShowItemController(Controller):
         item = CatItem.get_by_name(url_unquote(name))
         if not item:
             raise NotFound
-        item.name = self.request.get('name')
-        item.categories = split(self.request.get('categories'), '\n')
-        item.links = split(self.request.get('links'), '\n')
+        item.update({
+            'name': self.request.get('name'),
+            'categories': split(self.request.get('categories'), '\n'),
+            'links': split(self.request.get('links'), '\n'),
+            'picture': self.request.get('picture'),
+        })
         item.put()
         self.redirect(u'/v/' + item.name)
 
