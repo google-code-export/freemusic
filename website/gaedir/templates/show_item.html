@@ -36,10 +36,11 @@
 			{% if is_admin %}
 				<li><a href="{{ path_prefix }}/edit/entry?key={{ item.key|escape }}">Edit this entry</a></li>
 				<li><a href="{{ path_prefix }}/submit">Submit entry</a></li>
+				<li><a href="{{ admin_url|escape }}">Admin</a></li>
 			{% endif %}
-			<li><a href="{{ log_out_url }}">Log out</a></li>
+			<li><a href="{{ log_out_url|escape }}">Log out</a></li>
 		{% else %}
-			<li><a href="{{ log_in_url }}">Editor log in</a></li>
+			<li><a href="{{ log_in_url|escape }}">Editor log in</a></li>
 		{% endif %}
 	</ul>
 </div>

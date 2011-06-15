@@ -184,6 +184,11 @@ class View:
         self.data['path_prefix'] = os.environ['CAT_URL_PREFIX']
         self.data['user'] = users.get_current_user()
         self.data['is_admin'] = users.is_current_user_admin()
+        if self.data['is_admin']:
+            if os.environ['SERVER_SOFTWARE'].startswith('Development/'):
+                self.data['admin_url'] = '/_ah/admin'
+            else:
+                self.data['admin_url'] = 'https://appengine.google.com/deployment?app_id=' + os.environ['APPLICATION_ID']
 
     def reply(self, request):
         self.data['path'] = request.request.path

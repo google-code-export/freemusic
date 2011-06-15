@@ -15,7 +15,7 @@ static/scripts.js: static/scripts/*.js
 	cat static/scripts/*.js > static/scripts.js
 
 serve: .tmp/blobstore
-	dev_appserver.py --enable_sendmail --use_sqlite --blobstore_path=.tmp/blobstore --datastore_path=.tmp/datastore .
+	dev_appserver.py --require_indexes --enable_sendmail --use_sqlite --blobstore_path=.tmp/blobstore --datastore_path=.tmp/datastore .
 
 .tmp/blobstore:
 	mkdir -p .tmp/blobstore
