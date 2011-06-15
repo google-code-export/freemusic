@@ -18,7 +18,7 @@
 	<h2>Items in this category</h2>
 	<ul id="items">
 		{% for item in items %}
-			<li><a href="{{ path_prefix }}/v/{{ item.name|escape }}">{{ item.name }}</a></li>
+			<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}">{{ item.name }}</a></li>
 		{% endfor %}
 	</ul>
 {% endif %}
