@@ -2,9 +2,25 @@
 {% block body %}
 <h1>{{ item.name|escape }}</h1>
 <form method="post" action="{{ path }}">
-	<input type="text" name="name" value="{{ item.name|escape }}"/>
-	<textarea name="categories">{{ item.categories|listarea }}</textarea>
-	<textarea name="links">{{ item.links|listarea }}</textarea>
-	<button>Save</button>
+	<table>
+		<tbody>
+			<tr>
+				<th>Name:</th>
+				<td><input type="text" name="name" value="{{ item.name|escape }}"/></td>
+			</tr>
+			<tr>
+				<th>Categories:</th>
+				<td><textarea name="categories">{{ item.categories|listarea }}</textarea></td>
+			</tr>
+			<tr>
+				<th>Links:</th>
+				<td><textarea name="links">{{ item.links|listarea }}</textarea></td>
+			</tr>
+			<tr>
+				<th/>
+				<td><button>Save</button> or <a href="{{ path_prefix }}/v/{{ item.name|escape }}">cancel</a></td>
+			</tr>
+		</tbody>
+	</table>
 </form>
 {% endblock %}

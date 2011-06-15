@@ -13,3 +13,9 @@ h1 .count {
 	font-style: italic;
 	font-size: .75em;
 }
+
+form th {
+	text-align: left;
+	vertical-align: top;
+	padding-right: 1em;
+}
