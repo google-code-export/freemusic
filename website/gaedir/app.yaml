@@ -1,0 +1,5 @@
+handlers:
+- url: /dir/static/
+  static_dir: gaedir/static
+- url: /dir/.*
+  script: gaedir/server.py
