@@ -19,3 +19,8 @@ form th {
 	vertical-align: top;
 	padding-right: 1em;
 }
+form .hint {
+	font-style: italic;
+	font-size: 80%;
+	margin: 0 0 .5em;
+}

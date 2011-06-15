@@ -43,6 +43,11 @@ class Model(db.Model):
             if v:
                 setattr(self, k, v)
 
+    @classmethod
+    def get_by_key(cls, key):
+        obj = db.get(db.Key(key))
+        return obj
+
 
 class Category(Model):
     name = db.StringProperty()
@@ -53,10 +58,12 @@ class Category(Model):
     depth = db.IntegerProperty()
 
     def put(self):
-        if '/' in self.name:
-            self.parents = [ u'/'.join(self.name.split('/')[:-1]) ]
-        else:
-            self.parents = ['/']
+        parents = add_parents([self.name])
+        self.depth = len(parents)
+
+        parents.remove(self.name)
+        self.parents = parents
+
         return db.Model.put(self)
 
     def get_children(self):
@@ -174,40 +181,44 @@ class View:
         request.response.out.write(content)
 
 
-class BrowserController(webapp.RequestHandler):
+class ShowCategoryController(webapp.RequestHandler):
     def get(self, path):
         cat = Category.get_by_name(url_unquote(path))
         if not cat:
             raise NotFound
-        BrowserView({
+        ShowCategoryView({
             'cat': cat,
             'children': sorted(cat.get_children(), key=lambda c: c.name.lower()),
             'items': sorted(cat.get_items(), key=lambda i: i.name.lower()),
         }).reply(self)
 
-class BrowserView(View):
+class ShowCategoryView(View):
     template_name = 'show_category.html'
 
 
-class SubmitCategoryController(webapp.RequestHandler):
+class EditCategoryController(webapp.RequestHandler):
+    """Category editor."""
     def get(self):
-        SubmitCategoryView({
-            'category_name': self.request.get('name'),
+        cat = Category.get_by_key(self.request.get('key'))
+        if not cat:
+            raise NotFound
+        EditCategoryView({
+            'cat': cat,
         }).reply(self)
 
     def post(self):
-        cat = Category()
-        cat.name = self.request.get('name')
-        cat.author = users.get_current_user()
-        if self.request.get('link'):
-            cat.link = self.request.get('link')
-        cat.item_count = 0
+        cat = Category.get_by_key(self.request.get('key'))
+        if not cat:
+            raise NotFound
+        cat.update({
+            'name': self.request.get('name'),
+            'link': self.request.get('link'),
+        })
         cat.put()
         self.redirect(os.environ['CAT_URL_PREFIX'] + '/' + cat.name)
 
-
-class SubmitCategoryView(View):
-    template_name = 'submit_category.html'
+class EditCategoryView(View):
+    template_name = 'edit_category.html'
 
 
 class SubmitItemController(webapp.RequestHandler):
@@ -281,9 +292,9 @@ def serve(prefix=''):
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         (prefix + '/', IndexController),
         (prefix + '/submit', SubmitItemController),
-        (prefix + '/submit/category', SubmitCategoryController),
+        (prefix + '/edit/category', EditCategoryController),
         (prefix + '/v/(.*)', ShowItemController),
-        (prefix + '/(.*)', BrowserController),
+        (prefix + '/(.*)', ShowCategoryController),
     ], debug=debug))
 
 

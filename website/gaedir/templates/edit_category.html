@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Edit category{% endblock %}
+
+{% block body %}
+<h1>Submit a new category</h1>
+<form method="post" action="{{ path }}">
+	<input type="hidden" name="key" value="{{ cat.key }}"/>
+	<table>
+		<tbody>
+			<tr>
+				<th>Name:</th>
+				<td>
+					<input type="text" name="name" value="{{ cat.name|escape }}" placeholder="Category name"/>
+				</td>
+			</tr>
+			<tr>
+				<th>Links to:</th>
+				<td>
+					<input type="text" name="link" value="{% if cat.link %}{{ cat.link|escape }}{% endif %}" placeholder="Links to"/>
+					<p class="hint">Specify only if the category you're editing is a symlink.</p>
+				</td>
+			</tr>
+			<tr>
+				<th/>
+				<td>
+					<button>Submit</button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+{% endblock %}
