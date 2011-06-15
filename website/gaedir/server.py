@@ -98,7 +98,21 @@ class Category(Model):
 
     @classmethod
     def get_toc(cls):
-        return sorted(cls.all().fetch(100), key=lambda c: c.name.lower())
+        toc = []
+        categories = cls.gql('WHERE depth < 3').fetch(1000)
+
+        for cat in categories:
+            if cat.depth == 1:
+                sub_categories = []
+                for sub in categories:
+                    if cat.name in sub.parents:
+                        sub_categories.append(sub)
+                toc.append({
+                    'name': cat.name,
+                    'children': sub_categories,
+                })
+
+        return toc
 
 
 class CatItem(Model):
@@ -276,7 +290,7 @@ class EditItemView(View):
 class IndexController(webapp.RequestHandler):
     def get(self):
         IndexView({
-            'categories': Category.get_toc(),
+            'toc': Category.get_toc(),
         }).reply(self)
 
 class IndexView(View):
