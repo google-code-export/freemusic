@@ -7,3 +7,9 @@ input[type=text], textarea {
 textarea {
 	height: 100px;
 }
+
+h1 .count {
+	font-weight: normal;
+	font-style: italic;
+	font-size: .75em;
+}

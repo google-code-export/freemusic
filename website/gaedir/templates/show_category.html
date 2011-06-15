@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %} ({{ cat.get_item_count }})</h1>
+<h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %} <span class="count">({{ cat.get_item_count }})</span></h1>
 
 {% if children %}
 	<h2>Subcategories</h2>
