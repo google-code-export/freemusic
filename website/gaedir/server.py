@@ -101,6 +101,9 @@ class CatItem(Model):
     picture = db.LinkProperty()
     description = db.TextProperty()
 
+    # Used by the cron job to update information from external sources.
+    last_updated = db.DateTimeProperty(auto_now_add=True)
+
     # This includes implicitly added parent categories.
     all_categories = db.StringListProperty()
 
