@@ -110,7 +110,7 @@ class GAEDirCategory(Model):
                         sub_categories.append(sub)
                 toc.append({
                     'name': cat.name,
-                    'children': sub_categories,
+                    'children': sorted(sub_categories, key=lambda c: c.name.lower())[:3],
                 })
 
         return sorted(toc, key=lambda x: x['name'].lower())
