@@ -1,16 +1,18 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>Categories</h1>
-<ul id="toc">
-{% for cat in toc %}<li>
-	{{ cat.name|catlink }}
-	{% if cat.children %}
-		<p class="children">
-		{% for child in cat.children %}{{ child.name|shortcatlink }}{% if forloop.last %}...{% else %}, {% endif %}{% endfor %}
-		</p>
-	{% endif %}
-</li>{% endfor %}
-</ul>
+<div class="content">
+	<h1>Categories</h1>
+	<ul id="toc">
+	{% for cat in toc %}<li>
+		{{ cat.name|catlink }}
+		{% if cat.children %}
+			<p class="children">
+			{% for child in cat.children %}{{ child.name|shortcatlink }}{% if forloop.last %}...{% else %}, {% endif %}{% endfor %}
+			</p>
+		{% endif %}
+	</li>{% endfor %}
+	</ul>
+</div>
 
 <div id="nav">
 	<h2>Menu</h2>

@@ -3,9 +3,8 @@
 {% block title %}{{ item.name|escape }}{% endblock %}
 
 {% block body %}
-<h1>{{ item.name|escape }}</h1>
-
-<div id="iteminfo">
+<div id="iteminfo" class="content">
+	<h1>{{ item.name|escape }}</h1>
 	{% if item.picture %}
 		<img src="{{ item.picture|escape }}" alt="picture"/>
 	{% endif %}
@@ -14,19 +13,25 @@
 	{% endif %}
 </div>
 
-{% if item.categories %}
-<h2>Categories</h2>
-<ul>{% for cat in item.get_categories %}
-<li>{{ cat|catlink }}</li>
-{% endfor %}</ul>
-{% endif %}
+<div id="meta">
+	{% if item_links %}
+	<div id="itemlinks">
+		<h2>Links</h2>
+		<ul>{% for link in item_links %}
+			<li><a href="{{ link.href|escape }}">{{ link.name|escape }}</a></li>
+		{% endfor %}</ul>
+	</div>
+	{% endif %}
 
-{% if item_links %}
-<h2>Links</h2>
-<ul>{% for link in item_links %}
-	<li><a href="{{ link.href|escape }}">{{ link.name|escape }}</a></li>
-{% endfor %}</ul>
-{% endif %}
+	{% if item.categories %}
+	<div id="itemcat">
+		<h2>Categories</h2>
+		<ul>{% for cat in item.get_categories %}
+		<li>{{ cat|catlink }}</li>
+		{% endfor %}</ul>
+	</div>
+	{% endif %}
+</div>
 
 <div id="nav">
 	<h2>Menu</h2>

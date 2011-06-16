@@ -1,3 +1,11 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-color: white;
+	color: #333;
+	font: normal 10pt/15pt Ubuntu, sans-serif;
+}
+
 a {
 	color: #008;
 }
@@ -31,4 +39,68 @@ form .hint {
 
 li.promote {
 	font-weight: bold;
+}
+
+
+#wrapper {
+	position: relative;
+	max-width: 800px;
+	margin: 10px auto;
+}
+
+.content {
+	top: 50px;
+	position: absolute;
+}
+
+#iteminfo {
+	margin-right: 300px;
+}
+#iteminfo img {
+	float: left;
+	margin: 0 .5em .25em 0;
+	border: solid 1px #ccc;
+	padding: 1px;
+}
+
+#meta {
+	position: absolute;
+	top: 50px;
+	left: 100%;
+	margin-left: -200px;
+	width: 200px;
+}
+#meta ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#nav {
+	position: absolute;
+	top: 0;
+	height: 28px;
+	border: solid #ccc 4px;
+	text-align: right;
+	width: 100%;
+	font-size: 12px;
+	line-height: 28px;
+	text-transform: lowercase;
+	background: #ccc url(/fmh-static/logo.76x28.png) no-repeat top left;
+}
+#nav h2 {
+	display: none;
+}
+#nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 2px 6px;
+}
+#nav li {
+	display: inline;
+	margin-left: 1em;
+}
+
+#iteminfo {
+	top: 50px;
 }
