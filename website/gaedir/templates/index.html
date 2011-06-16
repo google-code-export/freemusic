@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="content">
+<div id="toc" class="content">
 	<h1>Categories</h1>
-	<ul id="toc">
+	<ul>
 	{% for cat in toc %}<li>
 		{{ cat.name|catlink }}
 		{% if cat.children %}
