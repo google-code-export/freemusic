@@ -2,6 +2,7 @@
 
 import logging
 import os
+import re
 import sys
 import urllib
 import wsgiref
@@ -9,10 +10,15 @@ import wsgiref
 from google.appengine.dist import use_library
 use_library('django', '0.96')
 
+from django.utils import simplejson
+from google.appengine.api import taskqueue
+from google.appengine.api import urlfetch
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
+
+LAST_FM_KEY = '730a57dbf9b5b7f2be60f63754aa3162'
 
 
 class NotFound(Exception): pass
@@ -132,7 +138,10 @@ class GAEDirEntry(Model):
     def put(self):
         self.update_all_categories()
         # self.update_counts()
-        return db.Model.put(self)
+        db.Model.put(self)
+
+    def schedule_update(self):
+        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/entry', params={ 'key': str(self.key()) })
 
     def update_all_categories(self):
         """Fills self.all_categories with parent names, adds missing categories
@@ -202,8 +211,6 @@ class View:
         path = os.path.join(os.path.dirname(__file__), 'templates', self.template_name)
         content = template.render(path, self.data)
 
-        logging.debug(self.data)
-
         request.response.headers['Content-Type'] = self.content_type + '; charset=utf-8'
         request.response.out.write(content)
 
@@ -272,6 +279,7 @@ class SubmitEntryController(Controller):
             'description': self.request.get('description'),
         })
         item.put()
+        item.schedule_update()
         self.redirect('/v/' + item.name.encode('utf-8'))
 
 class SubmitEntryView(View):
@@ -334,6 +342,7 @@ class EditEntryController(Controller):
             'description': self.request.get('description'),
         })
         item.put()
+        item.schedule_update()
         self.redirect('/v/' + item.name.encode('utf-8'))
 
 class EditEntryView(View):
@@ -350,6 +359,40 @@ class IndexView(View):
     template_name = 'index.html'
 
 
+class UpdateEntryController(Controller):
+    def post(self):
+        entry = GAEDirEntry.get_by_key(self.request.get('key'))
+        if not entry:
+            raise NotFound
+        """
+        if not users.is_current_user_admin():
+            raise Forbidden
+        """
+
+        update = self.update_from_lastfm(entry)
+        if update:
+            entry.put()
+
+    def update_from_lastfm(self, entry):
+        update = False
+        for link in entry.links:
+            match = re.match('http://(?:www.last.fm|www.lastfm.ru)/music/(.+)', link)
+            if match:
+                url = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%s&api_key=%s&format=json' % (match.group(1), LAST_FM_KEY)
+                data = simplejson.loads(urlfetch.fetch(url=url).content)
+
+                for image in data['artist']['image']:
+                    if image['size'] == 'large':
+                        entry.picture = image['#text']
+                        logging.info(u'Found picture for %s: %s' % (entry.name, entry.picture))
+                        update = True
+
+                try:
+                    entry.description = data['artist']['bio']['content']
+                except KeyError: pass
+        return update
+
+
 def serve(prefix=''):
     debug = True
     if debug:
@@ -361,6 +404,7 @@ def serve(prefix=''):
         (prefix + '/submit', SubmitEntryController),
         (prefix + '/edit/entry', EditEntryController),
         (prefix + '/edit/category', EditCategoryController),
+        (prefix + '/update/entry', UpdateEntryController),
         (prefix + '/v/(.*)', ShowItemController),
         (prefix + '/(.*)', ShowCategoryController),
     ], debug=debug))
