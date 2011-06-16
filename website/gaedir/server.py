@@ -170,7 +170,8 @@ class GAEDirEntry(Model):
 class Controller(webapp.RequestHandler):
     def redirect(self, path):
         path = os.environ.get('CAT_URL_PREFIX') + path
-        path = path.replace(' ', '_')
+        path = urllib.quote(path.replace(' ', '_'))
+        logging.debug('Redirecting to %s' % path)
         return webapp.RequestHandler.redirect(self, path)
 
 
