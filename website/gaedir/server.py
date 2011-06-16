@@ -71,7 +71,7 @@ class HTMLStripper(HTMLParser.HTMLParser):
 class Model(db.Model):
     def update(self, data):
         for k, v in data.items():
-            if v:
+            if v or (v == False):
                 setattr(self, k, v)
 
     @classmethod
@@ -88,6 +88,8 @@ class GAEDirCategory(Model):
     author = db.UserProperty()
     item_count = db.IntegerProperty()
     depth = db.IntegerProperty()
+    # Promotes the category to the front page.
+    promote = db.BooleanProperty()
 
     def put(self):
         parents = add_parents([self.name])
@@ -133,6 +135,9 @@ class GAEDirCategory(Model):
     def update_item_count(self):
         self.item_count = GAEDirEntry.gql('WHERE categories = :1', self.name).count()
 
+    def __repr__(self):
+        return u'<gaedir.Category name=%s promote=%s>' % (self.name, self.promote or False)
+
     @classmethod
     def get_by_name(cls, name):
         cat = cls.gql('WHERE name = :1', name).get()
@@ -140,18 +145,32 @@ class GAEDirCategory(Model):
 
     @classmethod
     def get_toc(cls):
+        """Returns a structure with the top categories, to show on the front
+        page.  The structure is a list of (name, children)."""
         toc = []
         categories = cls.gql('WHERE depth < 3').fetch(1000)
 
         for cat in categories:
             if cat.depth == 1:
-                sub_categories = []
+                promoted = []
+                normal = []
                 for sub in categories:
                     if cat.name in sub.parents:
-                        sub_categories.append(sub)
+                        if sub.promote:
+                            promoted.append(sub)
+                        else:
+                            normal.append(sub)
+
+                limit = max(3, len(promoted))
+                children = list(promoted + normal)[:limit]
+
+                if cat.name == 'Music':
+                    logging.debug(promoted)
+                    logging.debug(normal)
+
                 toc.append({
                     'name': cat.name,
-                    'children': sorted(sub_categories, key=lambda c: c.name.lower())[:3],
+                    'children': sorted(children, key=lambda c: c.name.lower())[:3],
                 })
 
         return sorted(toc, key=lambda x: x['name'].lower())
@@ -286,6 +305,7 @@ class EditCategoryController(webapp.RequestHandler):
         cat.update({
             'name': self.request.get('name'),
             'link': self.request.get('link'),
+            'promote': bool(self.request.get('promote')),
         })
         cat.put()
         self.redirect(os.environ['CAT_URL_PREFIX'] + '/' + cat.name.encode('utf-8'))

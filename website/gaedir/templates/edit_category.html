@@ -15,6 +15,12 @@
 				</td>
 			</tr>
 			<tr>
+				<th>Promote to front page:</th>
+				<td>
+					<input type="checkbox" name="promote" value="yes"{% if cat.promote %} checked="checked"{% endif %}/>
+				</td>
+			</tr>
+			<tr>
 				<th>Links to:</th>
 				<td>
 					<input type="text" name="link" value="{% if cat.link %}{{ cat.link|escape }}{% endif %}" placeholder="Links to"/>
