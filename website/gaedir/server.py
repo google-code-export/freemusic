@@ -83,6 +83,7 @@ class Model(db.Model):
 class GAEDirCategory(Model):
     name = db.StringProperty()
     parents = db.StringListProperty()
+    first_parent = db.StringProperty()
     date_added = db.DateTimeProperty(auto_now_add=True)
     author = db.UserProperty()
     item_count = db.IntegerProperty()
@@ -94,12 +95,22 @@ class GAEDirCategory(Model):
 
         parents.remove(self.name)
         self.parents = parents
+        self.first_parent = max(parents)
 
         return db.Model.put(self)
 
     def get_children(self):
-        children = self.gql('WHERE parents = :1', self.name).fetch(100)
-        return children
+        """Returns a sorted list of immediate children."""
+        children = self.gql('WHERE first_parent = :1', self.name).fetch(100)
+
+        # fallback to old method
+        if not children:
+            children = []
+            for child in self.gql('WHERE parents = :1', self.name).fetch(100):
+                if child.depth == self.depth + 1:
+                    children.append(child)
+
+        return sorted(children, key=lambda c: c.name.lower())
 
     def get_items(self):
         """Returns all items in this category."""
