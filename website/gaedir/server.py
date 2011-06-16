@@ -79,6 +79,10 @@ class Model(db.Model):
         obj = db.get(db.Key(key))
         return obj
 
+    @classmethod
+    def find_all(cls):
+        return cls.all().fetch(1000)
+
 
 class GAEDirCategory(Model):
     name = db.StringProperty()
@@ -97,7 +101,10 @@ class GAEDirCategory(Model):
 
         parents.remove(self.name)
         self.parents = parents
-        self.first_parent = max(parents)
+        if parents:
+            self.first_parent = max(parents)
+
+        self.update_item_count()
 
         return db.Model.put(self)
 
@@ -133,10 +140,13 @@ class GAEDirCategory(Model):
         return self.item_count or 0
 
     def update_item_count(self):
-        self.item_count = GAEDirEntry.gql('WHERE categories = :1', self.name).count()
+        self.item_count = GAEDirEntry.gql('WHERE all_categories = :1', self.name).count()
 
     def __repr__(self):
         return u'<gaedir.Category name=%s promote=%s>' % (self.name, self.promote or False)
+
+    def schedule_update(self):
+        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/category', params={ 'key': str(self.key()) })
 
     @classmethod
     def get_by_name(cls, name):
@@ -449,6 +459,18 @@ class UpdateEntryController(Controller):
         return update
 
 
+class UpdateCategoryController(Controller):
+    def get(self):
+        for cat in GAEDirCategory.find_all():
+            cat.schedule_update()
+
+    def post(self):
+        cat = GAEDirCategory.get_by_key(self.request.get('key'))
+        if not cat:
+            raise NotFound
+        cat.put()
+
+
 def serve(prefix=''):
     debug = True
     if debug:
@@ -460,6 +482,7 @@ def serve(prefix=''):
         (prefix + '/submit', SubmitEntryController),
         (prefix + '/edit/entry', EditEntryController),
         (prefix + '/edit/category', EditCategoryController),
+        (prefix + '/update/category', UpdateCategoryController),
         (prefix + '/update/entry', UpdateEntryController),
         (prefix + '/v/(.*)', ShowItemController),
         (prefix + '/(.*)', ShowCategoryController),
