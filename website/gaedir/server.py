@@ -1,5 +1,6 @@
 # encoding=utf-8
 
+import HTMLParser
 import logging
 import os
 import re
@@ -42,6 +43,29 @@ def add_parents(categories):
                 names.append(name)
             del parts[-1]
     return sorted(names)
+
+
+class HTMLStripper(HTMLParser.HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+
+    def handle_data(self, d):
+        self.fed.append(d)
+
+    def get_data(self):
+        return ''.join(self.fed)
+
+    @classmethod
+    def process(cls, html):
+        s = cls()
+        s.feed(html)
+        text = s.get_data()
+
+        lines = [u'<p>%s</p>' % l.strip() for l in text.split('\n') if l.strip()]
+        text = u''.join(lines)
+
+        return text
 
 
 class Model(db.Model):
@@ -388,7 +412,8 @@ class UpdateEntryController(Controller):
                         update = True
 
                 try:
-                    entry.description = data['artist']['bio']['content']
+                    entry.description = HTMLStripper.process(data['artist']['bio']['content'])
+                    logging.debug(entry.description)
                 except KeyError: pass
         return update
 

@@ -1,3 +1,4 @@
+import cgi
 import os
 import urllib
 
@@ -34,3 +35,9 @@ def shortcatlink(name):
 @register.filter
 def listarea(values):
     return u'\n'.join(values)
+
+
+@register.filter
+def safe_html(text):
+    text = cgi.escape(text).replace('&lt;p&gt;', '<p>').replace('&lt;/p&gt;', '</p>')
+    return text
