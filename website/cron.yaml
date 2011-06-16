@@ -1,12 +1,15 @@
 # http://code.google.com/intl/ru-RU/appengine/docs/python/config/cron.html
 
 cron:
-  - description: Update event schedule from last.fm.
-    url: /events/update
-    schedule: every 4 hours
-  - description: Update charts.
-    url: /chart
-    schedule: every 24 hours
-  - description: Ask users to review albums.
-    url: /album/review/beg
-    schedule: every 24 hours
+- description: Update event schedule from last.fm.
+  url: /events/update
+  schedule: every 4 hours
+- description: Update charts.
+  url: /chart
+  schedule: every 24 hours
+- description: Ask users to review albums.
+  url: /album/review/beg
+  schedule: every 24 hours
+- description: update directory categories
+  url: /c/update/category
+  schedule: every 1 hours
