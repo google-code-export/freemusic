@@ -265,8 +265,10 @@ class SubmitEntryController(Controller):
         item = GAEDirEntry()
         item.update({
             'name': self.request.get('name'),
-            'categories': split(self.request.get('cat')),
-            'links': split(self.request.get('links')),
+            'categories': split(self.request.get('categories'), '\n'),
+            'links': split(self.request.get('links'), '\n'),
+            'picture': self.request.get('picture'),
+            'description': self.request.get('description'),
         })
         item.put()
         self.redirect('/v/' + item.name.encode('utf-8'))
