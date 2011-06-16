@@ -1,0 +1,34 @@
+a {
+	color: #008;
+}
+
+input[type=text], textarea {
+	width: 500px;
+	display: block;
+	margin-bottom: .5em;
+	padding: 2px 4px;
+}
+textarea {
+	height: 100px;
+}
+
+h1 .count {
+	font-weight: normal;
+	font-style: italic;
+	font-size: .75em;
+}
+
+form th {
+	text-align: left;
+	vertical-align: top;
+	padding-right: 1em;
+}
+form .hint {
+	font-style: italic;
+	font-size: 80%;
+	margin: 0 0 .5em;
+}
+
+li.promote {
+	font-weight: bold;
+}

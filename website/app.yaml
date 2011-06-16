@@ -8,7 +8,7 @@ api_version: 1
 handlers:
 
 - url: /c/static/
-  static_dir: gaedir/static
+  static_dir: static/gaedir
 - url: /c/.*
   script: gaedir/server.py
 
