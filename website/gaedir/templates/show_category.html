@@ -9,7 +9,7 @@
 	<h2>Subcategories</h2>
 	<ul id="see_also">
 	{% for child in children %}
-		<li><a href="{{ path_prefix }}/{{ child.name }}">{{ child.get_name }}</a> ({{ child.get_item_count }})</li>
+		<li{% if child.promote %} class="promote"{% endif %}><a href="{{ path_prefix }}/{{ child.name }}">{{ child.get_name }}</a> ({{ child.get_item_count }})</li>
 	{% endfor %}
 	</ul>
 {% endif %}

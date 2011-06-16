@@ -24,3 +24,7 @@ form .hint {
 	font-size: 80%;
 	margin: 0 0 .5em;
 }
+
+li.promote {
+	font-weight: bold;
+}
