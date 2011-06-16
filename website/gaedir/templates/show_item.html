@@ -21,10 +21,10 @@
 {% endfor %}</ul>
 {% endif %}
 
-{% if item.links %}
+{% if item_links %}
 <h2>Links</h2>
-<ul>{% for link in item.links %}
-	<li><a href="{{ link|escape }}">{{ link|escape }}</a></li>
+<ul>{% for link in item_links %}
+	<li><a href="{{ link.href|escape }}">{{ link.name|escape }}</a></li>
 {% endfor %}</ul>
 {% endif %}
 

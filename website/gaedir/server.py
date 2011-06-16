@@ -290,6 +290,24 @@ class ShowItemController(Controller):
 class ShowItemView(View):
     template_name = 'show_item.html'
 
+    def __init__(self, data):
+        if data['item'].links:
+            data['item_links'] = self.format_links(data['item'].links)
+        View.__init__(self, data)
+
+    def format_links(self, links):
+        result = []
+        for link in links:
+            parts = link.split('/')
+            host = parts[2]
+            if host.startswith('www.'):
+                host = host[4:]
+            result.append({
+                'name': host,
+                'href': link,
+            })
+        return sorted(result, key=lambda l: l['name'].lower())
+
 
 class EditEntryController(Controller):
     def get(self):
