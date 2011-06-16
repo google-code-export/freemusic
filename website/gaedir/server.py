@@ -188,7 +188,7 @@ class View:
             if os.environ['SERVER_SOFTWARE'].startswith('Development/'):
                 self.data['admin_url'] = '/_ah/admin'
             else:
-                self.data['admin_url'] = 'https://appengine.google.com/deployment?app_id=' + os.environ['APPLICATION_ID']
+                self.data['admin_url'] = 'https://appengine.google.com/dashboard?app_id=' + os.environ['APPLICATION_ID']
 
     def reply(self, request):
         self.data['path'] = request.request.path
