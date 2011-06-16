@@ -171,16 +171,12 @@ class GAEDirCategory(Model):
                         else:
                             normal.append(sub)
 
-                limit = max(3, len(promoted))
-                children = list(promoted + normal)[:limit]
-
-                if cat.name == 'Music':
-                    logging.debug(promoted)
-                    logging.debug(normal)
+                limit = max(4, len(promoted))
+                children = promoted + normal
 
                 toc.append({
                     'name': cat.name,
-                    'children': sorted(children, key=lambda c: c.name.lower())[:3],
+                    'children': sorted(children[:limit], key=lambda c: c.name.lower()),
                 })
 
         return sorted(toc, key=lambda x: x['name'].lower())
