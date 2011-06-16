@@ -450,7 +450,6 @@ class UpdateEntryController(Controller):
 
                 try:
                     entry.description = HTMLStripper.process(data['artist']['bio']['content'])
-                    logging.debug(entry.description)
                 except KeyError: pass
         return update
 
