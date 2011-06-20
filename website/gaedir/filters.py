@@ -34,7 +34,7 @@ def shortcatlink(name):
 
 @register.filter
 def listarea(values):
-    return u'\n'.join(values)
+    return u'\n'.join(sorted(values))
 
 
 @register.filter
