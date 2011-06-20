@@ -6,23 +6,21 @@
 <div class="content">
 	<h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %}</h1>
 
-	{% if items %}
-		<h2>Items in this category</h2>
-		<ul id="items">
-			{% for item in items %}
-				<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}">{{ item.name }}</a></li>
-			{% endfor %}
-		</ul>
-	{% endif %}
-</div>
-
-<div id="meta">
 	{% if children %}
-		<h2>Subcategories</h2>
+		<p>Subcategories:</p>
 		<ul id="see_also">
 		{% for child in children %}
 			<li{% if child.promote %} class="promote"{% endif %}><a href="{{ path_prefix }}/{{ child.name }}">{{ child.get_name }}</a> ({{ child.get_item_count }})</li>
 		{% endfor %}
+		</ul>
+	{% endif %}
+
+	{% if items %}
+		<p>Items in this category:</p>
+		<ul id="items">
+			{% for item in items %}
+				<li><a href="{{ path_prefix }}/v/{{ item.name|uurlencode }}">{{ item.name }}</a></li>
+			{% endfor %}
 		</ul>
 	{% endif %}
 </div>

@@ -51,7 +51,7 @@ form .hint {
 	margin: 0 0 .5em;
 }
 
-li.promote {
+li.promote a {
 	font-weight: bold;
 }
 
