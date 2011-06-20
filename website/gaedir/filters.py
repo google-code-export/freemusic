@@ -31,6 +31,12 @@ def shortcatlink(name):
     result = u'<a href="%s/%s">%s</a>' % (os.environ['CAT_URL_PREFIX'], name.replace(' ', '_'), text)
     return result
 
+@register.filter
+def simplecatlink(name):
+    text = name.replace('/', ': ')
+    link = os.environ['CAT_URL_PREFIX'] + '/' + name.replace(' ', '_')
+    return u'<a href="%s" class="category">%s</a>' % (link, text)
+
 
 @register.filter
 def listarea(values):

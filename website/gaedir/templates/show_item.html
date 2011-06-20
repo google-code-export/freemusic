@@ -27,7 +27,7 @@
 	<div id="itemcat">
 		<h2>Categories</h2>
 		<ul>{% for cat in item.get_categories %}
-		<li>{{ cat|catlink }}</li>
+		<li>{{ cat|simplecatlink }}</li>
 		{% endfor %}</ul>
 	</div>
 	{% endif %}
