@@ -3,35 +3,39 @@
 {% block title %}Submit entry{% endblock %}
 
 {% block body %}
-<h1>Submit an entry</h1>
-<form method="post" action="{{ path }}">
-	<table>
-		<tbody>
-			<tr>
-				<th>Name:</th>
-				<td><input type="text" name="name" value="{{ item.name|escape }}"/></td>
-			</tr>
-			<tr>
-				<th>Description:</th>
-				<td><textarea name="description">{% if item.description %}{{ item.description|escape }}{% endif %}</textarea></td>
-			</tr>
-			<tr>
-				<th>Categories:</th>
-				<td><textarea name="categories">{{ category_name|escape }}</textarea></td>
-			</tr>
-			<tr>
-				<th>Links:</th>
-				<td><textarea name="links">{{ item.links|listarea }}</textarea></td>
-			</tr>
-			<tr>
-				<th>Picture URL:</th>
-				<td><input type="text" name="picture" value="{% if item.picture %}{{ item.picture|escape }}{% endif %}"/></td>
-			</tr>
-			<tr>
-				<th/>
-				<td><button>Submit</button> or <a href="{{ path_prefix }}/{{ category_name|escape }}">cancel</a></td>
-			</tr>
-		</tbody>
-	</table>
-</form>
+<div class="content">
+	<h1>Submit an entry</h1>
+	<form method="post" action="{{ path }}">
+		<table>
+			<tbody>
+				<tr>
+					<th>Name:</th>
+					<td><input type="text" name="name" value="{{ item.name|escape }}"/></td>
+				</tr>
+				<tr>
+					<th>Description:</th>
+					<td><textarea name="description">{% if item.description %}{{ item.description|escape }}{% endif %}</textarea></td>
+				</tr>
+				<tr>
+					<th>Categories:</th>
+					<td><textarea name="categories">{{ category_name|escape }}</textarea></td>
+				</tr>
+				<tr>
+					<th>Links:</th>
+					<td><textarea name="links">{{ item.links|listarea }}</textarea></td>
+				</tr>
+				<tr>
+					<th>Picture URL:</th>
+					<td><input type="text" name="picture" value="{% if item.picture %}{{ item.picture|escape }}{% endif %}"/></td>
+				</tr>
+				<tr>
+					<th/>
+					<td><button>Submit</button> or <a href="{{ path_prefix }}/{{ category_name|escape }}">cancel</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
 {% endblock %}
+
+{% block admin_links %}{% endblock %}

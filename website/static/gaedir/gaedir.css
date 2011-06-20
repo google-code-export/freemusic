@@ -121,7 +121,7 @@ li.promote {
 	font-size: 12px;
 	line-height: 28px;
 	text-transform: lowercase;
-	background: #ccc url(/fmh-static/logo.76x28.png) no-repeat top left;
+	background: #ccc no-repeat top left;
 }
 #nav h2 {
 	display: none;
@@ -134,6 +134,18 @@ li.promote {
 #nav li {
 	display: inline;
 	margin-left: 1em;
+}
+#nav #home {
+	display: block;
+	width: 76px;
+	height: 28px;
+	position: absolute;
+	background: transparent url(/fmh-static/logo.76x28.png) no-repeat top left;
+	top: 0;
+	left: 0;
+}
+#nav #home span {
+	display: none;
 }
 
 
