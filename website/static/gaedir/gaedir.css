@@ -70,6 +70,7 @@ li.promote a {
 #iteminfo {
 	margin-right: 300px;
 	top: 50px;
+	width: 100%;
 }
 #iteminfo img {
 	/*
@@ -90,25 +91,6 @@ li.promote a {
 	margin-top: 1em;
 	line-height: 1.25em;
 	border-bottom: solid 1px #ccc;
-}
-
-#meta {
-	position: absolute;
-	top: 50px;
-	left: 100%;
-	margin-left: -200px;
-	width: 200px;
-}
-#meta h2 {
-	margin: 0 0 .25em;
-}
-#meta ul {
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-}
-#meta > div {
-	margin-bottom: 1em;
 }
 
 #nav {

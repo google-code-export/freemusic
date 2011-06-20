@@ -20,12 +20,11 @@
 		{% endfor %}</ul>
 	</div>
 	{% endif %}
-</div>
 
-<div id="meta">
 	{% if item.categories %}
 	<div id="itemcat">
 		<h2>Categories</h2>
+		<p>This entry is in the following categories:</p>
 		<ul>{% for cat in item.get_categories %}
 		<li>{{ cat|simplecatlink }}</li>
 		{% endfor %}</ul>
