@@ -22,6 +22,9 @@ textarea {
 textarea[name=description] {
 	height: 200px;
 }
+textarea[name=links], textarea[name=categories] {
+	white-space: nowrap;
+}
 
 h1 .count {
 	font-weight: normal;
