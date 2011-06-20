@@ -26,10 +26,14 @@ textarea[name=links], textarea[name=categories] {
 	white-space: nowrap;
 }
 
-h1 .count {
+h1 {
 	font-weight: normal;
-	font-style: italic;
-	font-size: .75em;
+	font-size: 20pt;
+}
+
+h2 {
+	font-weight: normal;
+	font-size: 16pt;
 }
 
 form th {
@@ -76,10 +80,16 @@ li.promote {
 	margin-left: -200px;
 	width: 200px;
 }
+#meta h2 {
+	margin: 0 0 .25em;
+}
 #meta ul {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+}
+#meta > div {
+	margin-bottom: 1em;
 }
 
 #nav {
