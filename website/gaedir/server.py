@@ -442,14 +442,16 @@ class UpdateEntryController(Controller):
                 url = 'http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&artist=%s&api_key=%s&format=json' % (match.group(1), LAST_FM_KEY)
                 data = simplejson.loads(urlfetch.fetch(url=url).content)
 
-                for image in data['artist']['image']:
-                    if image['size'] == 'large':
-                        entry.picture = image['#text']
-                        logging.info(u'Found picture for %s: %s' % (entry.name, entry.picture))
-                        update = True
+                if not entry.picture:
+                    for image in data['artist']['image']:
+                        if image['size'] == 'large':
+                            entry.picture = image['#text']
+                            logging.info(u'Found picture for %s: %s' % (entry.name, entry.picture))
+                            update = True
 
                 try:
-                    entry.description = HTMLStripper.process(data['artist']['bio']['content'])
+                    if not entry.description:
+                        entry.description = HTMLStripper.process(data['artist']['bio']['content'])
                 except KeyError: pass
         return update
 
