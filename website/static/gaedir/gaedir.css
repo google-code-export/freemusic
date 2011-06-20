@@ -19,6 +19,9 @@ input[type=text], textarea {
 textarea {
 	height: 100px;
 }
+textarea[name=description] {
+	height: 200px;
+}
 
 h1 .count {
 	font-weight: normal;
