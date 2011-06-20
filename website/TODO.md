@@ -1,7 +1,6 @@
 Важно
 ======
 
-- sitemap.xml
 - categories.rss
 - entries.rss
 - локальное хранение картинок

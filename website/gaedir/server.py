@@ -80,8 +80,11 @@ class Model(db.Model):
         return obj
 
     @classmethod
-    def find_all(cls):
-        return cls.all().fetch(1000)
+    def find_all(cls, order=None):
+        query = cls.all()
+        if order is not None:
+            query = query.order(order)
+        return query.fetch(1000)
 
 
 class GAEDirCategory(Model):
@@ -262,7 +265,7 @@ class View:
 
     def reply(self, request):
         self.data['path'] = request.request.path
-        self.data['base'] = os.environ.get('CAT_URL_PREFIX')
+        self.data['base'] = self.get_base_url()
         if self.data['user']:
             self.data['log_out_url'] = users.create_logout_url(os.environ['PATH_INFO'])
         else:
@@ -273,6 +276,14 @@ class View:
 
         request.response.headers['Content-Type'] = self.content_type + '; charset=utf-8'
         request.response.out.write(content)
+
+    def get_base_url(self):
+        """Returns the base for all URLs."""
+        base = 'http://' + os.environ['HTTP_HOST']
+        if base.endswith(':80'):
+            base = base[:-3]
+        base += os.environ['CAT_URL_PREFIX']
+        return base
 
 
 class ShowCategoryController(webapp.RequestHandler):
@@ -468,6 +479,27 @@ class UpdateCategoryController(Controller):
         cat.put()
 
 
+class SitemapController(Controller):
+    def get(self):
+        SitemapView({
+            'categories': GAEDirCategory.find_all('name'),
+            'entries': GAEDirEntry.find_all('name'),
+        }).reply(self)
+
+
+class SitemapView(View):
+    template_name = 'sitemap.xml'
+
+
+class RobotsController(Controller):
+    def get(self):
+        RobotsView().reply(self)
+
+class RobotsView(View):
+    template_name = 'robots.txt'
+    content_type = 'text/plain'
+
+
 def serve(prefix=''):
     debug = True
     if debug:
@@ -479,6 +511,8 @@ def serve(prefix=''):
         (prefix + '/submit', SubmitEntryController),
         (prefix + '/edit/entry', EditEntryController),
         (prefix + '/edit/category', EditCategoryController),
+        (prefix + '/robots\.txt', RobotsController),
+        (prefix + '/sitemap\.xml', SitemapController),
         (prefix + '/update/category', UpdateCategoryController),
         (prefix + '/update/entry', UpdateEntryController),
         (prefix + '/v/(.*)', ShowItemController),
