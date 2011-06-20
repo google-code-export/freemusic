@@ -19,3 +19,6 @@ serve: .tmp/blobstore
 
 .tmp/blobstore:
 	mkdir -p .tmp/blobstore
+
+test-syntax:
+	find gaedir -name '*.py' | xargs pep8 -r --ignore=E501

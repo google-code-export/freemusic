@@ -25,11 +25,13 @@ def catlink(name):
         result = catlink(u'/'.join(parts[:-1])) + u': ' + result
     return result
 
+
 @register.filter
 def shortcatlink(name):
     text = name.split(u'/')[-1]
     result = u'<a href="%s/%s">%s</a>' % (os.environ['CAT_URL_PREFIX'], name.replace(' ', '_'), text)
     return result
+
 
 @register.filter
 def simplecatlink(name):

@@ -22,15 +22,22 @@ from google.appengine.ext.webapp import template
 LAST_FM_KEY = '730a57dbf9b5b7f2be60f63754aa3162'
 
 
-class NotFound(Exception): pass
-class Forbidden(Exception): pass
+class NotFound(Exception):
+    pass
+
+
+class Forbidden(Exception):
+    pass
+
 
 def split(value, sep='\n'):
-    return [ p.strip() for p in value.split(sep) if p.strip() ]
+    return [p.strip() for p in value.split(sep) if p.strip()]
+
 
 def url_unquote(value):
     value = urllib.unquote(value).replace('_', ' ')
     return value.decode('utf-8')
+
 
 def add_parents(categories):
     """Returns a list of categories with their parents added."""
@@ -149,7 +156,7 @@ class GAEDirCategory(Model):
         return u'<gaedir.Category name=%s promote=%s>' % (self.name, self.promote or False)
 
     def schedule_update(self):
-        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/category', params={ 'key': str(self.key()) })
+        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/category', params={'key': str(self.key())})
 
     @classmethod
     def get_by_name(cls, name):
@@ -205,7 +212,7 @@ class GAEDirEntry(Model):
         db.Model.put(self)
 
     def schedule_update(self):
-        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/entry', params={ 'key': str(self.key()) })
+        taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/entry', params={'key': str(self.key())})
 
     def update_all_categories(self):
         """Fills self.all_categories with parent names, adds missing categories
@@ -302,6 +309,7 @@ class ShowCategoryController(webapp.RequestHandler):
             'items': sorted(cat.get_items(), key=lambda i: i.name.lower()),
         }).reply(self)
 
+
 class ShowCategoryView(View):
     template_name = 'show_category.html'
 
@@ -332,12 +340,13 @@ class EditCategoryController(webapp.RequestHandler):
         cat.put()
         self.redirect(os.environ['CAT_URL_PREFIX'] + '/' + cat.name.encode('utf-8'))
 
+
 class EditCategoryView(View):
     template_name = 'edit_category.html'
 
 
 class SubmitEntryController(Controller):
-    def get(self):  
+    def get(self):
         if not users.is_current_user_admin():
             raise Forbidden
         SubmitEntryView({
@@ -359,6 +368,7 @@ class SubmitEntryController(Controller):
         item.schedule_update()
         self.redirect('/v/' + item.name.encode('utf-8'))
 
+
 class SubmitEntryView(View):
     template_name = 'submit_item.html'
 
@@ -371,6 +381,7 @@ class ShowItemController(Controller):
         ShowItemView({
             'item': item,
         }).reply(self)
+
 
 class ShowItemView(View):
     template_name = 'show_item.html'
@@ -422,6 +433,7 @@ class EditEntryController(Controller):
         item.schedule_update()
         self.redirect('/v/' + item.name.encode('utf-8'))
 
+
 class EditEntryView(View):
     template_name = 'edit_item.html'
 
@@ -431,6 +443,7 @@ class IndexController(webapp.RequestHandler):
         IndexView({
             'toc': GAEDirCategory.get_toc(),
         }).reply(self)
+
 
 class IndexView(View):
     template_name = 'index.html'
@@ -476,7 +489,8 @@ class UpdateEntryController(Controller):
                 try:
                     if not entry.description:
                         entry.description = HTMLStripper.process(data['artist']['bio']['content'])
-                except KeyError: pass
+                except KeyError:
+                    pass
         return update
 
 
@@ -508,6 +522,7 @@ class RobotsController(Controller):
     def get(self):
         RobotsView().reply(self)
 
+
 class RobotsView(View):
     template_name = 'robots.txt'
     content_type = 'text/plain'
@@ -535,6 +550,7 @@ class EntriesFeedController(Controller):
         EntriesFeedView({
             'entries': data,
         }).reply(self)
+
 
 class EntriesFeedView(View):
     template_name = 'entries.rss'
