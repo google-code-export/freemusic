@@ -7,7 +7,11 @@ body {
 }
 
 a {
-	color: #008;
+	color: rgb(6, 69, 173); /* thanks wikipedia */
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
 }
 
 input[type=text], textarea {
@@ -65,12 +69,27 @@ li.promote {
 
 #iteminfo {
 	margin-right: 300px;
+	top: 50px;
 }
 #iteminfo img {
+	/*
 	float: left;
 	margin: 0 .5em .25em 0;
+	*/
+	float: right;
+	margin: 0 0 .25em .5em;
 	border: solid 1px #ccc;
 	padding: 1px;
+}
+#iteminfo ul {
+	margin: 0;
+	padding: 0 0 0 2em;
+	list-style-type: square;
+}
+#iteminfo h2 {
+	margin-top: 2em;
+	clear: both;
+	border-bottom: solid 1px #ccc;
 }
 
 #meta {
@@ -117,10 +136,6 @@ li.promote {
 	margin-left: 1em;
 }
 
-#iteminfo {
-	top: 50px;
-}
-
 
 #toc ul {
 	list-style-type: none;
@@ -139,4 +154,9 @@ li.promote {
 	margin: .25em 0;
 	font-weight: normal;
 	font-size: 10pt;
+}
+
+
+#itemlinks {
+	clear: both;
 }
