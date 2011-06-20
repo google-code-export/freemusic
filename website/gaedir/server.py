@@ -157,6 +157,7 @@ class GAEDirCategory(Model):
         return u'<gaedir.Category name=%s promote=%s>' % (self.name, self.promote or False)
 
     def schedule_update(self):
+        """Starts background update of the category."""
         taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/category', params={'key': str(self.key())})
 
     def is_shown_in_toc(self):
@@ -164,7 +165,7 @@ class GAEDirCategory(Model):
 
     @classmethod
     def get_by_name(cls, name):
-        cat = cls.gql('WHERE name = :1', name).get()
+        cat = cls.gql('WHERE name = :1', name.strip()).get()
         return cat
 
     @classmethod
@@ -196,6 +197,14 @@ class GAEDirCategory(Model):
 
         return sorted(toc, key=lambda x: x['name'].lower())
 
+    @classmethod
+    def update_some(cls, names):
+        """Schedules updates of the specified categories."""
+        for name in names:
+            cat = cls.get_by_name(name)
+            if cat is not None:
+                cat.schedule_update()
+
 
 class GAEDirEntry(Model):
     name = db.StringProperty()
@@ -217,6 +226,7 @@ class GAEDirEntry(Model):
         db.Model.put(self)
 
     def schedule_update(self):
+        """Starts background update of the entry."""
         taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/entry', params={'key': str(self.key())})
 
     def update_all_categories(self):
@@ -249,7 +259,7 @@ class GAEDirEntry(Model):
 
     @classmethod
     def get_by_name(cls, name):
-        return cls.gql('WHERE name = :1', name).get()
+        return cls.gql('WHERE name = :1', name.strip()).get()
 
     @classmethod
     def get_by_category(cls, name, limit=100):
@@ -427,6 +437,9 @@ class EditEntryController(Controller):
             raise NotFound
         if not users.is_current_user_admin():
             raise Forbidden
+
+        categories = item.categories
+
         item.update({
             'name': self.request.get('name'),
             'categories': split(self.request.get('categories'), '\n'),
@@ -436,6 +449,9 @@ class EditEntryController(Controller):
         })
         item.put()
         item.schedule_update()
+
+        GAEDirCategory.update_some(add_parents(categories + item.categories))
+
         self.redirect('/v/' + item.name.encode('utf-8'))
 
 
@@ -508,6 +524,7 @@ class UpdateCategoryController(Controller):
         cat = GAEDirCategory.get_by_key(self.request.get('key'))
         if not cat:
             raise NotFound
+        logging.debug(u'Updating category %s' % cat.name)
         cat.put()
 
 
