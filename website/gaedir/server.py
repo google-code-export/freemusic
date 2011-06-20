@@ -389,7 +389,7 @@ class ShowItemController(Controller):
 
 
 class ShowItemView(View):
-    template_name = 'show_item.html'
+    template_name = 'show_entry.html'
 
     def __init__(self, data):
         if data['item'].links:
