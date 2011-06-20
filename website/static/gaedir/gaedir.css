@@ -87,8 +87,8 @@ li.promote {
 	list-style-type: square;
 }
 #iteminfo h2 {
-	margin-top: 2em;
-	clear: both;
+	margin-top: 1em;
+	line-height: 1.25em;
 	border-bottom: solid 1px #ccc;
 }
 
@@ -154,9 +154,4 @@ li.promote {
 	margin: .25em 0;
 	font-weight: normal;
 	font-size: 10pt;
-}
-
-
-#itemlinks {
-	clear: both;
 }
