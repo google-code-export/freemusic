@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-{% for cat in categories %}<url>
+{% for cat in categories %}{% if cat.item_count %}<url>
 	<loc>{{ base }}/{{ cat.name|uurlencode }}</loc>
-</url>{% endfor %}
+</url>{% endif %}{% endfor %}
 
 {% for entry in entries %}<url>
 	<loc>{{ base }}/v/{{ entry.name|uurlencode }}</loc>

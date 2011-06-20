@@ -126,7 +126,7 @@ class GAEDirCategory(Model):
         if not children:
             children = []
             for child in self.gql('WHERE parents = :1', self.name).fetch(100):
-                if child.depth == self.depth + 1:
+                if child.depth == self.depth + 1 and child.item_count > 0:
                     children.append(child)
 
         return sorted(children, key=lambda c: c.name.lower())
@@ -158,6 +158,9 @@ class GAEDirCategory(Model):
     def schedule_update(self):
         taskqueue.add(url=os.environ['CAT_URL_PREFIX'] + '/update/category', params={'key': str(self.key())})
 
+    def is_shown_in_toc(self):
+        return self.item_count > 0
+
     @classmethod
     def get_by_name(cls, name):
         cat = cls.gql('WHERE name = :1', name).get()
@@ -171,15 +174,16 @@ class GAEDirCategory(Model):
         categories = cls.gql('WHERE depth < 3').fetch(1000)
 
         for cat in categories:
-            if cat.depth == 1:
+            if cat.depth == 1 and cat.is_shown_in_toc():
                 promoted = []
                 normal = []
                 for sub in categories:
-                    if cat.name in sub.parents:
-                        if sub.promote:
-                            promoted.append(sub)
-                        else:
-                            normal.append(sub)
+                    if cat.is_shown_in_toc():
+                        if cat.name in sub.parents:
+                            if sub.promote:
+                                promoted.append(sub)
+                            else:
+                                normal.append(sub)
 
                 limit = max(4, len(promoted))
                 children = promoted + normal
