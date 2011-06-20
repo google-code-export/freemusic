@@ -508,11 +508,11 @@ def serve(prefix=''):
     webapp.template.register_template_library('gaedir.filters')
     wsgiref.handlers.CGIHandler().run(webapp.WSGIApplication([
         (prefix + '/', IndexController),
-        (prefix + '/submit', SubmitEntryController),
-        (prefix + '/edit/entry', EditEntryController),
         (prefix + '/edit/category', EditCategoryController),
+        (prefix + '/edit/entry', EditEntryController),
         (prefix + '/robots\.txt', RobotsController),
         (prefix + '/sitemap\.xml', SitemapController),
+        (prefix + '/submit', SubmitEntryController),
         (prefix + '/update/category', UpdateCategoryController),
         (prefix + '/update/entry', UpdateEntryController),
         (prefix + '/v/(.*)', ShowItemController),
