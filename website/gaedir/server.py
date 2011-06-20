@@ -375,7 +375,7 @@ class SubmitEntryController(Controller):
 
 
 class SubmitEntryView(View):
-    template_name = 'submit_item.html'
+    template_name = 'submit_entry.html'
 
 
 class ShowItemController(Controller):
@@ -440,7 +440,7 @@ class EditEntryController(Controller):
 
 
 class EditEntryView(View):
-    template_name = 'edit_item.html'
+    template_name = 'edit_entry.html'
 
 
 class IndexController(webapp.RequestHandler):
