@@ -11,9 +11,7 @@
 	{% if item.description %}
 		<div id="description">{{ item.description|safe_html }}</div>
 	{% endif %}
-</div>
 
-<div id="meta">
 	{% if item_links %}
 	<div id="itemlinks">
 		<h2>Links</h2>
@@ -22,7 +20,9 @@
 		{% endfor %}</ul>
 	</div>
 	{% endif %}
+</div>
 
+<div id="meta">
 	{% if item.categories %}
 	<div id="itemcat">
 		<h2>Categories</h2>
