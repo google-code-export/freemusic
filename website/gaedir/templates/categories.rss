@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link href="{{ base }}/export/categories.rss" rel="self" type="application/rss+xml"/>
+        <language>ru-RU</language>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <generator>gae-dir</generator>{% for cat in categories %}
+        <author>{% if cat.author %}{{ cat.author.email }} ({{ cat.author.nickname }}){% else %}info@example.com (anonymous){% endif %}</author>
+        <item>
+            <title>{{ cat.name|escape }}</title>
+            <link>{{ base }}/{{ cat.name|uurlencode }}</link>
+            <guid>{{ base }}/{{ cat.name|uurlencode }}</guid>
+            <pubDate>{{ cat.date_added|date:"r" }}</pubDate>
+        </item>{% endfor %}
+    </channel>
+</rss>

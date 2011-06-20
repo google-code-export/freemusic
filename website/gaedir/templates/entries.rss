@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <atom:link href="{{ base }}/export/entries.rss" rel="self" type="application/rss+xml"/>
+        <language>ru-RU</language>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <generator>gae-dir</generator>{% for entry in entries %}
+        <author>{% if entry.author %}{{ entry.author.email }} ({{ entry.author.nickname }}){% else %}info@example.com (anonymous){% endif %}</author>
+        <item>
+            <title>{{ entry.name|escape }}</title>
+            <link>{{ base }}/v/{{ entry.name|uurlencode }}</link>
+            <guid>{{ base }}/v/{{ entry.name|uurlencode }}</guid>
+            <pubDate>{{ entry.date_added|date:"r" }}</pubDate>
+        </item>{% endfor %}
+    </channel>
+</rss>

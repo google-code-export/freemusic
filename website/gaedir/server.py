@@ -80,11 +80,11 @@ class Model(db.Model):
         return obj
 
     @classmethod
-    def find_all(cls, order=None):
+    def find_all(cls, limit=1000, order=None):
         query = cls.all()
         if order is not None:
             query = query.order(order)
-        return query.fetch(1000)
+        return query.fetch(limit)
 
 
 class GAEDirCategory(Model):
@@ -191,6 +191,7 @@ class GAEDirEntry(Model):
     links = db.StringListProperty()
     picture = db.LinkProperty()
     description = db.TextProperty()
+    date_added = db.DateTimeProperty(auto_now_add=True)
 
     # Used by the cron job to update information from external sources.
     last_updated = db.DateTimeProperty(auto_now_add=True)
@@ -237,6 +238,10 @@ class GAEDirEntry(Model):
     @classmethod
     def get_by_name(cls, name):
         return cls.gql('WHERE name = :1', name).get()
+
+    @classmethod
+    def get_by_category(cls, name, limit=100):
+        return cls.gql('WHERE all_categories = :1', name).fetch(limit)
 
 
 class Controller(webapp.RequestHandler):
@@ -432,6 +437,12 @@ class IndexView(View):
 
 
 class UpdateEntryController(Controller):
+    def get(self):
+        entries = GAEDirEntry.find_all()
+        for entry in entries:
+            entry.schedule_update()
+        return 'Scheduled update of %u entries.' % len(entries)
+
     def post(self):
         entry = GAEDirEntry.get_by_key(self.request.get('key'))
         if not entry:
@@ -442,6 +453,8 @@ class UpdateEntryController(Controller):
         """
 
         update = self.update_from_lastfm(entry)
+        if entry.date_added > entry.last_updated:
+            update = True
         if update:
             entry.put()
 
@@ -500,6 +513,34 @@ class RobotsView(View):
     content_type = 'text/plain'
 
 
+class CategoriesFeedController(Controller):
+    def get(self):
+        CategoriesFeedView({
+            'categories': GAEDirCategory.find_all(limit=100, order='-date_added'),
+        }).reply(self)
+
+
+class CategoriesFeedView(View):
+    template_name = 'categories.rss'
+    content_type = 'application/rss+xml'
+
+
+class EntriesFeedController(Controller):
+    def get(self):
+        if self.request.get('category'):
+            data = GAEDirEntry.get_by_category(self.request.get('category'), limit=100)
+        else:
+            data = GAEDirEntry.find_all(limit=100, order='-date_added')
+        logging.debug(data)
+        EntriesFeedView({
+            'entries': data,
+        }).reply(self)
+
+class EntriesFeedView(View):
+    template_name = 'entries.rss'
+    content_type = 'application/rss+xml'
+
+
 def serve(prefix=''):
     debug = True
     if debug:
@@ -510,6 +551,8 @@ def serve(prefix=''):
         (prefix + '/', IndexController),
         (prefix + '/edit/category', EditCategoryController),
         (prefix + '/edit/entry', EditEntryController),
+        (prefix + '/export/categories\.rss', CategoriesFeedController),
+        (prefix + '/export/entries\.rss', EntriesFeedController),
         (prefix + '/robots\.txt', RobotsController),
         (prefix + '/sitemap\.xml', SitemapController),
         (prefix + '/submit', SubmitEntryController),
