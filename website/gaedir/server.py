@@ -126,9 +126,10 @@ class GAEDirCategory(Model):
         if not children:
             children = []
             for child in self.gql('WHERE parents = :1', self.name).fetch(100):
-                if child.depth == self.depth + 1 and child.item_count > 0:
+                if child.depth == self.depth + 1:
                     children.append(child)
 
+        children = [c for c in children if c.item_count > 0]
         return sorted(children, key=lambda c: c.name.lower())
 
     def get_items(self):
