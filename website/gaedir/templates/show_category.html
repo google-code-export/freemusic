@@ -2,6 +2,8 @@
 
 {% block title %}{{ cat.name|escape }}{% endblock %}
 
+{% block head %}<link rel="alternate" type="application/rss+xml" title="Entries in {{ cat.name|escape }}" href="{{ path_prefix }}/export/entries.rss?cat={{ cat.name|escape }}"/>{% endblock %}
+
 {% block body %}
 <div class="content">
 	<h1>{% for part in cat.get_path %}{% if forloop.last %}{{ part.0 }}{% else %}<a href="{{ path_prefix }}/{{ part.1 }}">{{ part.0 }}</a>: {% endif %}{% endfor %}</h1>

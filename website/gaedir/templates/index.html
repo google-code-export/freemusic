@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+
+{% block head %}
+	<link rel="alternate" type="application/rss+xml" title="New categories" href="{{ path_prefix }}/export/categories.rss"/>
+	<link rel="alternate" type="application/rss+xml" title="New entries" href="{{ path_prefix }}/export/entries.rss"/>
+{% endblock %}
+
 {% block body %}
 <div id="toc" class="content">
 	<h1>Categories</h1>
@@ -7,7 +13,7 @@
 		{{ cat.name|catlink }}
 		{% if cat.children %}
 			<p class="children">
-			{% for child in cat.children %}{{ child.name|shortcatlink }}{% if forloop.last %}...{% else %}, {% endif %}{% endfor %}
+				{% for child in cat.children %}{{ child.name|shortcatlink }}{% if forloop.last %}...{% else %}, {% endif %}{% endfor %}
 			</p>
 		{% endif %}
 	</li>{% endfor %}
