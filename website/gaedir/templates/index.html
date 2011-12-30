@@ -9,14 +9,14 @@
 <div id="toc" class="content">
 	<h1>Categories</h1>
 	<ul>
-	{% for cat in toc %}<li>
+	{% for cat in toc %}{% if cat.children %}<li>
 		{{ cat.name|catlink }}
 		{% if cat.children %}
 			<p class="children">
 				{% for child in cat.children %}{{ child.name|shortcatlink }}{% if forloop.last %}...{% else %}, {% endif %}{% endfor %}
 			</p>
 		{% endif %}
-	</li>{% endfor %}
+	</li>{% endif %}{% endfor %}
 	</ul>
 </div>
 {% endblock %}

@@ -977,6 +977,7 @@ class MLSendTask(BaseHandler):
         html = markdown.markdown(text).strip()
         text += u'\n\n-- \nFree Music Hub\nhttp://www.freemusichub.net/\n'
         mail.send_mail(sender=config.MAIL_FROM, to=recipient, bcc=config.MAIL_FROM, subject=self.request.get('subject'), body=text, html=html)
+        
 
 
 if __name__ == '__main__':
@@ -997,6 +998,7 @@ if __name__ == '__main__':
         ('/artist/([^/]+)/mail/send$', MLSendHandler),
         ('/artist/([^/]+)/rss$', ArtistFeedHandler),
         ('/artists', ArtistsHandler),
+        ('/data\.yaml', DataYamlHandler),
         ('/file/(\d+)/([^/]+)/(.+)$', FileServeHandler),
         ('/robots.txt$', RobotsHandler),
         ('/rss$', IndexFeedHandler),

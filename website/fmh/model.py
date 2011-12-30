@@ -81,6 +81,9 @@ class Album(CustomModel):
     def find_by_artist(cls, artist_name, limit=30):
         return cls.gql('WHERE artist = :1', artist_name).fetch(limit)
 
+    def get_old(self):
+        return SiteAlbum.get_by_name(self.title)
+
 
 class SiteAlbum(CustomModel):
     id = db.IntegerProperty()
@@ -130,6 +133,10 @@ class SiteAlbum(CustomModel):
     @classmethod
     def get_by_id(cls, album_id):
         return cls.gql('WHERE id = :1', album_id).get()
+
+    @classmethod
+    def get_by_name(cls, name):
+        return cls.gql('WHERE name = :1', name).get()
 
     @classmethod
     def find(cls, limit=30):
